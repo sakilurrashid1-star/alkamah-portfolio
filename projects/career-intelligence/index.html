@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="CareerLens — a data-driven career intelligence dashboard by Alkamah Sakilur Rashid.">
+<title>CareerLens — Career Intelligence</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2d;--panel2:#10243a;--text:#eaf2ff;--muted:#93a7c2;--line:#203650;--accent:#6ee7f9;--accent2:#9b8cff;--good:#5ee6a8;--warn:#ffd166;--danger:#ff7b8a;--shadow:0 20px 60px rgba(0,0,0,.28)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#123050 0,transparent 35%),radial-gradient(circle at 90% 10%,#25205c 0,transparent 30%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}.wrap{max-width:1180px;margin:auto;padding:28px 20px 70px}.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:22px;align-items:stretch}.hero,.card{border:1px solid var(--line)}.hero-main{padding:34px;border-radius:24px;background:linear-gradient(135deg,rgba(19,46,73,.96),rgba(13,27,45,.96));box-shadow:var(--shadow)}.eyebrow{color:var(--accent);font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:12px}.hero h1{font-size:clamp(38px,6vw,68px);line-height:1;margin:12px 0}.hero p{color:var(--muted);max-width:700px;font-size:17px}.pill{display:inline-flex;padding:8px 12px;border:1px solid #31506f;border-radius:999px;color:#cfe4ff;font-size:13px;margin:5px 5px 0 0}.score-card{border-radius:24px;background:linear-gradient(160deg,#151c48,#0d1b2d);padding:28px;display:flex;flex-direction:column;justify-content:center;box-shadow:var(--shadow)}.score-ring{width:150px;height:150px;border-radius:50%;margin:5px auto 18px;display:grid;place-items:center;background:conic-gradient(var(--accent) var(--score,72%),#20334b 0)}.score-ring:before{content:"";position:absolute;width:112px;height:112px;border-radius:50%;background:#101b2e}.score-num{position:relative;font-size:42px;font-weight:900}.score-label{text-align:center;color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.card{background:rgba(13,27,45,.92);border-radius:20px;padding:22px;box-shadow:var(--shadow)}.full{grid-column:1/-1}.card h2{font-size:19px;margin:0 0 5px}.sub{color:var(--muted);font-size:13px;margin-bottom:18px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}select,input,button{width:100%;font:inherit;border-radius:12px;border:1px solid #2a4562;background:#0a1728;color:var(--text);padding:12px}input:focus,select:focus{outline:2px solid #356f8c}button{cursor:pointer;background:linear-gradient(90deg,#24566d,#51457f);font-weight:800}.skills{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.skill{border:1px solid #2b4662;border-radius:999px;padding:7px 10px;font-size:12px;cursor:pointer;color:#bdd0e8}.skill.active{border-color:var(--accent);color:var(--accent);background:#10303c}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{padding:14px;border:1px solid var(--line);border-radius:14px;background:#0a1728}.metric b{display:block;font-size:22px}.metric span{color:var(--muted);font-size:11px}.bar{height:9px;background:#20334b;border-radius:99px;overflow:hidden;margin:10px 0 16px}.fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s}.gap{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #1b3047}.gap:last-child{border:0}.badge{font-size:11px;border-radius:999px;padding:4px 8px}.have{background:#123b30;color:var(--good)}.need{background:#422c20;color:var(--warn)}.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.step{border:1px solid var(--line);border-radius:16px;padding:16px;background:#0a1728}.step .n{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#203b57;color:var(--accent);font-weight:900}.step h3{font-size:14px;margin:12px 0 5px}.step p{font-size:12px;color:var(--muted);margin:0}.insight{border-left:3px solid var(--accent);padding:10px 14px;background:#0a1728;border-radius:0 12px 12px 0;color:#c9d8eb;margin-top:10px}.footer{text-align:center;color:#7289a5;font-size:12px;margin-top:28px}.footer a{color:var(--accent);text-decoration:none}@media(max-width:800px){.hero,.grid{grid-template-columns:1fr}.full{grid-column:auto}.controls,.metrics,.roadmap{grid-template-columns:1fr}.hero-main{padding:25px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<div class="hero-main">
+<div class="eyebrow">Career Intelligence Engine</div>
+<h1>CareerLens</h1>
+<p>Turn your current skills into a practical career signal: compare role fit, identify skill gaps, estimate market positioning, and follow a focused learning roadmap.</p>
+<span class="pill">📊 Data-driven</span><span class="pill">🧠 Explainable scoring</span><span class="pill">🚀 Interactive</span><span class="pill">⚡ No backend required</span>
+</div>
+<div class="score-card"><div class="score-ring" id="ring"><div class="score-num" id="score">72%</div></div><div class="score-label" id="scoreLabel">Role fit score</div></div>
+</section>
+
+<div class="grid">
+<section class="card">
+<h2>🎯 Target Role</h2><div class="sub">Choose the career direction you want to evaluate.</div>
+<div class="controls"><div><label for="role">Role</label><select id="role"></select></div><div><label for="exp">Experience</label><select id="exp"><option>Student / Beginner</option><option>Junior</option><option>Intermediate</option></select></div></div>
+<div style="margin-top:16px"><label>Your skills — click to toggle</label><div class="skills" id="skills"></div></div>
+</section>
+
+<section class="card">
+<h2>📈 Market Snapshot</h2><div class="sub">Illustrative benchmark signals for portfolio demonstration.</div>
+<div class="metrics"><div class="metric"><b id="salary">$62k</b><span>Illustrative median</span></div><div class="metric"><b id="demand">High</b><span>Demand signal</span></div><div class="metric"><b id="remote">78%</b><span>Remote-friendly signal</span></div></div>
+<div class="insight" id="insight">Strongest advantage: analytical thinking + Python foundation.</div>
+</section>
+
+<section class="card full">
+<h2>🧩 Skill Match Analysis</h2><div class="sub">The score is explainable: weighted core skills + supporting skills + experience adjustment.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+<div><label>Overall match</label><div class="bar"><div class="fill" id="fill"></div></div><div id="matchText" style="color:var(--muted);font-size:13px">Good starting position.</div></div>
+<div id="gaps"></div>
+</div>
+</section>
+
+<section class="card full">
+<h2>🗺️ Personalized Roadmap</h2><div class="sub">A practical sequence generated from your largest skill gaps.</div>
+<div class="roadmap" id="roadmap"></div>
+</section>
+
+<section class="card full">
+<h2>🔎 Decision Insight</h2><div class="sub">What to do next based on the current profile.</div>
+<div class="insight" id="decision"></div>
+</section>
+</div>
+
+<div class="footer">Built as a portfolio project by <a href="https://github.com/sakilurrashid1-star">Alkamah Sakilur Rashid</a> · CareerLens v1.0</div>
+</div>
+<script>
+const roles={
+"Data Analyst":{salary:"$58k",demand:"Very High",remote:"74%",core:["Python","SQL","Pandas","Statistics"],support:["Excel","Power BI","Data Visualization"],insight:"Your fastest path is to combine SQL + Python with clear business storytelling."},
+"Data Scientist":{salary:"$86k",demand:"High",remote:"78%",core:["Python","SQL","Pandas","Statistics","Machine Learning"],support:["NumPy","Scikit-learn","Data Visualization"],insight:"A strong analytics base becomes much more valuable when you add statistics and machine learning."},
+"ML Engineer":{salary:"$102k",demand:"High",remote:"71%",core:["Python","Machine Learning","APIs","Git"],support:["PyTorch","TensorFlow","Docker","SQL"],insight:"Focus on production skills: APIs, Git, deployment and model serving—not only notebooks."},
+"Full-Stack Developer":{salary:"$78k",demand:"Very High",remote:"69%",core:["JavaScript","React","Node.js","Git"],support:["MongoDB","SQL","REST APIs","Testing"],insight:"Your portfolio will stand out when projects demonstrate complete user-to-database workflows."},
+"Cybersecurity Analyst":{salary:"$76k",demand:"High",remote:"63%",core:["Networking","Linux","Python","Security Fundamentals"],support:["SIEM","OWASP","Git","SQL"],insight:"Build evidence through labs, secure coding and documented incident-analysis projects."}
+};
+const allSkills=["Python","SQL","Pandas","Statistics","Machine Learning","NumPy","Scikit-learn","Data Visualization","JavaScript","React","Node.js","Git","MongoDB","REST APIs","Testing","Networking","Linux","Security Fundamentals","OWASP","Docker","PyTorch","TensorFlow","Excel","Power BI","SIEM"];
+let selected=new Set(["Python","Git","Data Visualization"]);
+const roleEl=document.getElementById('role'),skillsEl=document.getElementById('skills');Object.keys(roles).forEach(r=>roleEl.add(new Option(r,r)));
+function renderSkills(){skillsEl.innerHTML='';allSkills.forEach(s=>{const b=document.createElement('button');b.type='button';b.className='skill '+(selected.has(s)?'active':'');b.textContent=s;b.onclick=()=>{selected.has(s)?selected.delete(s):selected.add(s);renderSkills();update()};skillsEl.appendChild(b)})}
+function update(){const r=roles[roleEl.value],exp=document.getElementById('exp').value;let matched=r.core.filter(s=>selected.has(s)).length;let support=r.support.filter(s=>selected.has(s)).length;let score=Math.round((matched/r.core.length)*75+(support/r.support.length)*25);if(exp==='Junior')score+=4;if(exp==='Intermediate')score+=7;score=Math.min(99,score);document.getElementById('score').textContent=score+'%';document.getElementById('ring').style.setProperty('--score',score+'%');document.getElementById('fill').style.width=score+'%';document.getElementById('salary').textContent=r.salary;document.getElementById('demand').textContent=r.demand;document.getElementById('remote').textContent=r.remote;document.getElementById('insight').textContent=r.insight;document.getElementById('scoreLabel').textContent=score>=85?'Strong role fit':score>=65?'Promising role fit':'Early-stage role fit';document.getElementById('matchText').textContent=score>=85?'You already cover most of the role’s core signals. Prioritize projects and measurable outcomes.':score>=65?'You have a useful foundation. Close the highest-value gaps before applying broadly.':'Treat this role as a longer-term target and build the core skill stack first.';
+const gaps=document.getElementById('gaps');gaps.innerHTML='<label>Skill gap map</label>';[...r.core,...r.support].forEach(s=>{const d=document.createElement('div');d.className='gap';d.innerHTML='<span>'+s+'</span><span class="badge '+(selected.has(s)?'have':'need')+'">'+(selected.has(s)?'Ready':'Build')+'</span>';gaps.appendChild(d)});
+const missing=r.core.filter(s=>!selected.has(s));const roadmap=document.getElementById('roadmap');roadmap.innerHTML='';const steps=[missing[0]||r.support[0],missing[1]||r.support[1],"Portfolio Project"];steps.forEach((s,i)=>{const d=document.createElement('div');d.className='step';d.innerHTML='<div class="n">'+(i+1)+'</div><h3>'+s+'</h3><p>'+(i===0?'Build the foundation with a focused mini-project and practice set.':i===1?'Apply the skill to a realistic dataset or production-style workflow.':'Ship a polished project with README, screenshots, tests and a measurable result.')+'</p>';roadmap.appendChild(d)});
+document.getElementById('decision').textContent=score>=85?'Apply + prove: target internships/jobs now and use one strong project to demonstrate the stack.':score>=65?'Close the top two gaps, then ship a focused project that directly demonstrates the target role.':'Build fundamentals first, document your progress, and reassess this role after completing the core roadmap.'}
+roleEl.onchange=update;document.getElementById('exp').onchange=update;renderSkills();update();
+</script>
+</body>
+</html>
