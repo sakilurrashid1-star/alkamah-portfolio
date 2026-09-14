@@ -5,26 +5,49 @@ A GitHub Pages-ready personal portfolio website showcasing projects, technical s
 ## ✨ Portfolio Highlights
 
 - 👨‍💻 Developer profile and introduction
-- 🚀 Featured technical projects
+- 🚀 **Project Command Center** — a dedicated premium project showcase
 - 🧠 Interactive CareerLens intelligence project
-- 🛠️ Technical skills and tools
+- 🛡️ NetPulse network intelligence and security lab
+- 🤖 AetherMind decision intelligence lab
 - 📊 Data & AI interests
+- 🛠️ Technical skills and tools
 - 🎯 Professional goals
 - 🤝 Contact and social links
 - 📱 Responsive web experience
 
+## 🚀 Project Command Center
+
+The portfolio now has a dedicated, interactive project surface at:
+
+`/projects/`
+
+It presents projects as engineering case studies rather than a simple card grid, including:
+
+- live-demo and source-code pathways
+- domain filters and project search
+- engineering-depth / product-maturity indicators
+- case-study modal views
+- architecture and engineering-method sections
+- explicit boundaries between real, simulated and synthetic data
+- responsive desktop/mobile presentation
+
 ## ⭐ Featured Projects
+
+### 🛡️ NetPulse — Network Intelligence & Security Investigation Lab
+
+Browser-native network analysis environment covering traffic simulation, packet flows, PCAP/PCAPNG analysis, protocol intelligence, flow analytics, timelines, relationship graphs, heuristic findings and SOC-style investigation.
+
+### 🧠 AetherMind — Explainable Decision Intelligence
+
+Decision laboratory modeling ambition, risk, time, resources and uncertainty into explainable scores, scenario lenses, parallel futures and a human-challenge layer.
 
 ### 🧠 CareerLens — Data-Driven Career Intelligence
 
-An interactive browser-based career intelligence dashboard that evaluates role fit, maps skill gaps, shows illustrative market signals, and generates a focused learning roadmap.
-
-**Tech:** HTML5 · CSS3 · JavaScript  
-**Project:** `projects/career-intelligence/`
+Interactive browser-based career intelligence dashboard that evaluates role fit, maps skill gaps, shows illustrative market signals, and generates a focused learning roadmap.
 
 ### 🤖 NexusMarket AI
 
-Interactive Python/Streamlit dashboard for technology-job-market and skills analytics.
+Interactive Python/Streamlit dashboard for technology-job-market and skills analytics using explicitly synthetic data.
 
 ### ⚡ High-Availability MERN Task Manager
 
@@ -50,6 +73,7 @@ alkamah-portfolio/
 ├── index.html
 ├── .nojekyll
 ├── projects/
+│   ├── index.html                 # Project Command Center
 │   └── career-intelligence/
 │       ├── index.html
 │       └── README.md
@@ -67,7 +91,7 @@ cd alkamah-portfolio
 
 Open `index.html` directly in a browser, or serve the folder with a local development server.
 
-To view CareerLens locally, open `projects/career-intelligence/index.html`.
+To view the Project Command Center locally, open `projects/index.html`.
 
 ## 🌍 GitHub Pages Deployment
 
@@ -77,7 +101,7 @@ To view CareerLens locally, open `projects/career-intelligence/index.html`.
 4. Select the `main` branch and `/(root)`.
 5. Save the configuration.
 
-GitHub Pages can serve the CareerLens project directly from its nested folder.
+GitHub Pages serves nested project pages directly from their folders.
 
 ## 🔄 Updating the Portfolio
 
