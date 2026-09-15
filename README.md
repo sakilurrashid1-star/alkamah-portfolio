@@ -6,6 +6,7 @@ A GitHub Pages-ready personal portfolio website showcasing projects, technical s
 
 - 👨‍💻 Developer profile and introduction
 - 🚀 **Project Command Center** — a dedicated premium project showcase
+- 🛡️ **10-Minute Engineering Challenge** — flagship SOC incident-response simulation
 - 🧠 Interactive CareerLens intelligence project
 - 🛡️ NetPulse network intelligence and security lab
 - 🤖 AetherMind decision intelligence lab
@@ -32,6 +33,15 @@ It presents projects as engineering case studies rather than a simple card grid,
 - responsive desktop/mobile presentation
 
 ## ⭐ Featured Projects
+
+### 🛡️ 10-Minute Engineering Challenge — SOC Incident Response Simulation
+
+**Flagship cybersecurity engineering artifact.** A ten-minute, browser-based incident-response simulation where the analyst must correlate telemetry, contain an active threat without unnecessarily destroying evidence, expand the hunt across identity/endpoint/network dimensions, and produce a decision-quality executive handoff.
+
+**Core capabilities:** cross-source triage · IOC correlation · containment strategy · volatile evidence discipline · threat hunting · MITRE ATT&CK-oriented reasoning · executive communication · deterministic readiness scoring.
+
+**Live:** https://sakilurrashid1-star.github.io/10-Minute-Engineering-Challenge/
+**Source:** https://github.com/sakilurrashid1-star/10-Minute-Engineering-Challenge
 
 ### 🛡️ NetPulse — Network Intelligence & Security Investigation Lab
 
@@ -74,6 +84,7 @@ alkamah-portfolio/
 ├── .nojekyll
 ├── projects/
 │   ├── index.html                 # Project Command Center
+│   ├── 10-minute-engineering-challenge.html
 │   └── career-intelligence/
 │       ├── index.html
 │       └── README.md
