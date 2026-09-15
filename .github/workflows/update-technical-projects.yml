@@ -1,0 +1,93 @@
+name: Sync GitHub Projects to Technical Projects
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add missing GitHub projects
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          projects = [
+              ('10-Minute Engineering Challenge',
+               'Cybersecurity, SOC, MITRE ATT&CK, Threat Hunting',
+               'A time-boxed browser SOC incident-response simulation focused on evidence-based triage, containment, threat hunting, identity pivots, and executive incident communication.',
+               'fas fa-shield-halved',
+               'https://github.com/sakilurrashid1-star/10-Minute-Engineering-Challenge'),
+              ('NetPulse',
+               'PCAP, TCP/IP, SOC, NDR, Network Intelligence',
+               'A browser-native network investigation lab with packet-flow simulation, PCAP/PCAPNG parsing, protocol intelligence, timelines, relationship graphs, and SOC investigation workflows.',
+               'fas fa-network-wired',
+               'https://github.com/sakilurrashid1-star/-NetPulse'),
+              ('AetherMind',
+               'Decision Intelligence, Explainability, Scenario Modeling',
+               'An explainable decision-intelligence laboratory that models ambition, risk, time, resources, and uncertainty into structured scores and scenario lenses.',
+               'fas fa-brain',
+               'https://github.com/sakilurrashid1-star/AetherMind-Decision-Intelligence-Lab'),
+              ('CareerLens',
+               'Analytics, Role-Fit Scoring, Skill Graphs',
+               'An interactive career-intelligence engine for comparing technical paths, explaining role-fit scores, identifying skill gaps, and producing practical roadmaps.',
+               'fas fa-user-graduate',
+               'https://github.com/sakilurrashid1-star/CareerLens'),
+          ]
+
+          anchor = '            projects: [\n'
+          start = html.find(anchor)
+          if start == -1:
+              raise SystemExit('projects array not found')
+
+          end = html.find('            ],\n            \n            awards:', start)
+          if end == -1:
+              raise SystemExit('end of projects array not found')
+
+          block = html[start:end]
+          missing = [p for p in projects if f'title: "{p[0]}"' not in block]
+
+          if missing:
+              entries = []
+              for title, tech, desc, icon, github in missing:
+                  entries.append(
+                      '                {\n'
+                      f'                    title: "{title}",\n'
+                      f'                    tech: "{tech}",\n'
+                      f'                    desc: "{desc}",\n'
+                      f'                    icon: "{icon}",\n'
+                      f'                    github: "{github}"\n'
+                      '                }'
+                  )
+
+              separator = ',\n' if block.rstrip().endswith('}') else ''
+              new_block = block.rstrip() + separator + ',\n'.join(entries) + '\n'
+              html = html[:start] + new_block + html[end:]
+              path.write_text(html, encoding='utf-8')
+              print(f'Added {len(missing)} GitHub projects.')
+          else:
+              print('All requested GitHub projects are already present.')
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Add GitHub projects to Technical Projects [skip ci]"
+            git push
+          fi
