@@ -1,0 +1,29 @@
+name: Inspect Existing Cultural Markup
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print Cultural Moments context only
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          text = Path('index.html').read_text(encoding='utf-8')
+          terms = ['Cultural Moments', 'cultural moments', 'CSE Picnic', 'cse-picnic', 'picnic']
+          for term in terms:
+              print(f'\n===== TERM: {term} =====')
+              for m in re.finditer(re.escape(term), text):
+                  a=max(0,m.start()-1200); b=min(len(text),m.end()+1800)
+                  print(text[a:b])
+                  print('\n-----\n')
+          print('INDEX SIZE:', len(text))
