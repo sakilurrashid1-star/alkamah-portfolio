@@ -13,17 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Print Cultural Moments context only
+      - name: Inspect exact gallery structure
         shell: python
         run: |
           from pathlib import Path
           import re
           text = Path('index.html').read_text(encoding='utf-8')
-          terms = ['Cultural Moments', 'cultural moments', 'CSE Picnic', 'cse-picnic', 'picnic']
-          for term in terms:
-              print(f'\n===== TERM: {term} =====')
-              for m in re.finditer(re.escape(term), text):
-                  a=max(0,m.start()-1200); b=min(len(text),m.end()+1800)
-                  print(text[a:b])
-                  print('\n-----\n')
           print('INDEX SIZE:', len(text))
+          print('data:image occurrences:', len(re.findall(r'data:image/[^;]+;base64,', text)))
+          print('cultural gallery buttons:', len(re.findall(r'class="cultural-gallery-item', text)))
+          print('openCulturalLightbox calls:', len(re.findall(r'openCulturalLightbox\(', text)))
+          print('image tags:', len(re.findall(r'<img\b', text)))
+          for m in re.finditer(r'class="cultural-gallery-item', text):
+              start=max(0,m.start()-200)
+              end=min(len(text),m.start()+700)
+              snippet=text[start:end]
+              print('\n--- GALLERY ITEM ---\n', snippet[:1000])
+          for m in re.finditer(r'openCulturalLightbox\(', text):
+              start=max(0,m.start()-300)
+              end=min(len(text),m.start()+500)
+              print('\n--- LIGHTBOX CONTEXT ---\n', text[start:end])
