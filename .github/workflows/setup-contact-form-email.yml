@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure contact form
+      - name: Configure contact form for real email submission
         shell: python
         run: |
           from pathlib import Path
@@ -24,51 +24,43 @@ jobs:
           path = Path('index.html')
           html = path.read_text(encoding='utf-8')
 
-          if 'formsubmit.co/sakilurrashid@gmail.com' in html:
-              print('Contact form already configured.')
-              raise SystemExit(0)
+          target = 'https://formsubmit.co/sakilurrashid@gmail.com'
+          if target not in html:
+              raise SystemExit('Expected FormSubmit destination not found; no changes made.')
 
-          marker = re.search(r'<section[^>]+id=[\"\']contact[\"\'][^>]*>', html, re.I)
-          if not marker:
-              raise SystemExit('Contact section not found; no changes made.')
+          # FormSubmit needs the browser's native POST. The previous JavaScript
+          # handler called preventDefault(), which kept the form in demo mode.
+          # Remove only that cancellation call; leave the existing UI/validation intact.
+          old = "document.getElementById('contactForm').addEventListener('submit', (e) => {\n            e.preventDefault();"
+          new = "document.getElementById('contactForm').addEventListener('submit', (e) => {\n            // Native POST to FormSubmit is intentional: do not call preventDefault()."
 
-          section_start = marker.start()
-          section_end = html.find('</section>', marker.end())
-          if section_end == -1:
-              raise SystemExit('Contact section closing tag not found; no changes made.')
-
-          section = html[section_start:section_end]
-          form_match = re.search(r'<form\b([^>]*)>', section, re.I)
-          if not form_match:
-              raise SystemExit('Contact form not found inside #contact; no changes made.')
-
-          attrs = form_match.group(1)
-          if re.search(r'\baction\s*=', attrs, re.I):
-              attrs = re.sub(r'\baction\s*=\s*([\"\']).*?\1', 'action="https://formsubmit.co/sakilurrashid@gmail.com"', attrs, count=1, flags=re.I)
+          if old in html:
+              html = html.replace(old, new, 1)
+              print('Removed JavaScript submission cancellation.')
+          elif new in html:
+              print('Submission cancellation already removed.')
           else:
-              attrs += ' action="https://formsubmit.co/sakilurrashid@gmail.com"'
-          if not re.search(r'\bmethod\s*=', attrs, re.I):
-              attrs += ' method="POST"'
+              raise SystemExit('Expected contact-form submit handler not found; no changes made.')
 
-          form_open_old = form_match.group(0)
-          form_open_new = '<form' + attrs + '>'
-          section = section.replace(form_open_old, form_open_new, 1)
+          # Ensure the fields required by FormSubmit are present.
+          html = re.sub(
+              r'(<input\\b[^>]*type=[\"\']email[\"\'][^>]*)(>)',
+              lambda m: m.group(1) if re.search(r'\\bname\\s*=\\s*[\"\']email[\"\']', m.group(1), re.I) else m.group(1) + ' name="email"' + m.group(2),
+              html, count=1, flags=re.I
+          )
+          html = re.sub(
+              r'(<textarea\\b[^>]*)(>)',
+              lambda m: m.group(1) if re.search(r'\\bname\\s*=\\s*[\"\']message[\"\']', m.group(1), re.I) else m.group(1) + ' name="message"' + m.group(2),
+              html, count=1, flags=re.I
+          )
 
-          # Make the email field replyable by FormSubmit.
-          section = re.sub(r'(<input\b[^>]*type=[\"\']email[\"\'][^>]*)(>)', lambda m: m.group(1) if re.search(r'\bname\s*=', m.group(1), re.I) else m.group(1) + ' name="email"' + m.group(2), section, count=1, flags=re.I)
-          section = re.sub(r'(<textarea\b[^>]*)(>)', lambda m: m.group(1) if re.search(r'\bname\s*=', m.group(1), re.I) else m.group(1) + ' name="message"' + m.group(2), section, count=1, flags=re.I)
-
-          hidden = '''\n                    <input type="hidden" name="_subject" value="New Portfolio Contact — Let's Work Together">\n                    <input type="hidden" name="_template" value="table">\n                    <input type="hidden" name="_captcha" value="true">\n                    <input type="hidden" name="_next" value="https://sakilurrashid1-star.github.io/alkamah-portfolio/?submitted=1#contact">\n          '''
-          insert_at = form_open_new
-          section = section.replace(insert_at, insert_at + hidden, 1)
-
-          html = html[:section_start] + section + html[section_end:]
           path.write_text(html, encoding='utf-8')
-          print('Contact form configured successfully.')
+          print('Contact form is configured for native FormSubmit POST.')
+
       - name: Commit change
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet && echo "No changes to commit." || git commit -m "Connect Let's Work Together form to email"
+          git diff --cached --quiet && echo "No changes to commit." || git commit -m "Fix contact form email submission"
           git push
