@@ -1,0 +1,1 @@
+This file triggers the Professional Experience animation installer workflow. It can remain in the repository as a lightweight audit marker.
