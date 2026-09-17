@@ -1,0 +1,34 @@
+name: Cultural Gallery Safe Inspect 2
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect without changing files
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          text=Path('index.html').read_text(encoding='utf-8')
+          print('size',len(text))
+          print('gallery buttons',len(re.findall(r'cultural-gallery-item',text)))
+          print('data urls',len(re.findall(r'data:image/[^;]+;base64,',text)))
+          for pat in [r'const\s+\w*?[Cc]ultural\w*?\s*=.*?;', r'function\s+openCulturalLightbox.*?\}', r'culturalGallery\w*']:
+              hits=re.findall(pat,text,re.S)
+              print('PATTERN',pat,'HITS',len(hits))
+              for h in hits[:10]:
+                  print(h[:1500].replace('base64,','base64,[DATA]'))
+          # Report every gallery button's img src type/length, without printing image data.
+          for i,m in enumerate(re.finditer(r'<button[^>]*class="[^"]*cultural-gallery-item[^"]*"[\s\S]*?</button>',text),1):
+              block=m.group(0)
+              imgs=re.findall(r'<img\b[^>]*?src="([^"]+)"',block,re.S)
+              print('ITEM',i,'IMG_COUNT',len(imgs),[(x[:30],len(x)) for x in imgs])
