@@ -1,0 +1,40 @@
+name: Fix CSE Picnic gallery visibility
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix-gallery:
+    if: ${{ !contains(github.event.head_commit.message, 'Fix CSE Picnic gallery visibility') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Make gallery visibly render in main page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '<!-- CSE-PICNIC-2026-FORCE -->'
+          if marker in s:
+              print('Visibility fix already present')
+              raise SystemExit(0)
+          block = r'''\n<!-- CSE-PICNIC-2026-FORCE -->\n<section id="cse-picnic-2026-force" aria-label="CSE Picnic 2026 Cultural Moments" style="display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:9999!important;width:min(1200px,92vw)!important;margin:48px auto!important;padding:28px!important;border-radius:28px!important;background:rgba(255,255,255,.06)!important;box-sizing:border-box!important;">\n  <div style="text-align:center!important;margin-bottom:24px!important;">\n    <h2 style="margin:0 0 8px!important;">Cultural Moments — CSE Picnic 2026</h2>\n    <p style="margin:0!important;opacity:.78!important;">Presidency University · CSE Picnic 2026</p>\n  </div>\n  <div style="display:grid!important;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))!important;gap:18px!important;">\n    <a href="DSC07337.JPG" target="_blank" rel="noopener"><img src="DSC07337.JPG" alt="CSE Picnic 2026 performance" style="display:block!important;width:100%!important;height:320px!important;object-fit:cover!important;border-radius:18px!important;"></a>\n    <a href="DSC07351.JPG" target="_blank" rel="noopener"><img src="DSC07351.JPG" alt="CSE Picnic 2026 stage moment" style="display:block!important;width:100%!important;height:320px!important;object-fit:cover!important;border-radius:18px!important;"></a>\n    <a href="DSC07355.JPG" target="_blank" rel="noopener"><img src="DSC07355.JPG" alt="CSE Picnic 2026 audience moment" style="display:block!important;width:100%!important;height:320px!important;object-fit:cover!important;border-radius:18px!important;"></a>\n    <a href="DSC07357.JPG" target="_blank" rel="noopener"><img src="DSC07357.JPG" alt="CSE Picnic 2026 cultural moment" style="display:block!important;width:100%!important;height:320px!important;object-fit:cover!important;border-radius:18px!important;"></a>\n    <a href="DSC07371.JPG" target="_blank" rel="noopener"><img src="DSC07371.JPG" alt="CSE Picnic 2026 cultural performance" style="display:block!important;width:100%!important;height:320px!important;object-fit:cover!important;border-radius:18px!important;"></a>\n  </div>\n</section>\n'''
+          m = re.search(r'<body\b[^>]*>', s, flags=re.I)
+          if not m:
+              raise SystemExit('No body tag found')
+          s = s[:m.end()] + block + s[m.end():]
+          p.write_text(s, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Fix CSE Picnic gallery visibility"
+          git push
