@@ -967,7 +967,7 @@
 
         // Form Submit Logic
         document.getElementById('contactForm').addEventListener('submit', (e) => {
-            e.preventDefault();
+            // Native POST to FormSubmit is intentional: do not call preventDefault().
             const btn = document.getElementById('submitBtn'), stat = document.getElementById('formStatus');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             btn.disabled = true; stat.classList.add('hidden');
