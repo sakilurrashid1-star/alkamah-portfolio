@@ -1,0 +1,25 @@
+name: Restore gallery before replacement
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    if: github.event.head_commit.message != 'Restore Cultural Moments to pre-picnic state'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore index from pre-gallery commit
+        run: |
+          git checkout 37ac2b1616c44625678ed3479c0462cc3f81fe39 -- index.html
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Restore Cultural Moments to pre-picnic state"
+          git push
