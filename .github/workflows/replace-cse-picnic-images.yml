@@ -1,0 +1,79 @@
+name: Replace CSE Picnic Images Safely
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  replace-images:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Replace only the five existing CSE Picnic image paths
+        shell: python
+        run: |
+          from pathlib import Path
+          import sys
+
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+
+          replacements = {
+              'assets/cse-picnic-2026-01.jpg': 'DSC07337.JPG',
+              'assets/cse-picnic-2026-02.jpg': 'DSC07351.JPG',
+              'assets/cse-picnic-2026-03.jpg': 'DSC07355.JPG',
+              'assets/cse-picnic-2026-04.jpg': 'DSC07357.JPG',
+              'assets/cse-picnic-2026-05.jpg': 'DSC07371.JPG',
+          }
+
+          missing = [old for old in replacements if old not in text]
+          if missing:
+              print('SAFE STOP: expected existing placeholder paths were not found:', missing)
+              sys.exit(1)
+
+          for old, new in replacements.items():
+              count = text.count(old)
+              if count != 1:
+                  print(f'SAFE STOP: expected exactly one occurrence of {old}, found {count}')
+                  sys.exit(1)
+
+          new_text = text
+          for old, new in replacements.items():
+              new_text = new_text.replace(old, new)
+
+          if new_text == text:
+              print('SAFE STOP: no change produced')
+              sys.exit(1)
+
+          p.write_text(new_text, encoding='utf-8')
+          print('Safe replacement complete: only five image src paths changed.')
+
+      - name: Validate HTML file is non-empty and contains all five new images
+        shell: python
+        run: |
+          from pathlib import Path
+          import sys
+          text = Path('index.html').read_text(encoding='utf-8')
+          required = ['DSC07337.JPG','DSC07351.JPG','DSC07355.JPG','DSC07357.JPG','DSC07371.JPG']
+          if not text.strip() or any(x not in text for x in required):
+              print('SAFE STOP: validation failed')
+              sys.exit(1)
+          print('Validation passed.')
+
+      - name: Commit the surgical change and remove this temporary workflow
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html .github/workflows/replace-cse-picnic-images.yml
+          git rm .github/workflows/replace-cse-picnic-images.yml
+          git commit -m 'Add original CSE Picnic 2026 photos to existing Cultural Moments gallery'
+          git push origin main
