@@ -1,0 +1,136 @@
+name: Add CSE Picnic Photos Safely
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  add-gallery:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Add photos only inside existing Cultural Moments section
+        shell: python
+        run: |
+          from pathlib import Path
+          import re, sys
+
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+          original = text
+
+          # Locate the exact existing Cultural Moments section.
+          hits = list(re.finditer(r'Cultural Moments', text, re.I))
+          if not hits:
+              print('SAFE STOP: Cultural Moments heading not found.')
+              sys.exit(1)
+          if len(hits) > 3:
+              print('SAFE STOP: too many Cultural Moments matches:', len(hits))
+              sys.exit(1)
+          h = hits[0]
+          section_start = text.rfind('<section', 0, h.start())
+          section_end = text.find('</section>', h.end())
+          if section_start < 0 or section_end < 0:
+              print('SAFE STOP: could not isolate Cultural Moments section.')
+              sys.exit(1)
+          section_end += len('</section>')
+          section = text[section_start:section_end]
+
+          # Do not touch the page if this exact addition already exists.
+          if 'CSE Picnic 2026' in section or 'DSC07337.JPG' in section:
+              print('Already present; no change needed.')
+              sys.exit(0)
+
+          # Find an existing gallery container inside this section and reuse its styling.
+          container_matches = list(re.finditer(r'<([a-zA-Z][\w:-]*)\b[^>]*class=["\'][^"\']*(?:cultural[^"\']*gallery|gallery[^"\']*cultural)[^"\']*["\'][^>]*>', section, re.I))
+          if not container_matches:
+              container_matches = list(re.finditer(r'<([a-zA-Z][\w:-]*)\b[^>]*class=["\'][^"\']*gallery[^"\']*["\'][^>]*>', section, re.I))
+          if not container_matches:
+              print('SAFE STOP: no existing gallery container found in Cultural Moments; refusing to invent a new design.')
+              sys.exit(1)
+
+          cm = container_matches[0]
+          tag = cm.group(1)
+          open_tag_end = cm.end()
+
+          # Find the matching closing tag for this container, accounting for nesting.
+          tag_re = re.compile(r'<(/?)' + re.escape(tag) + r'\b[^>]*>', re.I)
+          depth = 0
+          close_start = None
+          for m in tag_re.finditer(section, cm.start()):
+              if m.group(1):
+                  depth -= 1
+                  if depth == 0:
+                      close_start = m.start()
+                      break
+              elif not m.group(0).rstrip().endswith('/>'):
+                  depth += 1
+          if close_start is None:
+              print('SAFE STOP: could not find gallery closing tag.')
+              sys.exit(1)
+
+          # Reuse the existing gallery item's visual class if available.
+          inside = section[open_tag_end:close_start]
+          item_match = re.search(r'<([a-zA-Z][\w:-]*)\b[^>]*class=["\'][^"\']*(?:gallery-item|cultural[^"\']*item)[^"\']*["\'][^>]*>', inside, re.I)
+          item_tag = item_match.group(1) if item_match else 'div'
+          item_class = None
+          if item_match:
+              cls = re.search(r'class=["\']([^"\']+)["\']', item_match.group(0), re.I)
+              item_class = cls.group(1) if cls else None
+          if not item_class:
+              item_class = 'cultural-gallery-item'
+
+          photos = [
+              ('DSC07337.JPG', 'CSE Picnic 2026 – Stage Performance'),
+              ('DSC07351.JPG', 'CSE Picnic 2026 – Cultural Performance'),
+              ('DSC07355.JPG', 'CSE Picnic 2026 – Live Performance'),
+              ('DSC07357.JPG', 'CSE Picnic 2026 – Audience Moment'),
+              ('DSC07371.JPG', 'CSE Picnic 2026 – Cultural Moment'),
+          ]
+
+          items = []
+          for filename, alt in photos:
+              items.append(f'''\n        <{item_tag} class="{item_class}">\n          <img src="{filename}" alt="{alt}" loading="lazy">\n          <div class="cultural-gallery-caption">CSE Picnic 2026</div>\n        </{item_tag}>''')
+          addition = '\n'.join(items) + '\n      '
+
+          new_section = section[:close_start] + addition + section[close_start:]
+          new_text = text[:section_start] + new_section + text[section_end:]
+
+          if new_text == original:
+              print('SAFE STOP: no change produced.')
+              sys.exit(1)
+          if any(x not in new_text for x, _ in photos):
+              print('SAFE STOP: one or more image paths missing after edit.')
+              sys.exit(1)
+          if new_text.count('CSE Picnic 2026') != 5:
+              print('SAFE STOP: unexpected CSE Picnic count:', new_text.count('CSE Picnic 2026'))
+              sys.exit(1)
+
+          p.write_text(new_text, encoding='utf-8')
+          print('SUCCESS: added exactly five CSE Picnic 2026 images inside the existing Cultural Moments gallery.')
+
+      - name: Validate and commit
+        shell: bash
+        run: |
+          git diff --check
+          test -s index.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Add original CSE Picnic 2026 photos to Cultural Moments'
+          git push origin main
+
+      - name: Remove this temporary workflow
+        if: success()
+        shell: bash
+        run: |
+          git rm .github/workflows/add-cse-picnic-safely.yml
+          git commit -m 'Remove temporary CSE Picnic workflow'
+          git push origin main
