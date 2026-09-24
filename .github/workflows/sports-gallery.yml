@@ -1,70 +1,65 @@
-name: Add Sports Gallery to Portfolio
+name: Fix Sports Section
 on:
   push:
     branches: [main]
 permissions:
   contents: write
 jobs:
-  add-sports-gallery:
+  fix-sports:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Inject sports gallery into homepage
+      - name: Put the uploaded sports photos inside the existing Sports Activities section
         shell: python
         run: |
           from pathlib import Path
-          p = Path("index.html")
-          s = p.read_text(encoding="utf-8")
-          start = "<!-- SPORTS-GALLERY-START -->"
-          end = "<!-- SPORTS-GALLERY-END -->"
-          if start in s and end in s:
-              raise SystemExit(0)
-          gallery = r'''
-          <!-- SPORTS-GALLERY-START -->
-          <section id="sports-gallery" aria-label="Sports & Football">
-            <style>
-              #sports-gallery{margin:80px auto;max-width:1180px;padding:0 20px}
-              #sports-gallery .sg-head{text-align:center;margin-bottom:28px}
-              #sports-gallery .sg-kicker{letter-spacing:.18em;text-transform:uppercase;font-size:.75rem;opacity:.7}
-              #sports-gallery h2{font-size:clamp(2rem,4vw,3.2rem);margin:.35rem 0}
-              #sports-gallery .sg-sub{opacity:.72;max-width:700px;margin:0 auto}
-              #sports-gallery .sg-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:30px}
-              #sports-gallery figure{margin:0;overflow:hidden;border-radius:22px;background:rgba(255,255,255,.05);box-shadow:0 18px 50px rgba(0,0,0,.22)}
-              #sports-gallery img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;transition:transform .45s ease}
-              #sports-gallery figure:nth-child(2) img{aspect-ratio:3/4}
-              #sports-gallery figure:hover img{transform:scale(1.025)}
-              #sports-gallery figcaption{padding:14px 16px;font-size:.92rem;opacity:.82}
-              @media(max-width:760px){#sports-gallery .sg-grid{grid-template-columns:1fr}#sports-gallery figure:nth-child(2) img{aspect-ratio:16/10}}
-            </style>
-            <div class="sg-head">
-              <div class="sg-kicker">Sports & Football</div>
-              <h2>On the Field</h2>
-              <p class="sg-sub">Team spirit, competition, leadership and memorable moments from Presidency University CSE football activities.</p>
-            </div>
-            <div class="sg-grid">
-              <figure>
-                <img src="assets/sports-football-action.jpg" alt="Presidency University CSE football activities" loading="lazy">
-                <figcaption>Football action and team moments.</figcaption>
-              </figure>
-              <figure>
-                <img src="assets/sports-medal-ceremony.jpg" alt="Presidency University sports medal ceremony" loading="lazy">
-                <figcaption>Recognition, teamwork and achievement.</figcaption>
-              </figure>
-            </div>
-          </section>
-          <!-- SPORTS-GALLERY-END -->
-          '''
-          body = s.lower().rfind("</body>")
-          if body == -1:
-              s += gallery
-          else:
-              s = s[:body] + gallery + "\n" + s[body:]
-          p.write_text(s, encoding="utf-8")
-      - name: Commit homepage update
+          import re
+          p=Path("index.html")
+          s=p.read_text(encoding="utf-8")
+          old='''      <div id="sports-activities" class="rounded-3xl p-8 md:p-10 border border-accent/20 bg-accent/[0.04] scroll-mt-24">
+        <div class="flex items-center gap-4 mb-5">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-accent/15 text-accent"><i class="fas fa-trophy"></i></div>
+          <div><p class="text-sm text-accent font-semibold uppercase tracking-wider">Segment 03</p><h3 class="text-3xl font-bold">Sports Activities</h3></div>
+        </div>
+        <p class="text-gray-400 mb-6">Sports participation, tournaments, teamwork, achievements, and memorable moments.</p>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="rounded-2xl border border-white/10 bg-black/10 p-5"><i class="fas fa-medal text-accent mb-3"></i><h4 class="font-bold">Sports Events</h4><p class="text-sm text-gray-500 mt-1">Details can be added later.</p></div>
+          <div class="rounded-2xl border border-white/10 bg-black/10 p-5"><i class="fas fa-ranking-star text-accent mb-3"></i><h4 class="font-bold">Achievements</h4><p class="text-sm text-gray-500 mt-1">Awards and results can be added later.</p></div>
+          <div class="rounded-2xl border border-dashed border-accent/30 bg-black/10 p-5"><i class="fas fa-photo-film text-accent mb-3"></i><h4 class="font-bold">Media Gallery</h4><p class="text-sm text-gray-500 mt-1">Photos &amp; videos will be added later.</p></div>
+        </div>
+      </div>'''
+          new='''      <div id="sports-activities" class="rounded-3xl p-8 md:p-10 border border-accent/20 bg-accent/[0.04] scroll-mt-24">
+        <div class="flex items-center gap-4 mb-5">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-accent/15 text-accent"><i class="fas fa-trophy"></i></div>
+          <div><p class="text-sm text-accent font-semibold uppercase tracking-wider">Segment 03</p><h3 class="text-3xl font-bold">Sports Activities</h3></div>
+        </div>
+        <p class="text-gray-400 mb-7">Football, team leadership, competition, achievements, and memorable moments from Presidency University CSE sports activities.</p>
+        <div class="grid md:grid-cols-2 gap-5">
+          <figure class="group overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+            <img src="assets/sports-medal-ceremony.jpg" alt="Presidency University sports medal ceremony and team recognition" class="w-full h-[320px] object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+            <figcaption class="p-4"><h4 class="font-bold text-white">Recognition &amp; Achievement</h4><p class="text-sm text-gray-500 mt-1">A memorable sports recognition moment with teammates and fellow participants.</p></figcaption>
+          </figure>
+          <figure class="group overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+            <img src="assets/sports-football-action.jpg" alt="Presidency University CSE football match and team moments" class="w-full h-[320px] object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+            <figcaption class="p-4"><h4 class="font-bold text-white">Football &amp; Team Spirit</h4><p class="text-sm text-gray-500 mt-1">Match action, team coordination, and the competitive spirit of CSE football.</p></figcaption>
+          </figure>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4 mt-5">
+          <div class="rounded-2xl border border-white/10 bg-black/10 p-5"><i class="fas fa-futbol text-accent mb-3"></i><h4 class="font-bold">Football</h4><p class="text-sm text-gray-500 mt-1">Active participation in university football activities and tournaments.</p></div>
+          <div class="rounded-2xl border border-white/10 bg-black/10 p-5"><i class="fas fa-people-group text-accent mb-3"></i><h4 class="font-bold">Teamwork</h4><p class="text-sm text-gray-500 mt-1">Building coordination, communication, and team spirit on the field.</p></div>
+          <div class="rounded-2xl border border-accent/30 bg-accent/[0.06] p-5"><i class="fas fa-crown text-accent mb-3"></i><h4 class="font-bold">Leadership</h4><p class="text-sm text-gray-500 mt-1">Leadership experience through team participation and captaincy.</p></div>
+        </div>
+      </div>'''
+          if old not in s:
+              raise SystemExit("Original Sports Activities block not found")
+          s=s.replace(old,new,1)
+          s=re.sub(r'\s*<!-- SPORTS-GALLERY-START -->.*?<!-- SPORTS-GALLERY-END -->\s*', '\n', s, flags=re.S)
+          p.write_text(s,encoding="utf-8")
+      - name: Commit and remove temporary workflow
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/sports-gallery.yml
           git add index.html
-          git diff --cached --quiet && exit 0
-          git commit -m "Add sports gallery to portfolio homepage"
+          git commit -m "Integrate sports photos into Sports Activities section"
           git push
