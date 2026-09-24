@@ -65,7 +65,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm .github/workflows/sports-gallery.yml
           git add index.html
           git commit -m "Integrate sports photos into Sports Activities"
           git push
