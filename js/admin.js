@@ -162,14 +162,14 @@ if (isFirebaseReady) {
                 AdminState.authMethod = 'google';
                 localStorage.setItem('alkamah_admin_session', 'active');
                 updateNavbarAdminStatus();
-                showAdminToast(`স্বাগতম আলকামাহ! (${user.displayName || user.email})`, 'success');
+                showAdminToast(`Welcome Alkamah! (${user.displayName || user.email})`, 'success');
                 loadInboxMessages();
             } else {
                 await signOut(auth);
                 AdminState.isAdmin = false;
                 AdminState.user = null;
                 updateNavbarAdminStatus();
-                showAdminToast('অননুমোদিত অ্যাকাউন্ট। শুধুমাত্র sakilurrashid1@gmail.com প্রবেশ করতে পারবে।', 'error');
+                showAdminToast('Unauthorized account. Access restricted to sakilurrashid1@gmail.com.', 'error');
             }
         } else {
             // Check if passcode session was active
@@ -189,7 +189,7 @@ if (isFirebaseReady) {
 // Login With Google
 export async function loginWithGoogle() {
     if (!isFirebaseReady) {
-        showAdminToast('Firebase ক্লাউড সংযোগ সক্রিয় নয়। মাস্টার কোড দিয়ে লগইন করুন।', 'error');
+        showAdminToast('Firebase cloud connection is not active. Please sign in with master passcode.', 'error');
         return;
     }
     
@@ -205,22 +205,22 @@ export async function loginWithGoogle() {
             AdminState.authMethod = 'google';
             closeAdminAuthModal();
             openAdminDashboard();
-            showAdminToast('অ্যাডমিন হিসেবে সফলভাবে লগইন হয়েছে!', 'success');
+            showAdminToast('Signed in as Administrator successfully!', 'success');
             loadInboxMessages();
         } else {
             await signOut(auth);
-            showAdminToast('এই গুগল অ্যাকাউন্টে অ্যাডমিন অনুমতি নেই।', 'error');
+            showAdminToast('This Google account does not have administrator privileges.', 'error');
         }
     } catch (err) {
         console.error('Google Sign-in Error:', err);
-        showAdminToast('গুগল লগইন সম্পন্ন হয়নি: ' + (err.message || 'Error'), 'error');
+        showAdminToast('Google sign-in failed: ' + (err.message || 'Error'), 'error');
     }
 }
 
 // Login With Email & Password
 export async function loginWithEmail(email, password) {
     if (!isFirebaseReady) {
-        showAdminToast('Firebase ক্লাউড সংযোগ প্রস্তুত নয়।', 'error');
+        showAdminToast('Firebase cloud connection is not ready.', 'error');
         return;
     }
     
@@ -234,15 +234,15 @@ export async function loginWithEmail(email, password) {
             AdminState.authMethod = 'email';
             closeAdminAuthModal();
             openAdminDashboard();
-            showAdminToast('ইমেইল দিয়ে অ্যাডমিন লগইন সফল!', 'success');
+            showAdminToast('Admin sign-in successful via email!', 'success');
             loadInboxMessages();
         } else {
             await signOut(auth);
-            showAdminToast('এই ইমেইলে অ্যাডমিন অনুমতি নেই।', 'error');
+            showAdminToast('This email address does not have administrator privileges.', 'error');
         }
     } catch (err) {
         console.error('Email Sign-in Error:', err);
-        showAdminToast('ইমেইল বা পাসওয়ার্ড সঠিক নয়।', 'error');
+        showAdminToast('Invalid email or password.', 'error');
     }
 }
 
@@ -256,10 +256,10 @@ export function loginWithPasscode(code) {
         updateNavbarAdminStatus();
         closeAdminAuthModal();
         openAdminDashboard();
-        showAdminToast('মাস্টার পাসকোড দিয়ে অ্যাডমিন মোড সক্রিয় হয়েছে!', 'success');
+        showAdminToast('Admin mode activated with master passcode!', 'success');
         return true;
     } else {
-        showAdminToast('ভুল মাস্টার পাসকোড! আবার চেষ্টা করুন।', 'error');
+        showAdminToast('Incorrect master passcode! Please try again.', 'error');
         return false;
     }
 }
@@ -276,7 +276,7 @@ export async function logoutAdmin() {
     localStorage.removeItem('alkamah_admin_session');
     updateNavbarAdminStatus();
     closeAdminDashboard();
-    showAdminToast('অ্যাডমিন সেশন থেকে সফলভাবে লগআউট করা হয়েছে।', 'info');
+    showAdminToast('Signed out from admin session successfully.', 'info');
 }
 
 // Cloud Synchronization: Fetch /site/portfolio
@@ -321,15 +321,15 @@ export async function saveToCloud(portfolioData) {
     if (isFirebaseReady && AdminState.isAdmin && AdminState.user) {
         try {
             await setDoc(doc(db, 'site', 'portfolio'), portfolioData, { merge: true });
-            showAdminToast('ক্লাউড ফায়ারস্টোর ও লোকাল স্টোরেজে সফলভাবে সংরক্ষিত হয়েছে!', 'success');
+            showAdminToast('Saved to Cloud Firestore and local storage successfully!', 'success');
             return true;
         } catch (err) {
             console.error('Firestore save error:', err);
-            showAdminToast('লোকালে সংরক্ষিত হয়েছে, ক্লাউড ফায়ারস্টোরে সেভ করতে গুগল দিয়ে লগইন করুন।', 'info');
+            showAdminToast('Saved locally. Sign in with Google to sync with Cloud Firestore.', 'info');
             return false;
         }
     } else {
-        showAdminToast('সকল পরিবর্তন লোকাল স্টোরেজে সংরক্ষিত হয়েছে!', 'success');
+        showAdminToast('All changes saved to local storage successfully!', 'success');
         return true;
     }
 }
@@ -383,10 +383,10 @@ export async function deleteInboxMessage(msgId) {
         AdminState.inbox = AdminState.inbox.filter(m => m.id !== msgId);
         renderAdminInbox();
         updateInboxBadge();
-        showAdminToast('বার্তাটি মুছে ফেলা হয়েছে।', 'info');
+        showAdminToast('Message deleted successfully.', 'info');
     } catch (err) {
         console.error('Delete message error:', err);
-        showAdminToast('বার্তা মুছতে ব্যর্থ হয়েছে।', 'error');
+        showAdminToast('Failed to delete message.', 'error');
     }
 }
 
@@ -411,7 +411,7 @@ export function exportPortfolioBackup(portfolioData) {
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    showAdminToast('সম্পূর্ণ পোর্টফোলিও ব্যাকআপ JSON ডাউনলোড হয়েছে!', 'success');
+    showAdminToast('Portfolio backup JSON downloaded successfully!', 'success');
 }
 
 // UI Modals Control
@@ -559,7 +559,7 @@ export function renderAdminProjectsList() {
     
     const projects = window.currentPortfolioData.projects || [];
     if (projects.length === 0) {
-        container.innerHTML = '<div class="p-6 rounded-2xl glass text-center text-slate-400">কোনো প্রজেক্ট পাওয়া যায়নি। নতুন প্রজেক্ট যোগ করুন।</div>';
+        container.innerHTML = '<div class="p-6 rounded-2xl glass text-center text-slate-400">No projects found. Add your first project above.</div>';
         return;
     }
     
@@ -672,14 +672,14 @@ export function renderAdminInbox() {
         container.innerHTML = `
             <div class="p-8 rounded-2xl glass text-center text-slate-400">
                 <i class="fas fa-inbox text-3xl mb-2 text-slate-500 block"></i>
-                <p>কোনো বার্তা বা লিড জমা পড়েনি। দর্শনার্থীরা মেসেজ পাঠালে এখানে দেখা যাবে।</p>
+                <p>No inquiries or leads received yet. Visitor messages will appear here.</p>
             </div>`;
         return;
     }
     
     let html = '';
     msgs.forEach((m) => {
-        const dateStr = m.ts ? new Date(m.ts).toLocaleString('bn-BD', { dateStyle: 'medium', timeStyle: 'short' }) : 'Unknown';
+        const dateStr = m.ts ? new Date(m.ts).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : 'Unknown';
         const emailMatch = (m.c || '').match(/[\w.-]+@[\w.-]+\.\w+/);
         const email = emailMatch ? emailMatch[0] : '';
         
@@ -699,11 +699,11 @@ export function renderAdminInbox() {
                     ${email ? `
                         <a href="mailto:${email}?subject=Reply to your portfolio inquiry&body=Dear ${encodeURIComponent(m.n || '')},%0A%0AThank you for reaching out.%0A%0ARegards,%0AAlkamah Sakilur Rashid"
                            class="px-4 py-1.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs font-bold transition-all flex items-center gap-2 shadow-sm">
-                            <i class="fas fa-reply text-xs"></i> <span>ইমেইলে উত্তর দিন</span>
+                            <i class="fas fa-reply text-xs"></i> <span>Reply via Email</span>
                         </a>` : ''}
                     <button type="button" onclick="window.adminDeleteMessage('${m.id}')"
                             class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold border border-rose-500/30 transition-all flex items-center gap-1.5">
-                        <i class="fas fa-trash text-xs"></i> <span>মুছে ফেলুন</span>
+                        <i class="fas fa-trash text-xs"></i> <span>Delete</span>
                     </button>
                 </div>
             </div>`;
@@ -718,7 +718,7 @@ window.adminLoginWithEmail = () => {
     const email = document.getElementById('admLoginEmail')?.value;
     const pass = document.getElementById('admLoginPassword')?.value;
     if (!email || !pass) {
-        showAdminToast('ইমেইল ও পাসওয়ার্ড পূরণ করুন।', 'error');
+        showAdminToast('Please enter both email and password.', 'error');
         return;
     }
     loginWithEmail(email, pass);
@@ -726,7 +726,7 @@ window.adminLoginWithEmail = () => {
 window.adminLoginWithPasscode = () => {
     const code = document.getElementById('admLoginPasscode')?.value;
     if (!code) {
-        showAdminToast('পাসকোড লিখুন।', 'error');
+        showAdminToast('Please enter the passcode.', 'error');
         return;
     }
     loginWithPasscode(code);
@@ -768,7 +768,7 @@ window.adminSaveProject = () => {
     
     const title = getVal('adm_proj_title');
     if (!title) {
-        showAdminToast('প্রজেক্টের শিরোনাম আবশ্যক।', 'error');
+        showAdminToast('Project title is required.', 'error');
         return;
     }
     
@@ -787,12 +787,12 @@ window.adminSaveProject = () => {
     if (AdminState.editingProjectIndex >= 0) {
         window.currentPortfolioData.projects[AdminState.editingProjectIndex] = newProj;
         AdminState.editingProjectIndex = -1;
-        document.getElementById('admProjectFormTitle').textContent = 'নতুন প্রজেক্ট যোগ করুন';
-        document.getElementById('admProjectSubmitBtn').textContent = 'প্রজেক্ট যোগ করুন';
-        showAdminToast('প্রজেক্ট সফলভাবে আপডেট করা হয়েছে!', 'success');
+        document.getElementById('admProjectFormTitle').textContent = 'Add New Project';
+        document.getElementById('admProjectSubmitBtn').textContent = 'Add Project';
+        showAdminToast('Project updated successfully!', 'success');
     } else {
         window.currentPortfolioData.projects.unshift(newProj);
-        showAdminToast('নতুন প্রজেক্ট সফলভাবে তালিকায় যুক্ত হয়েছে!', 'success');
+        showAdminToast('New project added to portfolio successfully!', 'success');
     }
     
     // Clear form
@@ -821,18 +821,18 @@ window.adminEditProject = (idx) => {
     document.getElementById('adm_proj_github').value = p.github || '';
     document.getElementById('adm_proj_demo').value = p.demo || '';
     
-    document.getElementById('admProjectFormTitle').textContent = `প্রজেক্ট সম্পাদনা: ${p.title}`;
-    document.getElementById('admProjectSubmitBtn').textContent = 'আপডেট সংরক্ষণ করুন';
+    document.getElementById('admProjectFormTitle').textContent = `Edit Project: ${p.title}`;
+    document.getElementById('admProjectSubmitBtn').textContent = 'Save Update';
     document.getElementById('admProjectFormCard').scrollIntoView({ behavior: 'smooth' });
 };
 
 window.adminDeleteProject = (idx) => {
-    if (!confirm('আপনি কি নিশ্চিত যে এই প্রজেক্টটি মুছে ফেলতে চান?')) return;
+    if (!confirm('Are you sure you want to delete this project?')) return;
     window.currentPortfolioData.projects.splice(idx, 1);
     saveToCloud(window.currentPortfolioData);
     renderAdminProjectsList();
     if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
-    showAdminToast('প্রজেক্ট মুছে ফেলা হয়েছে।', 'info');
+    showAdminToast('Project deleted successfully.', 'info');
 };
 
 // Club CRUD
@@ -842,7 +842,7 @@ window.adminSaveClub = () => {
     
     const club = getVal('adm_club_name');
     if (!club) {
-        showAdminToast('ক্লাবের নাম আবশ্যক।', 'error');
+        showAdminToast('Club name is required.', 'error');
         return;
     }
     
@@ -861,12 +861,12 @@ window.adminSaveClub = () => {
     if (AdminState.editingClubIndex >= 0) {
         window.currentPortfolioData.clubs[AdminState.editingClubIndex] = newClub;
         AdminState.editingClubIndex = -1;
-        document.getElementById('admClubFormTitle').textContent = 'নতুন ক্লাব দায়িত্ব যোগ করুন';
-        document.getElementById('admClubSubmitBtn').textContent = 'সংরক্ষণ করুন';
-        showAdminToast('ক্লাব তথ্য সফলভাবে আপডেট হয়েছে!', 'success');
+        document.getElementById('admClubFormTitle').textContent = 'Add New Club Leadership Role';
+        document.getElementById('admClubSubmitBtn').textContent = 'Save Club';
+        showAdminToast('Club information updated successfully!', 'success');
     } else {
         window.currentPortfolioData.clubs.push(newClub);
-        showAdminToast('নতুন ক্লাব দায়িত্ব যুক্ত হয়েছে!', 'success');
+        showAdminToast('New club role added successfully!', 'success');
     }
     
     ['adm_club_name', 'adm_club_role', 'adm_club_prevRole', 'adm_club_date', 'adm_club_desc'].forEach(id => {
@@ -892,18 +892,18 @@ window.adminEditClub = (idx) => {
     document.getElementById('adm_club_icon').value = c.icon || 'fas fa-shield-halved';
     document.getElementById('adm_club_color').value = c.color || 'text-emerald-400';
     
-    document.getElementById('admClubFormTitle').textContent = `ক্লাব সম্পাদনা: ${c.club}`;
-    document.getElementById('admClubSubmitBtn').textContent = 'আপডেট সংরক্ষণ করুন';
+    document.getElementById('admClubFormTitle').textContent = `Edit Club: ${c.club}`;
+    document.getElementById('admClubSubmitBtn').textContent = 'Save Update';
     document.getElementById('admClubFormCard').scrollIntoView({ behavior: 'smooth' });
 };
 
 window.adminDeleteClub = (idx) => {
-    if (!confirm('আপনি কি নিশ্চিত যে এই ক্লাব তথ্য মুছে ফেলতে চান?')) return;
+    if (!confirm('Are you sure you want to delete this club entry?')) return;
     window.currentPortfolioData.clubs.splice(idx, 1);
     saveToCloud(window.currentPortfolioData);
     renderAdminClubsList();
     if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
-    showAdminToast('ক্লাব তথ্য মুছে ফেলা হয়েছে।', 'info');
+    showAdminToast('Club information deleted successfully.', 'info');
 };
 
 // Gallery Photo Management
@@ -913,7 +913,7 @@ window.adminAddPhoto = () => {
     const caption = document.getElementById('adm_photo_caption')?.value.trim() || 'Pohela Boishakh Celebration';
     
     if (!src) {
-        showAdminToast('ছবির লিঙ্ক বা পাথ লিখুন।', 'error');
+        showAdminToast('Please enter the image URL or path.', 'error');
         return;
     }
     
@@ -928,16 +928,16 @@ window.adminAddPhoto = () => {
     saveToCloud(window.currentPortfolioData);
     renderAdminGalleryList();
     if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
-    showAdminToast('নতুন ছবি গ্যালারিতে যুক্ত হয়েছে!', 'success');
+    showAdminToast('New photo added to gallery successfully!', 'success');
 };
 
 window.adminDeletePhoto = (idx) => {
-    if (!confirm('আপনি কি এই ছবিটি গ্যালারি থেকে সরাতে চান?')) return;
+    if (!confirm('Are you sure you want to remove this photo from the gallery?')) return;
     window.currentPortfolioData.culturalPhotos.splice(idx, 1);
     saveToCloud(window.currentPortfolioData);
     renderAdminGalleryList();
     if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
-    showAdminToast('ছবি মুছে ফেলা হয়েছে।', 'info');
+    showAdminToast('Photo removed successfully.', 'info');
 };
 
 // Handle Image File Upload directly to DataURL
@@ -946,14 +946,14 @@ window.adminHandlePhotoUpload = (event) => {
     if (!file) return;
     
     if (file.size > 2 * 1024 * 1024) {
-        showAdminToast('ছবির সাইজ ২ মেগাবাইটের বেশি। অনুগ্রহ করে অপটিমাইজড ছবি আপলোড করুন।', 'error');
+        showAdminToast('Image file exceeds 2 MB. Please upload an optimized image.', 'error');
         return;
     }
     
     const reader = new FileReader();
     reader.onload = (e) => {
         document.getElementById('adm_photo_src').value = e.target.result;
-        showAdminToast('ছবি সফলভাবে লোড হয়েছে! ক্যাপশন লিখে "ছবি যোগ করুন" চাপুন।', 'success');
+        showAdminToast('Photo loaded! Enter caption and click "Add Photo".', 'success');
     };
     reader.readAsDataURL(file);
 };
@@ -982,19 +982,19 @@ window.adminImportBackup = (event) => {
                 saveToCloud(imported);
                 if (window.renderAllPortfolio) window.renderAllPortfolio(imported);
                 renderAdminDashboard();
-                showAdminToast('ব্যাকআপ ফাইল সফলভাবে রিস্টোর করা হয়েছে!', 'success');
+                showAdminToast('Backup restored successfully!', 'success');
             } else {
-                showAdminToast('অবৈধ ব্যাকআপ ফাইল ফরম্যাট।', 'error');
+                showAdminToast('Invalid backup file format.', 'error');
             }
         } catch (err) {
-            showAdminToast('JSON ফাইল পড়তে সমস্যা হয়েছে।', 'error');
+            showAdminToast('Failed to parse JSON backup file.', 'error');
         }
     };
     reader.readAsText(file);
 };
 
 window.adminResetToFactory = () => {
-    if (confirm('আপনি কি সম্পূর্ণ পোর্টফোলিওকে ফ্যাক্টরি ডিফল্ট অবস্থায় ফিরিয়ে নিতে চান? আপনার করা সাম্প্রতিক পরিবর্তনসমূহ মুছে যাবে।')) {
+    if (confirm('Are you sure you want to reset the entire portfolio to factory defaults? All unsynced local modifications will be lost.')) {
         localStorage.removeItem(DATA_STORAGE_KEY);
         location.reload();
     }
@@ -1002,12 +1002,12 @@ window.adminResetToFactory = () => {
 
 // Master Passcode Change
 window.adminChangePasscode = () => {
-    const newPin = prompt('নতুন মাস্টার পাসকোড লিখুন (কমপক্ষে ৬ অক্ষর):');
+    const newPin = prompt('Enter new master passcode (minimum 6 characters):');
     if (newPin && newPin.trim().length >= 6) {
         localStorage.setItem(PASSCODE_STORAGE_KEY, newPin.trim());
-        showAdminToast('মাস্টার পাসকোড সফলভাবে পরিবর্তন করা হয়েছে!', 'success');
+        showAdminToast('Master passcode updated successfully!', 'success');
     } else if (newPin) {
-        showAdminToast('পাসকোড কমপক্ষে ৬ অক্ষরের হতে হবে।', 'error');
+        showAdminToast('Passcode must be at least 6 characters.', 'error');
     }
 };
 

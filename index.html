@@ -2040,68 +2040,68 @@
                     <i class="fas fa-shield-halved"></i>
                 </div>
                 <div>
-                    <h3 id="adminAuthTitle" class="text-xl font-bold text-white leading-tight">অ্যাডমিন প্রবেশদ্বার</h3>
+                    <h3 id="adminAuthTitle" class="text-xl font-bold text-white leading-tight">Admin Access Portal</h3>
                     <p class="text-xs text-slate-400 mt-0.5">Alkamah Portfolio Control Center</p>
                 </div>
             </div>
 
             <!-- Login Method Tabs -->
             <div class="grid grid-cols-3 gap-1 p-1 bg-white/5 rounded-xl border border-white/5 mb-6 text-xs font-bold text-center">
-                <button type="button" id="authTabBtn-google" onclick="switchAuthTab('google')" class="py-2 rounded-lg bg-primary text-white transition-all">গুগল</button>
-                <button type="button" id="authTabBtn-email" onclick="switchAuthTab('email')" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all">ইমেইল</button>
-                <button type="button" id="authTabBtn-passcode" onclick="switchAuthTab('passcode')" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all">মাস্টার কোড</button>
+                <button type="button" id="authTabBtn-google" onclick="switchAuthTab('google')" class="py-2 rounded-lg bg-primary text-white transition-all">Google</button>
+                <button type="button" id="authTabBtn-email" onclick="switchAuthTab('email')" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all">Email</button>
+                <button type="button" id="authTabBtn-passcode" onclick="switchAuthTab('passcode')" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all">Master Code</button>
             </div>
 
             <!-- Tab 1: Google Login (Recommended, matches Giri Sompriti) -->
             <div id="authTabPane-google" class="space-y-4">
                 <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300 leading-relaxed">
-                    <p class="font-bold text-white mb-1"><i class="fas fa-circle-info text-primary mr-1"></i> অনুমোদিত অ্যাকাউন্ট:</p>
+                    <p class="font-bold text-white mb-1"><i class="fas fa-circle-info text-primary mr-1"></i> Authorized Accounts:</p>
                     <p class="font-mono text-[11px] text-emerald-400">sakilurrashid1@gmail.com</p>
                     <p class="font-mono text-[11px] text-emerald-400">alkamahrashid@gmail.com</p>
                 </div>
                 <button type="button" onclick="adminLoginWithGoogle()"
                         class="w-full py-3.5 px-4 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 flex items-center justify-center gap-3 transition-all shadow-lg hover:scale-[1.01]">
                     <i class="fab fa-google text-red-500 text-lg"></i>
-                    <span>গুগল দিয়ে অ্যাডমিন লগইন</span>
+                    <span>Admin Sign-In with Google</span>
                 </button>
             </div>
 
             <!-- Tab 2: Email & Password -->
             <div id="authTabPane-email" class="hidden space-y-3.5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">অ্যাডমিন ইমেইল</label>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Admin Email Address</label>
                     <input type="email" id="admLoginEmail" placeholder="sakilurrashid1@gmail.com"
                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-primary">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">পাসওয়ার্ড</label>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Password</label>
                     <input type="password" id="admLoginPassword" placeholder="••••••••"
                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-primary">
                 </div>
                 <button type="button" onclick="adminLoginWithEmail()"
                         class="w-full py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs sm:text-sm transition-all shadow-md">
-                    লগইন করুন
+                    Sign In
                 </button>
             </div>
 
             <!-- Tab 3: Master Passcode -->
             <div id="authTabPane-passcode" class="space-y-3.5 hidden">
-                <p class="text-xs text-slate-400">ইন্টারনেট বা ফায়ারস্টোর পপআপ ব্যতিরেকে সরাসরি অফলাইন/লোকাল অ্যাডমিন মোডে প্রবেশ করতে আপনার মাস্টার পাসকোড ব্যবহার করুন।</p>
+                <p class="text-xs text-slate-400">Enter your master passcode to access offline/local administrative controls directly without cloud popup.</p>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1">মাস্টার পাসকোড</label>
-                    <input type="password" id="admLoginPasscode" placeholder="ডিফল্ট: alkamah2026"
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Master Passcode</label>
+                    <input type="password" id="admLoginPasscode" placeholder="Default: alkamah2026"
                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 font-mono">
                 </div>
                 <button type="button" onclick="adminLoginWithPasscode()"
                         class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition-all shadow-md">
-                    প্রবেশ করুন
+                    Sign In
                 </button>
             </div>
 
             <!-- Footer info -->
             <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
-                <span><i class="fas fa-lock mr-1 text-emerald-400"></i> নিরাপদ ও এনক্রিপ্টেড</span>
-                <span>গিরি সম্প্রীতির সমতুল্য আর্কিটেকচার</span>
+                <span><i class="fas fa-lock mr-1 text-emerald-400"></i> Secure & Authenticated</span>
+                <span>Protected Admin Architecture</span>
             </div>
         </div>
     </div>
@@ -2120,7 +2120,7 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <h3 id="admCockpitTitle" class="text-base sm:text-lg font-bold text-white leading-tight">আলকামাহ — অ্যাডমিন ড্যাশবোর্ড</h3>
+                            <h3 id="admCockpitTitle" class="text-base sm:text-lg font-bold text-white leading-tight">Alkamah — Admin Dashboard</h3>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">SuperAdmin</span>
                         </div>
                         <div class="flex items-center gap-2 mt-0.5">
@@ -2135,17 +2135,17 @@
                     <button type="button" onclick="adminSaveToCloud()"
                             class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                         <i class="fas fa-cloud-arrow-up"></i>
-                        <span>ক্লাউডে সেভ করুন</span>
+                        <span>Save to Cloud</span>
                     </button>
                     <button type="button" onclick="closeAdminDashboard()"
                             class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold border border-white/10 transition-all flex items-center gap-1.5">
                         <i class="fas fa-globe"></i>
-                        <span>লাইভ সাইট</span>
+                        <span>Live Site</span>
                     </button>
                     <button type="button" onclick="adminLogout()"
-                            class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/20 transition-all flex items-center gap-1.5" title="লগআউট">
+                            class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/20 transition-all flex items-center gap-1.5" title="Sign Out">
                         <i class="fas fa-arrow-right-from-bracket"></i>
-                        <span class="hidden sm:inline">লগআউট</span>
+                        <span class="hidden sm:inline">Sign Out</span>
                     </button>
                     <button type="button" onclick="closeAdminDashboard()" aria-label="Close Cockpit"
                             class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-all">
@@ -2160,32 +2160,32 @@
                 <div class="w-full md:w-64 p-3 md:p-4 border-b md:border-b-0 md:border-r border-white/10 flex md:flex-col gap-1.5 overflow-x-auto md:overflow-y-auto shrink-0 bg-slate-900/30">
                     <button type="button" onclick="switchAdminTab('dashboard')" data-tab="dashboard"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all bg-primary/20 text-white border border-primary/50 text-left shrink-0">
-                        <i class="fas fa-gauge-high text-primary"></i> <span>ড্যাশবোর্ড</span>
+                        <i class="fas fa-gauge-high text-primary"></i> <span>Dashboard</span>
                     </button>
                     <button type="button" onclick="switchAdminTab('profile')" data-tab="profile"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
-                        <i class="fas fa-user-pen text-indigo-400"></i> <span>প্রোফাইল ও বায়ো</span>
+                        <i class="fas fa-user-pen text-indigo-400"></i> <span>Profile & Bio</span>
                     </button>
                     <button type="button" onclick="switchAdminTab('projects')" data-tab="projects"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
-                        <i class="fas fa-laptop-code text-cyan-400"></i> <span>প্রজেক্টস ম্যানেজার</span>
+                        <i class="fas fa-laptop-code text-cyan-400"></i> <span>Projects Manager</span>
                     </button>
                     <button type="button" onclick="switchAdminTab('clubs')" data-tab="clubs"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
-                        <i class="fas fa-users-gear text-purple-400"></i> <span>ক্লাবস ও নেতৃত্ব</span>
+                        <i class="fas fa-users-gear text-purple-400"></i> <span>Clubs & Leadership</span>
                     </button>
                     <button type="button" onclick="switchAdminTab('gallery')" data-tab="gallery"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
-                        <i class="fas fa-camera-retro text-amber-400"></i> <span>কালচারাল গ্যালারি</span>
+                        <i class="fas fa-camera-retro text-amber-400"></i> <span>Cultural Gallery</span>
                     </button>
                     <button type="button" onclick="switchAdminTab('inbox')" data-tab="inbox"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
-                        <i class="fas fa-inbox text-pink-400"></i> <span>ইনবক্স ও বার্তা</span>
+                        <i class="fas fa-inbox text-pink-400"></i> <span>Inbox & Messages</span>
                         <span id="adminInboxBadge" class="hidden"></span>
                     </button>
                     <button type="button" onclick="switchAdminTab('backup')" data-tab="backup"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
-                        <i class="fas fa-cloud-arrow-down text-emerald-400"></i> <span>ব্যাকআপ ও সেটিংস</span>
+                        <i class="fas fa-cloud-arrow-down text-emerald-400"></i> <span>Backup & Settings</span>
                     </button>
                 </div>
 
@@ -2198,47 +2198,47 @@
                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                             <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-folder-tree"></i></div>
-                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">মোট প্রজেক্ট</p><h4 id="admMetricProjects" class="text-2xl font-extrabold text-white">0</h4></div>
+                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Projects</p><h4 id="admMetricProjects" class="text-2xl font-extrabold text-white">0</h4></div>
                             </div>
                             <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-shield-halved"></i></div>
-                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">ক্লাব ভূমিকা</p><h4 id="admMetricClubs" class="text-2xl font-extrabold text-white">0</h4></div>
+                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Club Roles</p><h4 id="admMetricClubs" class="text-2xl font-extrabold text-white">0</h4></div>
                             </div>
                             <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-images"></i></div>
-                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">গ্যালারি ছবি</p><h4 id="admMetricGallery" class="text-2xl font-extrabold text-white">0</h4></div>
+                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Gallery Photos</p><h4 id="admMetricGallery" class="text-2xl font-extrabold text-white">0</h4></div>
                             </div>
                             <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-envelope-open-text"></i></div>
-                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">প্রাপ্ত বার্তা</p><h4 id="admMetricInbox" class="text-2xl font-extrabold text-white">0</h4></div>
+                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Inquiries</p><h4 id="admMetricInbox" class="text-2xl font-extrabold text-white">0</h4></div>
                             </div>
                         </div>
 
                         <!-- System Status & Quick Actions -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-bolt text-amber-400"></i> দ্রুত অ্যাকশন</h4>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-bolt text-amber-400"></i> Quick Actions</h4>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     <button type="button" onclick="switchAdminTab('projects')" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
-                                        <i class="fas fa-plus text-primary"></i> নতুন প্রজেক্ট যোগ করুন
+                                        <i class="fas fa-plus text-primary"></i> Add New Project
                                     </button>
                                     <button type="button" onclick="switchAdminTab('gallery')" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
-                                        <i class="fas fa-camera text-secondary"></i> গ্যালারিতে ছবি যোগ করুন
+                                        <i class="fas fa-camera text-secondary"></i> Add Gallery Photo
                                     </button>
                                     <button type="button" onclick="adminExportBackup()" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
-                                        <i class="fas fa-download text-emerald-400"></i> সম্পূর্ণ ডেটা ব্যাকআপ
+                                        <i class="fas fa-download text-emerald-400"></i> Download Backup
                                     </button>
                                     <button type="button" onclick="switchAdminTab('inbox')" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
-                                        <i class="fas fa-inbox text-pink-400"></i> মেসেজ ইনবক্স দেখুন
+                                        <i class="fas fa-inbox text-pink-400"></i> View Messages Inbox
                                     </button>
                                 </div>
                             </div>
 
                             <div class="glass p-6 rounded-2xl border border-white/10 space-y-3 text-xs text-slate-300">
-                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-shield-check text-emerald-400"></i> নিরাপত্তা ও ক্লাউড স্ট্যাটাস</h4>
-                                <p><strong class="text-white">ক্লাউড প্রজেক্ট:</strong> giri-somprity (Firestore DB)</p>
-                                <p><strong class="text-white">অনুমোদিত অ্যাডমিন:</strong> sakilurrashid1@gmail.com, alkamahrashid@gmail.com</p>
-                                <p><strong class="text-white">ডেটা লেয়ার:</strong> রিয়েল-টাইম লোকাল ক্যাশিং + ক্লাউড ফায়ারস্টোর ডুয়েল সিঙ্ক। যেকোনো ডিভাইস থেকে অ্যাডমিন লগইন করলেই লাইভ আপডেট প্রদর্শিত হবে।</p>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-shield-check text-emerald-400"></i> Security & Cloud Status</h4>
+                                <p><strong class="text-white">Cloud Project:</strong> giri-somprity (Firestore DB)</p>
+                                <p><strong class="text-white">Authorized Admins:</strong> sakilurrashid1@gmail.com, alkamahrashid@gmail.com</p>
+                                <p><strong class="text-white">Data Layer:</strong> Real-time local caching + Cloud Firestore dual synchronization. Any updates made from the admin cockpit are instantly synced and live across all devices.</p>
                             </div>
                         </div>
                     </div>
@@ -2246,48 +2246,48 @@
                     <!-- TAB 2: PROFILE & BIO -->
                     <div id="adminTab-profile" class="admin-tab-pane hidden space-y-6">
                         <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-5">
-                            <h4 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-user-pen text-primary"></i> ব্যক্তিগত তথ্য ও বায়ো সম্পাদনা</h4>
+                            <h4 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-user-pen text-primary"></i> Personal Details & Biography</h4>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">পূর্ণ নাম (Full Name)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Full Name</label>
                                     <input type="text" id="adm_name" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ডিসপ্লে নাম (Hero Name)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Display Name (Hero)</label>
                                     <input type="text" id="adm_firstName" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ফোন নম্বর (WhatsApp)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Phone (WhatsApp)</label>
                                     <input type="text" id="adm_phone" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ইমেইল ঠিকানা</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Email Address</label>
                                     <input type="email" id="adm_email" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ঠিকানা / অবস্থান</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Location / Address</label>
                                     <input type="text" id="adm_location" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">প্রোফাইল ছবি পাথ / URL</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Profile Image Path / URL</label>
                                     <input type="text" id="adm_profileImg" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-slate-300 mb-1">বায়ো / ভূমিকা বক্তব্য (About Me)</label>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">Biography / Overview (About Me)</label>
                                 <textarea id="adm_bio" rows="4" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary"></textarea>
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-slate-300 mb-1">টাইপিং অ্যানিমেশন টেক্সট (প্রতি লাইনে একটি করে বাক্যাংশ)</label>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">Hero Typing Phrases (One phrase per line)</label>
                                 <textarea id="adm_phrases" rows="4" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-primary"></textarea>
                             </div>
 
                             <button type="button" onclick="adminSaveProfile()"
                                     class="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
-                                <i class="fas fa-save"></i> <span>প্রোফাইল তথ্য সংরক্ষণ করুন</span>
+                                <i class="fas fa-save"></i> <span>Save Profile Information</span>
                             </button>
                         </div>
                     </div>
@@ -2296,16 +2296,16 @@
                     <div id="adminTab-projects" class="admin-tab-pane hidden space-y-6">
                         <!-- Add/Edit Project Form -->
                         <div id="admProjectFormCard" class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                            <h4 id="admProjectFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-plus-circle text-primary"></i> নতুন প্রজেক্ট যোগ করুন</h4>
+                            <h4 id="admProjectFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-plus-circle text-primary"></i> Add New Project</h4>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">প্রজেক্টের শিরোনাম (Title) *</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Project Title *</label>
                                     <input type="text" id="adm_proj_title" placeholder="NetPulse — Network Intelligence Lab"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ক্যাটাগরি আইডি</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Category ID</label>
                                     <select id="adm_proj_category" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                         <option value="cybersecurity">Cybersecurity & SOC</option>
                                         <option value="ai-ml">AI & Analytics</option>
@@ -2314,51 +2314,51 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ক্যাটাগরি লেবেল</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Category Label</label>
                                     <input type="text" id="adm_proj_catLabel" placeholder="Cybersecurity & SOC"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">লেবেল কালার ক্লাস</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Label Color Class</label>
                                     <input type="text" id="adm_proj_catColor" placeholder="text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ফন্ট অওসাম আইকন ক্লাস</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">FontAwesome Icon Class</label>
                                     <input type="text" id="adm_proj_icon" placeholder="fas fa-shield-halved"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-primary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">গিটহাব রিপো লিঙ্ক (GitHub URL)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">GitHub Repo Link (URL)</label>
                                     <input type="url" id="adm_proj_github" placeholder="https://github.com/sakilurrashid1-star/..."
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">লাইভ ডেমো লিঙ্ক (Live Demo URL)</label>
-                                    <input type="text" id="adm_proj_demo" placeholder="projects/netpulse/index.html বা https://..."
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Live Demo Link (URL)</label>
+                                    <input type="text" id="adm_proj_demo" placeholder="projects/netpulse/index.html or https://..."
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div class="sm:col-span-3">
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ব্যবহৃত টেকনোলজি (Tech Stack)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Technologies Used (Tech Stack)</label>
                                     <input type="text" id="adm_proj_tech" placeholder="Python, Streamlit, Pandas, NumPy, NLP"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
                                 </div>
                                 <div class="sm:col-span-3">
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">সংক্ষিপ্ত বিবরণ (Description)</label>
-                                    <textarea id="adm_proj_desc" rows="3" placeholder="প্রজেক্টের মূল বৈশিষ্ট্য ও কার্যকারিতা..."
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Project Description</label>
+                                    <textarea id="adm_proj_desc" rows="3" placeholder="Core features and engineering highlights..."
                                               class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary"></textarea>
                                 </div>
                             </div>
 
                             <button type="button" id="admProjectSubmitBtn" onclick="adminSaveProject()"
                                     class="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
-                                <i class="fas fa-plus"></i> <span>প্রজেক্ট যোগ করুন</span>
+                                <i class="fas fa-plus"></i> <span>Add Project</span>
                             </button>
                         </div>
 
                         <!-- Existing Projects List -->
                         <div class="space-y-3">
-                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-list-check text-cyan-400"></i> বিদ্যমান প্রজেক্ট তালিকা</h4>
+                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-list-check text-cyan-400"></i> Existing Projects List</h4>
                             <div id="admProjectsList" class="space-y-3"></div>
                         </div>
                     </div>
@@ -2367,50 +2367,50 @@
                     <div id="adminTab-clubs" class="admin-tab-pane hidden space-y-6">
                         <!-- Add/Edit Club Form -->
                         <div id="admClubFormCard" class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                            <h4 id="admClubFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-users text-purple-400"></i> নতুন ক্লাব দায়িত্ব যোগ করুন</h4>
+                            <h4 id="admClubFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-users text-purple-400"></i> Add New Club Leadership Role</h4>
                             
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ক্লাবের নাম (Club Name) *</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Club / Organization Name *</label>
                                     <input type="text" id="adm_club_name" placeholder="PU Cyber Security Club (PUCSC)"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">পদবী / দায়িত্ব (Role)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Role / Designation</label>
                                     <input type="text" id="adm_club_role" placeholder="Vice President"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">পূর্ববর্তী ভূমিকা (Previous Role)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Previous Role (Optional)</label>
                                     <input type="text" id="adm_club_prevRole" placeholder="General Secretary (Aug–Sep 2026)"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">মেয়াদ / তারিখ (Date)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Tenure / Date</label>
                                     <input type="text" id="adm_club_date" placeholder="Oct 2026 - Present"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">কালার ক্লাস</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Accent Color Class</label>
                                     <input type="text" id="adm_club_color" placeholder="text-emerald-400"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-purple-500">
                                 </div>
                                 <div class="sm:col-span-3">
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">দায়িত্ব ও কার্যক্রমের বিবরণ (Description)</label>
-                                    <textarea id="adm_club_desc" rows="3" placeholder="ওয়ার্কশপ লজিস্টিকস সমন্বয়, প্রচার ও টিম সুপারভিশন..."
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Responsibilities & Achievements</label>
+                                    <textarea id="adm_club_desc" rows="3" placeholder="Workshop coordination, team leadership, operations..."
                                               class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500"></textarea>
                                 </div>
                             </div>
 
                             <button type="button" id="admClubSubmitBtn" onclick="adminSaveClub()"
                                     class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
-                                <i class="fas fa-save"></i> <span>সংরক্ষণ করুন</span>
+                                <i class="fas fa-save"></i> <span>Save Club Role</span>
                             </button>
                         </div>
 
                         <!-- Existing Clubs List -->
                         <div class="space-y-3">
-                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-list text-purple-400"></i> বিদ্যমান ক্লাব ও নেতৃত্বের তালিকা</h4>
+                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-list text-purple-400"></i> Existing Clubs & Leadership Roles</h4>
                             <div id="admClubsList" class="space-y-3"></div>
                         </div>
                     </div>
@@ -2418,33 +2418,33 @@
                     <!-- TAB 5: CULTURAL GALLERY -->
                     <div id="adminTab-gallery" class="admin-tab-pane hidden space-y-6">
                         <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-camera text-secondary"></i> গ্যালারিতে ছবি যোগ করুন</h4>
+                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-camera text-secondary"></i> Add Gallery Photo</h4>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ছবির পাথ বা URL</label>
-                                    <input type="text" id="adm_photo_src" placeholder="assets/cultural-photo-1.jpg বা ওয়েব লিংক"
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Photo Path or URL</label>
+                                    <input type="text" id="adm_photo_src" placeholder="assets/cultural-photo-1.jpg or web URL"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ডিভাইস থেকে ছবি আপলোড (ঐচ্ছিক)</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Upload Photo from Device (Optional)</label>
                                     <input type="file" accept="image/*" onchange="adminHandlePhotoUpload(event)"
                                            class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-secondary/20 file:text-secondary">
                                 </div>
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">ক্যাপশন ও ইভেন্ট বিবরণ</label>
-                                    <input type="text" id="adm_photo_caption" placeholder="পহেলা বৈশাখ উদযাপন – সাংস্কৃতিক পরিবেশনা"
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Caption & Event Details</label>
+                                    <input type="text" id="adm_photo_caption" placeholder="Pohela Boishakh Celebration – Cultural Performance"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
                                 </div>
                             </div>
                             <button type="button" onclick="adminAddPhoto()"
                                     class="px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
-                                <i class="fas fa-plus"></i> <span>ছবি যোগ করুন</span>
+                                <i class="fas fa-plus"></i> <span>Add Photo</span>
                             </button>
                         </div>
 
                         <!-- Existing Gallery Grid -->
                         <div class="space-y-3">
-                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-images text-secondary"></i> বিদ্যমান গ্যালারি ছবি</h4>
+                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-images text-secondary"></i> Current Gallery Photos</h4>
                             <div id="admGalleryList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                         </div>
                     </div>
@@ -2453,12 +2453,12 @@
                     <div id="adminTab-inbox" class="admin-tab-pane hidden space-y-6">
                         <div class="flex items-center justify-between gap-4">
                             <div>
-                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-envelope-open-text text-pink-400"></i> মেসেজ ইনবক্স ও দর্শনার্থীর বার্তা</h4>
-                                <p class="text-xs text-slate-400">কন্টাক্ট ফর্মের মাধ্যমে পাঠানো সমস্ত অনুসন্ধান রিয়েল-টাইমে এখানে সংরক্ষিত হয়।</p>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-envelope-open-text text-pink-400"></i> Messages Inbox & Visitor Inquiries</h4>
+                                <p class="text-xs text-slate-400">All inquiries submitted through the contact form are stored in real time.</p>
                             </div>
                             <button type="button" onclick="adminRefreshInbox()"
                                     class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 text-xs font-bold transition-all flex items-center gap-1.5">
-                                <i class="fas fa-sync text-xs"></i> <span>রিফ্রেশ</span>
+                                <i class="fas fa-sync text-xs"></i> <span>Refresh</span>
                             </button>
                         </div>
                         <div id="admInboxList" class="space-y-3"></div>
@@ -2469,39 +2469,39 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Download Backup -->
                             <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-download text-emerald-400"></i> সম্পূর্ণ পোর্টফোলিও ব্যাকআপ</h4>
-                                <p class="text-xs text-slate-300 leading-relaxed">আপনার সমস্ত প্রজেক্ট, বায়ো, ক্লাবের তথ্য ও গ্যালারির কনফিগারেশন এক ক্লিকে একটি একক JSON ফাইল হিসেবে নিরাপদে ডাউনলোড করে সংরক্ষণ করুন।</p>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-download text-emerald-400"></i> Full Portfolio Backup</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">Safely export all projects, bio, club leadership roles, and gallery configurations into a single JSON file.</p>
                                 <button type="button" onclick="adminExportBackup()"
                                         class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
-                                    <i class="fas fa-file-arrow-down"></i> <span>JSON ব্যাকআপ ডাউনলোড</span>
+                                    <i class="fas fa-file-arrow-down"></i> <span>Download JSON Backup</span>
                                 </button>
                             </div>
 
                             <!-- Restore Backup -->
                             <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-upload text-cyan-400"></i> ব্যাকআপ রিস্টোর</h4>
-                                <p class="text-xs text-slate-300 leading-relaxed">পূর্বে ডাউনলোড করা যেকোনো JSON ব্যাকআপ ফাইল নির্বাচন করে সম্পূর্ণ পোর্টফোলিওর পূর্বাবস্থা তাৎক্ষণিকভাবে রিস্টোর করুন।</p>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-upload text-cyan-400"></i> Restore Backup</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">Select a previously exported JSON backup file to instantly restore your portfolio.</p>
                                 <input type="file" accept=".json" onchange="adminImportBackup(event)"
                                        class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500/20 file:text-cyan-300">
                             </div>
 
                             <!-- Change Master Passcode -->
                             <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-key text-amber-400"></i> মাস্টার পাসকোড পরিবর্তন</h4>
-                                <p class="text-xs text-slate-300 leading-relaxed">অফলাইন অ্যাডমিন অ্যাক্সেসের জন্য আপনার গোপন মাস্টার পাসকোড পরিবর্তন করতে পারেন।</p>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-key text-amber-400"></i> Change Master Passcode</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">Update your secret master passcode for offline administrator access.</p>
                                 <button type="button" onclick="adminChangePasscode()"
                                         class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
-                                    <i class="fas fa-shield-keyhole"></i> <span>পাসকোড পরিবর্তন করুন</span>
+                                    <i class="fas fa-shield-keyhole"></i> <span>Change Passcode</span>
                                 </button>
                             </div>
 
                             <!-- Factory Reset -->
                             <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-rotate-left text-rose-400"></i> ফ্যাক্টরি রিসেট</h4>
-                                <p class="text-xs text-slate-300 leading-relaxed">লোকালে সংরক্ষিত সকল কাস্টমাইজেশন মুছে ফেলে মূল ডিফল্ট পোর্টফোলিও তথ্যে ফিরে যেতে চাইলে রিসেট করুন।</p>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-rotate-left text-rose-400"></i> Reset to Factory Defaults</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">Revert to original default portfolio data, clearing all local modifications.</p>
                                 <button type="button" onclick="adminResetToFactory()"
                                         class="px-5 py-2.5 rounded-xl bg-rose-600/30 hover:bg-rose-600 text-rose-200 hover:text-white border border-rose-500/40 text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
-                                    <i class="fas fa-triangle-exclamation"></i> <span>ফ্যাক্টরি রিসেট করুন</span>
+                                    <i class="fas fa-triangle-exclamation"></i> <span>Reset to Factory Defaults</span>
                                 </button>
                             </div>
                         </div>
