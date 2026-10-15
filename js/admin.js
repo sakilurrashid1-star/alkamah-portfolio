@@ -2,7 +2,7 @@
  * Alkamah Sakilur Rashid Portfolio — Admin System & Firebase Integration
  * 
  * Secure Authentication, Full Access Control Panel & Real-time Cloud Sync
- * Matching Giri Sompriti Architecture with Google Sign-in & Master Passcode
+ * Enterprise Cloud Architecture with Google Sign-in & Master Passcode
  * Full Control for Profile, Projects, Leadership Clubs, and All Activities (Technical, Cultural, Sports)
  */
 
@@ -28,7 +28,7 @@ import {
     orderBy 
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-// Firebase Configuration (Matching Giri Sompriti)
+// Firebase Configuration (Dedicated Project for Portfolio)
 const firebaseConfig = {
     apiKey: "AIzaSyBNlW4HX4Am295kuirFvBy7dblCbSuigI4",
     authDomain: "giri-somprity.firebaseapp.com",
