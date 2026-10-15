@@ -2731,6 +2731,138 @@
             console.warn('Initial cloud sync notice:', e);
         }
     });
+    </script>
+
+    <!-- ==================================================== -->
+    <!-- BEN 10 CARTOON AI ASSISTANT (FIXED BOTTOM-RIGHT)    -->
+    <!-- ==================================================== -->
+    <div id="omnitrixTriggerWrap" class="fixed bottom-5 right-5 z-[99999] flex items-end gap-3 select-none">
+        <!-- Playful Ben 10 Comic Speech Bubble -->
+        <div id="omnitrixHint" onclick="window.omnitrixToggle()" 
+             class="flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-950/95 border-2 border-[#00ff66] text-[#00ff66] text-xs font-bold shadow-[0_0_25px_rgba(0,255,102,0.5)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 animate-bounce">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#00ff66] animate-ping"></span>
+            <span>⚡ Hey! I'm Ben 10! Ask me about Alkamah</span>
+        </div>
+
+        <!-- Ben 10 Cartoon Sticker Button -->
+        <button type="button" id="omnitrixDialBtn" onclick="window.omnitrixToggle()" 
+                class="omnitrix-dial-btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-4 border-[#00ff66] flex items-center justify-center shadow-[0_0_35px_rgba(0,255,102,0.85)] hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none overflow-hidden group cursor-pointer"
+                aria-label="Ask Ben 10 AI Assistant" title="Click to chat with Ben 10!">
+            
+            <!-- Rotating Alien Energy Ring -->
+            <div class="absolute inset-0 rounded-full border-2 border-dashed border-[#00ff66]/60 animate-spin pointer-events-none" style="animation-duration: 8s;"></div>
+            
+            <!-- Ben 10 Cartoon Avatar Image -->
+            <img src="assets/ben10-avatar.png" alt="Ben 10 Cartoon" 
+                 class="w-full h-full object-cover object-top scale-110 group-hover:scale-125 transition-transform duration-300 pointer-events-none select-none">
+
+            <!-- Green status blip -->
+            <span class="absolute bottom-0 right-1 w-4 h-4 rounded-full bg-[#00ff66] border-2 border-slate-950 shadow-[0_0_12px_#00ff66]"></span>
+        </button>
+    </div>
+
+    <!-- OMNITRIX HOLOGRAPHIC CHAT WINDOW -->
+    <div id="omnitrixModal" class="fixed bottom-28 right-4 sm:right-6 z-[99999] hidden w-[94vw] sm:w-[440px] max-h-[82vh] rounded-[2rem] omnitrix-holo-panel text-slate-100 flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0 shadow-2xl">
+        <!-- TOP HEADER BAR -->
+        <div class="p-4 sm:p-5 border-b border-emerald-500/20 bg-slate-950/90 backdrop-blur-md flex items-center justify-between relative">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border-2 border-[#00ff66]/50 overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(0,255,102,0.4)] flex-shrink-0">
+                    <img src="assets/ben10-avatar.png" alt="Ben 10" class="w-full h-full object-cover object-top scale-110">
+                </div>
+                <div>
+                    <h3 id="omnitrixHeaderTitle" class="font-extrabold text-sm sm:text-base tracking-wide text-white flex items-center gap-1.5">
+                        <i id="omnitrixHeaderIcon" class="fas fa-bolt text-[#00ff66]"></i> BEN 10 AI ASSISTANT
+                    </h3>
+                    <p id="omnitrixHeaderSubtitle" class="text-[11px] text-emerald-400 font-mono flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#00ff66] animate-pulse"></span>
+                        "It's Hero Time!" // Ready
+                    </p>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex items-center gap-1.5">
+                <button type="button" id="omnitrixSfxBtn" onclick="window.omnitrixToggleSfx()" 
+                        class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-all"
+                        title="Toggle Sound FX">
+                    <i class="fas fa-volume-high"></i>
+                </button>
+                <button type="button" onclick="window.omnitrixClose()" 
+                        class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-all"
+                        title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ALIEN HERO PERSONA SELECTOR BAR -->
+        <div class="px-3.5 py-2.5 bg-black/40 border-b border-emerald-500/15 flex items-center gap-1.5 overflow-x-auto omnitrix-custom-scrollbar text-[11px] font-bold">
+            <span class="text-[10px] text-slate-400 uppercase tracking-widest font-mono mr-1">Modes:</span>
+            <button type="button" onclick="window.omnitrixSetPersona('omni')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 font-bold flex items-center gap-1 flex-shrink-0" data-persona="omni">
+                <i class="fas fa-bolt text-[10px]"></i> Omni
+            </button>
+            <button type="button" onclick="window.omnitrixSetPersona('greyMatter')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 flex items-center gap-1 flex-shrink-0" data-persona="greyMatter">
+                <i class="fas fa-brain text-[10px] text-sky-400"></i> Grey Matter
+            </button>
+            <button type="button" onclick="window.omnitrixSetPersona('xlr8')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 flex items-center gap-1 flex-shrink-0" data-persona="xlr8">
+                <i class="fas fa-gauge-high text-[10px] text-cyan-400"></i> XLR8
+            </button>
+            <button type="button" onclick="window.omnitrixSetPersona('fourArms')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 flex items-center gap-1 flex-shrink-0" data-persona="fourArms">
+                <i class="fas fa-dumbbell text-[10px] text-red-400"></i> Four Arms
+            </button>
+            <button type="button" onclick="window.omnitrixSetPersona('upgrade')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 flex items-center gap-1 flex-shrink-0" data-persona="upgrade">
+                <i class="fas fa-microchip text-[10px] text-purple-400"></i> Upgrade
+            </button>
+        </div>
+
+        <!-- MESSAGES FEED -->
+        <div id="omnitrixMessages" class="p-4 space-y-3.5 overflow-y-auto max-h-[48vh] omnitrix-custom-scrollbar omnitrix-scanline text-xs leading-relaxed">
+            <div class="flex items-start gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border-2 border-[#00ff66]/50 overflow-hidden flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(0,255,102,0.3)]">
+                    <img src="assets/ben10-avatar.png" alt="Ben 10" class="w-full h-full object-cover object-top scale-110">
+                </div>
+                <div class="p-3.5 rounded-2xl omnitrix-bubble-ai text-slate-200">
+                    <p class="font-bold text-[#00ff66] mb-1">"It's Hero Time!" ⚡</p>
+                    <p>Hey! I am <strong>Ben 10</strong>, your virtual AI guide. Ask me anything about Alkamah—his Cybersecurity expertise, university leadership, development projects, or how to reach him!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK CHIPS -->
+        <div class="p-2.5 bg-black/30 border-t border-emerald-500/10 flex items-center gap-1.5 overflow-x-auto omnitrix-custom-scrollbar text-[11px]">
+            <button type="button" onclick="window.omnitrixAsk('Tell me about Alkamah')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex-shrink-0">
+                👤 Bio
+            </button>
+            <button type="button" onclick="window.omnitrixAsk('What are his cybersecurity skills?')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex-shrink-0">
+                🛡️ Cybersecurity
+            </button>
+            <button type="button" onclick="window.omnitrixAsk('Tell me about his university leadership roles')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex-shrink-0">
+                🏛️ Leadership
+            </button>
+            <button type="button" onclick="window.omnitrixAsk('What projects has he built?')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex-shrink-0">
+                🚀 Projects
+            </button>
+            <button type="button" onclick="window.omnitrixAsk('How can I contact or hire Alkamah?')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex-shrink-0">
+                📬 Contact
+            </button>
+            <button type="button" onclick="window.omnitrixAsk('Can I view his resume?')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all flex-shrink-0">
+                📄 CV
+            </button>
+        </div>
+
+        <!-- INPUT FORM -->
+        <form id="omnitrixForm" onsubmit="window.omnitrixSubmit(event)" class="p-3 bg-slate-950/90 border-t border-emerald-500/20 flex items-center gap-2">
+            <input type="text" id="omnitrixInput" placeholder="Ask Ben 10 anything about Alkamah..." autocomplete="off"
+                   class="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-emerald-500/30 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#00ff66] focus:ring-1 focus:ring-[#00ff66]">
+            
+            <button type="submit" 
+                    class="w-10 h-10 rounded-xl bg-[#00ff66] hover:bg-[#34d399] text-slate-950 font-bold flex items-center justify-center transition-all shadow-[0_0_12px_rgba(0,255,102,0.4)] hover:scale-105 active:scale-95 flex-shrink-0"
+                    title="Send Question">
+                <i class="fas fa-bolt"></i>
+            </button>
+        </form>
+    </div>
+
     <!-- Ben 10 Omnitrix Cartoon AI Assistant Module -->
     <script src="js/omnitrix-ai.js"></script>
 </body>

@@ -438,57 +438,47 @@
             .omnitrix-custom-scrollbar::-webkit-scrollbar-thumb:hover {
                 background: rgba(0, 255, 102, 0.6);
             }
-            /* Moveable / Draggable styles */
-            .omnitrix-draggable {
-                touch-action: none;
-                user-select: none;
-                -webkit-user-select: none;
-                cursor: grab;
-            }
-            .omnitrix-draggable.is-dragging {
-                cursor: grabbing !important;
-                filter: drop-shadow(0 20px 30px rgba(0, 255, 102, 0.6));
-                transform: scale(1.05);
-            }
         `;
         document.head.appendChild(style);
     }
 
     function injectOmnitrixMarkup() {
-        if (document.getElementById('omnitrixContainer')) return;
+        // If markup is already present directly in HTML, do not re-inject
+        if (document.getElementById('omnitrixTriggerWrap') || document.getElementById('omnitrixModal') || document.getElementById('omnitrixContainer')) {
+            return;
+        }
 
         const container = document.createElement('div');
         container.id = 'omnitrixContainer';
         container.innerHTML = `
-            <!-- FLOATING BEN 10 CARTOON WIDGET (DRAGGABLE & MOVEABLE) -->
-            <div id="omnitrixTriggerWrap" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] flex items-end gap-2.5 omnitrix-draggable select-none">
-                <!-- Playful Ben 10 Speech Bubble -->
-                <div id="omnitrixHint" 
-                     class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-950/95 border-2 border-[#00ff66] text-[#00ff66] text-xs font-bold shadow-[0_0_20px_rgba(0,255,102,0.5)] backdrop-blur-md transition-all hover:scale-105 select-none relative animate-bounce cursor-grab">
+            <!-- FLOATING BEN 10 CARTOON WIDGET (FIXED BOTTOM-RIGHT) -->
+            <div id="omnitrixTriggerWrap" class="fixed bottom-5 right-5 z-[99999] flex items-end gap-3 select-none">
+                <!-- Playful Ben 10 Comic Speech Bubble -->
+                <div id="omnitrixHint" onclick="window.omnitrixToggle()" 
+                     class="flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-950/95 border-2 border-[#00ff66] text-[#00ff66] text-xs font-bold shadow-[0_0_25px_rgba(0,255,102,0.5)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 active:scale-95 animate-bounce select-none">
                     <span class="w-2.5 h-2.5 rounded-full bg-[#00ff66] animate-ping"></span>
-                    <span>Hey! I'm Ben 10! Ask me about Alkamah</span>
-                    <span class="text-[10px] text-slate-300 font-mono ml-1 px-1.5 py-0.5 rounded bg-white/10 hidden sm:inline-block">Moveable 🖐️</span>
+                    <span>⚡ Hey! I'm Ben 10! Ask me about Alkamah</span>
                 </div>
 
                 <!-- Ben 10 Cartoon Sticker Dial Trigger -->
-                <button type="button" id="omnitrixDialBtn" 
-                        class="omnitrix-dial-btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-4 border-[#00ff66] flex items-center justify-center shadow-[0_0_30px_rgba(0,255,102,0.8)] hover:scale-110 active:scale-95 transition-transform duration-200 focus:outline-none overflow-hidden group cursor-grab"
-                        aria-label="Open Ben 10 Cartoon AI Assistant" title="Ben 10 Cartoon AI Assistant (Click to chat, drag to move)">
+                <button type="button" id="omnitrixDialBtn" onclick="window.omnitrixToggle()" 
+                        class="omnitrix-dial-btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-4 border-[#00ff66] flex items-center justify-center shadow-[0_0_35px_rgba(0,255,102,0.85)] hover:scale-110 active:scale-95 transition-all duration-300 focus:outline-none overflow-hidden group cursor-pointer"
+                        aria-label="Open Ben 10 Cartoon AI Assistant" title="Click to chat with Ben 10!">
                     
                     <!-- Omnitrix Rotating Energy Ring -->
-                    <div class="absolute inset-0 rounded-full border border-dashed border-[#00ff66]/50 animate-spin pointer-events-none" style="animation-duration: 10s;"></div>
+                    <div class="absolute inset-0 rounded-full border-2 border-dashed border-[#00ff66]/60 animate-spin pointer-events-none" style="animation-duration: 8s;"></div>
                     
                     <!-- Direct Ben 10 Cartoon Character Image -->
                     <img src="assets/ben10-avatar.png" alt="Ben 10 Cartoon" 
                          class="w-full h-full object-cover object-top scale-110 group-hover:scale-125 transition-transform duration-300 pointer-events-none select-none">
 
                     <!-- Green status blip -->
-                    <span class="absolute bottom-0 right-1 w-4 h-4 rounded-full bg-[#00ff66] border-2 border-slate-950 shadow-[0_0_10px_#00ff66]"></span>
+                    <span class="absolute bottom-0 right-1 w-4 h-4 rounded-full bg-[#00ff66] border-2 border-slate-950 shadow-[0_0_12px_#00ff66]"></span>
                 </button>
             </div>
 
             <!-- OMNITRIX HOLOGRAPHIC CHAT WINDOW -->
-            <div id="omnitrixModal" class="fixed bottom-24 right-3 sm:right-6 z-[9999] hidden w-[94vw] sm:w-[440px] max-h-[84vh] rounded-[2rem] omnitrix-holo-panel text-slate-100 flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0 shadow-2xl">
+            <div id="omnitrixModal" class="fixed bottom-28 right-4 sm:right-6 z-[99999] hidden w-[94vw] sm:w-[440px] max-h-[82vh] rounded-[2rem] omnitrix-holo-panel text-slate-100 flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0 shadow-2xl">
                 
                 <!-- TOP HEADER BAR -->
                 <div class="p-4 sm:p-5 border-b border-emerald-500/20 bg-slate-950/90 backdrop-blur-md flex items-center justify-between relative">
@@ -498,11 +488,9 @@
                             <img src="assets/ben10-avatar.png" alt="Ben 10" class="w-full h-full object-cover object-top scale-110">
                         </div>
                         <div>
-                            <div class="flex items-center gap-2">
-                                <h3 id="omnitrixHeaderTitle" class="font-extrabold text-sm sm:text-base tracking-wide text-white flex items-center gap-1.5">
-                                    BEN 10 AI ASSISTANT
-                                </h3>
-                            </div>
+                            <h3 id="omnitrixHeaderTitle" class="font-extrabold text-sm sm:text-base tracking-wide text-white flex items-center gap-1.5">
+                                <i id="omnitrixHeaderIcon" class="fas fa-bolt text-[#00ff66]"></i> BEN 10 AI ASSISTANT
+                            </h3>
                             <p id="omnitrixHeaderSubtitle" class="text-[11px] text-emerald-400 font-mono flex items-center gap-1.5">
                                 <span class="w-1.5 h-1.5 rounded-full bg-[#00ff66] animate-pulse"></span>
                                 "It's Hero Time!" // Ready
@@ -522,7 +510,7 @@
                         <!-- Close Button -->
                         <button type="button" onclick="window.omnitrixClose()" 
                                 class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-xs transition-all"
-                                title="Minimize Omnitrix">
+                                title="Close">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -531,25 +519,25 @@
                 <!-- ALIEN HERO PERSONA SELECTOR BAR -->
                 <div class="px-3.5 py-2.5 bg-black/40 border-b border-emerald-500/15 flex items-center gap-1.5 overflow-x-auto omnitrix-custom-scrollbar text-[11px] font-bold">
                     <span class="text-[10px] text-slate-400 uppercase tracking-widest font-mono mr-1">Modes:</span>
-                    <button type="button" onclick="window.omnitrixSetPersona('omni')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition-all flex items-center gap-1 flex-shrink-0" data-persona="omni">
+                    <button type="button" onclick="window.omnitrixSetPersona('omni')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 font-bold flex items-center gap-1 flex-shrink-0" data-persona="omni">
                         <i class="fas fa-bolt text-[10px]"></i> Omni
                     </button>
-                    <button type="button" onclick="window.omnitrixSetPersona('greyMatter')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 transition-all flex items-center gap-1 flex-shrink-0" data-persona="greyMatter">
+                    <button type="button" onclick="window.omnitrixSetPersona('greyMatter')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 flex items-center gap-1 flex-shrink-0" data-persona="greyMatter">
                         <i class="fas fa-brain text-[10px] text-sky-400"></i> Grey Matter
                     </button>
-                    <button type="button" onclick="window.omnitrixSetPersona('xlr8')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 transition-all flex items-center gap-1 flex-shrink-0" data-persona="xlr8">
+                    <button type="button" onclick="window.omnitrixSetPersona('xlr8')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 flex items-center gap-1 flex-shrink-0" data-persona="xlr8">
                         <i class="fas fa-gauge-high text-[10px] text-cyan-400"></i> XLR8
                     </button>
-                    <button type="button" onclick="window.omnitrixSetPersona('fourArms')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 transition-all flex items-center gap-1 flex-shrink-0" data-persona="fourArms">
+                    <button type="button" onclick="window.omnitrixSetPersona('fourArms')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 flex items-center gap-1 flex-shrink-0" data-persona="fourArms">
                         <i class="fas fa-dumbbell text-[10px] text-red-400"></i> Four Arms
                     </button>
-                    <button type="button" onclick="window.omnitrixSetPersona('upgrade')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 transition-all flex items-center gap-1 flex-shrink-0" data-persona="upgrade">
+                    <button type="button" onclick="window.omnitrixSetPersona('upgrade')" class="omni-persona-btn px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 flex items-center gap-1 flex-shrink-0" data-persona="upgrade">
                         <i class="fas fa-microchip text-[10px] text-purple-400"></i> Upgrade
                     </button>
                 </div>
 
                 <!-- MESSAGES STREAM -->
-                <div id="omnitrixMessages" class="p-4 space-y-3.5 overflow-y-auto max-h-[50vh] sm:max-h-[52vh] omnitrix-custom-scrollbar omnitrix-scanline text-xs leading-relaxed">
+                <div id="omnitrixMessages" class="p-4 space-y-3.5 overflow-y-auto max-h-[48vh] omnitrix-custom-scrollbar omnitrix-scanline text-xs leading-relaxed">
                     <!-- Initial Welcome Message -->
                     <div class="flex items-start gap-2.5">
                         <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border-2 border-[#00ff66]/50 overflow-hidden flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(0,255,102,0.3)]">
@@ -586,12 +574,12 @@
 
                 <!-- INPUT BAR -->
                 <form id="omnitrixForm" onsubmit="window.omnitrixSubmit(event)" class="p-3 bg-slate-950/90 border-t border-emerald-500/20 flex items-center gap-2">
-                    <input type="text" id="omnitrixInput" placeholder="Ask the Omnitrix anything..." autocomplete="off"
+                    <input type="text" id="omnitrixInput" placeholder="Ask Ben 10 anything about Alkamah..." autocomplete="off"
                            class="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-emerald-500/30 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#00ff66] focus:ring-1 focus:ring-[#00ff66]">
                     
                     <button type="submit" 
                             class="w-10 h-10 rounded-xl bg-[#00ff66] hover:bg-[#34d399] text-slate-950 font-bold flex items-center justify-center transition-all shadow-[0_0_12px_rgba(0,255,102,0.4)] hover:scale-105 active:scale-95 flex-shrink-0"
-                            title="Transmit Query">
+                            title="Send Question">
                         <i class="fas fa-bolt"></i>
                     </button>
                 </form>
@@ -606,10 +594,8 @@
     // 5. Global API & Controller
     // -------------------------------------------------------------------------
     let isOpen = false;
-    let justDragged = false;
 
     window.omnitrixToggle = function () {
-        if (justDragged) return;
         if (isOpen) {
             window.omnitrixClose();
         } else {
@@ -620,147 +606,48 @@
     window.omnitrixOpen = function () {
         const modal = document.getElementById('omnitrixModal');
         const hint = document.getElementById('omnitrixHint');
-        const wrap = document.getElementById('omnitrixTriggerWrap');
         if (!modal) return;
         isOpen = true;
 
-        // Position modal intelligently based on Ben 10's current location on screen
-        if (wrap) {
-            const rect = wrap.getBoundingClientRect();
-            // Vertical placement
-            if (rect.top > window.innerHeight / 2) {
-                // In lower half: place modal above Ben 10
-                modal.style.bottom = `${Math.max(12, window.innerHeight - rect.top + 12)}px`;
-                modal.style.top = 'auto';
-            } else {
-                // In upper half: place modal below Ben 10
-                modal.style.top = `${Math.min(window.innerHeight - 450, rect.bottom + 12)}px`;
-                modal.style.bottom = 'auto';
-            }
-
-            // Horizontal placement
-            if (rect.left < window.innerWidth / 2) {
-                // On left half: place modal anchored to left
-                modal.style.left = `${Math.max(12, rect.left)}px`;
-                modal.style.right = 'auto';
-            } else {
-                // On right half: place modal anchored to right
-                modal.style.right = `${Math.max(12, window.innerWidth - rect.right)}px`;
-                modal.style.left = 'auto';
-            }
-        }
-
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        setTimeout(() => {
+        
+        // Trigger smooth scale & fade in
+        requestAnimationFrame(() => {
             modal.classList.remove('scale-95', 'opacity-0');
             modal.classList.add('scale-100', 'opacity-100');
-        }, 10);
-        if (hint) hint.classList.add('hidden');
+        });
+
+        if (hint) {
+            hint.classList.add('hidden');
+        }
+
         playOmnitrixSfx('open');
-        document.getElementById('omnitrixInput')?.focus();
+        const input = document.getElementById('omnitrixInput');
+        if (input) {
+            setTimeout(() => input.focus(), 120);
+        }
     };
 
     window.omnitrixClose = function () {
         const modal = document.getElementById('omnitrixModal');
+        const hint = document.getElementById('omnitrixHint');
         if (!modal) return;
         isOpen = false;
+
         modal.classList.add('scale-95', 'opacity-0');
         modal.classList.remove('scale-100', 'opacity-100');
+
         setTimeout(() => {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-        }, 200);
+            if (hint) {
+                hint.classList.remove('hidden');
+            }
+        }, 220);
+
         playOmnitrixSfx('beep');
     };
-
-    // Make Ben 10 Draggable anywhere across the screen
-    function setupOmnitrixDraggable() {
-        const wrap = document.getElementById('omnitrixTriggerWrap');
-        if (!wrap) return;
-
-        let isPointerDown = false;
-        let isDragging = false;
-        let startX = 0, startY = 0;
-        let initialLeft = 0, initialTop = 0;
-
-        wrap.addEventListener('pointerdown', (e) => {
-            // Only primary button
-            if (e.button !== 0 && e.pointerType === 'mouse') return;
-
-            isPointerDown = true;
-            isDragging = false;
-            startX = e.clientX;
-            startY = e.clientY;
-
-            const rect = wrap.getBoundingClientRect();
-            initialLeft = rect.left;
-            initialTop = rect.top;
-
-            wrap.style.bottom = 'auto';
-            wrap.style.right = 'auto';
-            wrap.style.left = `${initialLeft}px`;
-            wrap.style.top = `${initialTop}px`;
-            wrap.style.transition = 'none';
-
-            try { wrap.setPointerCapture(e.pointerId); } catch (_) {}
-        });
-
-        wrap.addEventListener('pointermove', (e) => {
-            if (!isPointerDown) return;
-
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-
-            if (!isDragging && Math.hypot(dx, dy) > 6) {
-                isDragging = true;
-                justDragged = true;
-                wrap.classList.add('is-dragging');
-            }
-
-            if (isDragging) {
-                let newLeft = initialLeft + dx;
-                let newTop = initialTop + dy;
-
-                const wrapW = wrap.offsetWidth;
-                const wrapH = wrap.offsetHeight;
-                const maxLeft = window.innerWidth - wrapW - 10;
-                const maxTop = window.innerHeight - wrapH - 10;
-
-                newLeft = Math.max(10, Math.min(newLeft, maxLeft));
-                newTop = Math.max(10, Math.min(newTop, maxTop));
-
-                wrap.style.left = `${newLeft}px`;
-                wrap.style.top = `${newTop}px`;
-
-                // Adjust speech bubble orientation if near the left vs right edge
-                if (newLeft < 260) {
-                    wrap.style.flexDirection = 'row-reverse';
-                } else {
-                    wrap.style.flexDirection = 'row';
-                }
-            }
-        });
-
-        const handlePointerEnd = (e) => {
-            if (!isPointerDown) return;
-            isPointerDown = false;
-            wrap.classList.remove('is-dragging');
-            wrap.style.transition = '';
-
-            try { wrap.releasePointerCapture(e.pointerId); } catch (_) {}
-
-            if (isDragging) {
-                setTimeout(() => { justDragged = false; }, 250);
-            } else {
-                window.omnitrixToggle();
-            }
-            isDragging = false;
-        };
-
-        wrap.addEventListener('pointerup', handlePointerEnd);
-        wrap.addEventListener('pointercancel', handlePointerEnd);
-    }
 
     window.omnitrixToggleSfx = function () {
         sfxEnabled = !sfxEnabled;
@@ -902,7 +789,26 @@
     function initOmnitrix() {
         injectOmnitrixStyles();
         injectOmnitrixMarkup();
-        setupOmnitrixDraggable();
+
+        // Close when clicking outside of modal
+        document.addEventListener('click', (e) => {
+            if (!isOpen) return;
+            const modal = document.getElementById('omnitrixModal');
+            const wrap = document.getElementById('omnitrixTriggerWrap');
+            if (!modal) return;
+            if (!modal.contains(e.target) && (!wrap || !wrap.contains(e.target))) {
+                if (!e.target.closest('button[onclick*="omnitrix"]')) {
+                    window.omnitrixClose();
+                }
+            }
+        });
+
+        // Close on Escape key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                window.omnitrixClose();
+            }
+        });
     }
 
     if (document.readyState === 'loading') {
