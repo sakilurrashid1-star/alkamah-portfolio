@@ -334,7 +334,7 @@
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
                 <div class="flex-shrink-0">
-                    <a href="#" class="text-2xl font-bold font-heading tracking-tighter flex flex-col items-center group">
+                    <a href="#" onclick="handleSecretLogoClick(event)" class="text-2xl font-bold font-heading tracking-tighter flex flex-col items-center group cursor-pointer" title="ASR Portfolio">
                         <span class="text-gradient leading-none transition-transform group-hover:scale-105" id="brandName">ASR</span>
                         <span class="text-[9px] font-bold tracking-[0.2em] text-slate-400 mt-1">PORTFOLIO</span>
                     </a>
@@ -352,11 +352,11 @@
 
                 <!-- Right Action Buttons -->
                 <div class="hidden md:flex items-center space-x-3">
-                    <!-- Admin Login / Cockpit Button -->
+                    <!-- Admin Status Button (Hidden by default; only shown when authenticated) -->
                     <button type="button" id="adminNavBtn" onclick="toggleAdminView()" aria-label="Admin Access"
-                            class="px-3.5 py-2 rounded-full glass border border-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:border-emerald-500/40" title="Admin Login & Control Panel (Ctrl+Shift+A)">
+                            class="hidden px-3.5 py-2 rounded-full glass border border-emerald-500/50 bg-emerald-500/10 text-emerald-300 text-xs font-bold transition-all items-center gap-1.5 shadow-sm" title="Admin Active — Click to open Cockpit">
                         <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
-                        <span id="adminNavStatus">Admin</span>
+                        <span id="adminNavStatus">Alkamah (Admin)</span>
                     </button>
 
                     <!-- Theme Toggle -->
@@ -380,11 +380,6 @@
 
                 <!-- Mobile menu button -->
                 <div class="lg:hidden flex items-center gap-2">
-                    <button type="button" onclick="toggleAdminView()" aria-label="Admin Access"
-                            class="px-2.5 py-1.5 rounded-full glass border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-1">
-                        <i class="fas fa-shield-halved text-xs"></i>
-                        <span>Admin</span>
-                    </button>
                     <button type="button" onclick="toggleTheme()" aria-label="Toggle Theme"
                             class="w-9 h-9 rounded-full glass border border-white/10 text-slate-300 flex items-center justify-center">
                         <i class="fas fa-terminal text-xs"></i>
@@ -411,13 +406,14 @@
             <a href="#activities" class="mobile-link block text-slate-300 font-medium text-base hover:text-white">Activities</a>
             <a href="#projects" class="mobile-link block text-slate-300 font-medium text-base hover:text-white">Projects</a>
             <div class="pt-2 px-6 space-y-2">
-                <button type="button" id="adminMobileNavBtn" onclick="toggleAdminView()" class="mobile-link block w-full py-2.5 rounded-full glass border border-emerald-500/30 text-emerald-300 font-bold text-sm">
+                <button type="button" id="adminMobileNavBtn" onclick="toggleAdminView()" class="hidden mobile-link w-full py-2.5 rounded-full glass border border-emerald-500/30 text-emerald-300 font-bold text-sm">
                     <i class="fas fa-shield-halved text-emerald-400"></i> Admin Panel
                 </button>
                 <a href="#contact" class="mobile-link block w-full py-3 rounded-full bg-white text-slate-900 font-bold text-sm">Contact Me</a>
             </div>
         </div>
     </nav>
+
 
 
     <!-- HERO SECTION -->
@@ -1007,7 +1003,8 @@
                 <span class="hidden md:inline text-slate-700">|</span>
                 <span><i class="fas fa-map-marker-alt mr-1.5 text-xs text-accent"></i> Dhaka, Bangladesh</span>
             </div>
-            <p class="text-slate-500 font-light text-xs mb-8">© 2026 Alkamah Sakilur Rashid. All Rights Reserved.</p>
+            <p class="text-slate-500 font-light text-xs mb-8">© 2026 Alkamah Sakilur Rashid. All Rights Reserved. <button type="button" onclick="toggleAdminView()" class="opacity-0 hover:opacity-20 transition-opacity ml-1 text-[10px] text-slate-600 focus:outline-none" title="Staff Gateway" aria-label="Staff Gateway"><i class="fas fa-lock"></i></button></p>
+
             
             <button id="scrollToTop" class="w-10 h-10 rounded-full glass text-white flex items-center justify-center hover:bg-primary transition-all border border-white/10 hover:-translate-y-1" aria-label="Scroll to top">
                 <i class="fas fa-arrow-up text-sm"></i>

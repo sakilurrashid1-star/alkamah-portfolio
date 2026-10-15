@@ -117,25 +117,39 @@ export function updateNavbarAdminStatus() {
             navStatus.innerHTML = '<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>Alkamah (Admin)</span></span>';
         }
         if (navBtn) {
-            navBtn.classList.add('border-emerald-500/50', 'bg-emerald-500/10', 'text-emerald-300');
+            navBtn.classList.remove('hidden');
+            navBtn.classList.add('flex', 'border-emerald-500/50', 'bg-emerald-500/10', 'text-emerald-300');
             navBtn.title = 'Admin Panel Active — Click to open Cockpit';
         }
         if (mobileBtn) {
+            mobileBtn.classList.remove('hidden');
             mobileBtn.innerHTML = '<i class="fas fa-shield-halved text-emerald-400"></i> Admin Panel';
         }
     } else {
-        if (navStatus) {
-            navStatus.textContent = 'Admin';
-        }
         if (navBtn) {
-            navBtn.classList.remove('border-emerald-500/50', 'bg-emerald-500/10', 'text-emerald-300');
-            navBtn.title = 'Admin Login & Control Panel (Ctrl+Shift+A)';
+            navBtn.classList.add('hidden');
+            navBtn.classList.remove('flex');
         }
         if (mobileBtn) {
-            mobileBtn.innerHTML = '<i class="fas fa-shield-halved text-emerald-400"></i> Admin Login';
+            mobileBtn.classList.add('hidden');
         }
     }
 }
+
+// Secret 3-Click Trigger on Logo
+let secretLogoClicks = 0;
+let secretLogoTimer = null;
+export function handleSecretLogoClick(e) {
+    secretLogoClicks++;
+    clearTimeout(secretLogoTimer);
+    secretLogoTimer = setTimeout(() => { secretLogoClicks = 0; }, 1500);
+    if (secretLogoClicks >= 3) {
+        secretLogoClicks = 0;
+        toggleAdminView();
+    }
+}
+window.handleSecretLogoClick = handleSecretLogoClick;
+
 
 // Authentication Listeners
 if (isFirebaseReady) {
