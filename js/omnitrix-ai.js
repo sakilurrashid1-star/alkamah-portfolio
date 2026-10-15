@@ -438,6 +438,18 @@
             .omnitrix-custom-scrollbar::-webkit-scrollbar-thumb:hover {
                 background: rgba(0, 255, 102, 0.6);
             }
+            /* Moveable / Draggable styles */
+            .omnitrix-draggable {
+                touch-action: none;
+                user-select: none;
+                -webkit-user-select: none;
+                cursor: grab;
+            }
+            .omnitrix-draggable.is-dragging {
+                cursor: grabbing !important;
+                filter: drop-shadow(0 20px 30px rgba(0, 255, 102, 0.6));
+                transform: scale(1.05);
+            }
         `;
         document.head.appendChild(style);
     }
@@ -448,26 +460,27 @@
         const container = document.createElement('div');
         container.id = 'omnitrixContainer';
         container.innerHTML = `
-            <!-- FLOATING BEN 10 CARTOON WIDGET -->
-            <div id="omnitrixTriggerWrap" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] flex items-end gap-2.5">
+            <!-- FLOATING BEN 10 CARTOON WIDGET (DRAGGABLE & MOVEABLE) -->
+            <div id="omnitrixTriggerWrap" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] flex items-end gap-2.5 omnitrix-draggable select-none">
                 <!-- Playful Ben 10 Speech Bubble -->
-                <div id="omnitrixHint" onclick="window.omnitrixToggle()" 
-                     class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-950/95 border-2 border-[#00ff66] text-[#00ff66] text-xs font-bold shadow-[0_0_20px_rgba(0,255,102,0.5)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 select-none relative animate-bounce">
+                <div id="omnitrixHint" 
+                     class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-950/95 border-2 border-[#00ff66] text-[#00ff66] text-xs font-bold shadow-[0_0_20px_rgba(0,255,102,0.5)] backdrop-blur-md transition-all hover:scale-105 select-none relative animate-bounce cursor-grab">
                     <span class="w-2.5 h-2.5 rounded-full bg-[#00ff66] animate-ping"></span>
                     <span>Hey! I'm Ben 10! Ask me about Alkamah</span>
+                    <span class="text-[10px] text-slate-300 font-mono ml-1 px-1.5 py-0.5 rounded bg-white/10 hidden sm:inline-block">Moveable 🖐️</span>
                 </div>
 
                 <!-- Ben 10 Cartoon Sticker Dial Trigger -->
-                <button type="button" id="omnitrixDialBtn" onclick="window.omnitrixToggle()" 
-                        class="omnitrix-dial-btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-4 border-[#00ff66] flex items-center justify-center shadow-[0_0_30px_rgba(0,255,102,0.8)] hover:scale-110 active:scale-95 transition-transform duration-200 focus:outline-none overflow-hidden group"
-                        aria-label="Open Ben 10 Cartoon AI Assistant" title="Ben 10 Cartoon AI Assistant">
+                <button type="button" id="omnitrixDialBtn" 
+                        class="omnitrix-dial-btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-4 border-[#00ff66] flex items-center justify-center shadow-[0_0_30px_rgba(0,255,102,0.8)] hover:scale-110 active:scale-95 transition-transform duration-200 focus:outline-none overflow-hidden group cursor-grab"
+                        aria-label="Open Ben 10 Cartoon AI Assistant" title="Ben 10 Cartoon AI Assistant (Click to chat, drag to move)">
                     
                     <!-- Omnitrix Rotating Energy Ring -->
                     <div class="absolute inset-0 rounded-full border border-dashed border-[#00ff66]/50 animate-spin pointer-events-none" style="animation-duration: 10s;"></div>
                     
                     <!-- Direct Ben 10 Cartoon Character Image -->
                     <img src="assets/ben10-avatar.png" alt="Ben 10 Cartoon" 
-                         class="w-full h-full object-cover object-top scale-110 group-hover:scale-125 transition-transform duration-300 pointer-events-none">
+                         class="w-full h-full object-cover object-top scale-110 group-hover:scale-125 transition-transform duration-300 pointer-events-none select-none">
 
                     <!-- Green status blip -->
                     <span class="absolute bottom-0 right-1 w-4 h-4 rounded-full bg-[#00ff66] border-2 border-slate-950 shadow-[0_0_10px_#00ff66]"></span>
@@ -593,8 +606,10 @@
     // 5. Global API & Controller
     // -------------------------------------------------------------------------
     let isOpen = false;
+    let justDragged = false;
 
     window.omnitrixToggle = function () {
+        if (justDragged) return;
         if (isOpen) {
             window.omnitrixClose();
         } else {
@@ -605,8 +620,36 @@
     window.omnitrixOpen = function () {
         const modal = document.getElementById('omnitrixModal');
         const hint = document.getElementById('omnitrixHint');
+        const wrap = document.getElementById('omnitrixTriggerWrap');
         if (!modal) return;
         isOpen = true;
+
+        // Position modal intelligently based on Ben 10's current location on screen
+        if (wrap) {
+            const rect = wrap.getBoundingClientRect();
+            // Vertical placement
+            if (rect.top > window.innerHeight / 2) {
+                // In lower half: place modal above Ben 10
+                modal.style.bottom = `${Math.max(12, window.innerHeight - rect.top + 12)}px`;
+                modal.style.top = 'auto';
+            } else {
+                // In upper half: place modal below Ben 10
+                modal.style.top = `${Math.min(window.innerHeight - 450, rect.bottom + 12)}px`;
+                modal.style.bottom = 'auto';
+            }
+
+            // Horizontal placement
+            if (rect.left < window.innerWidth / 2) {
+                // On left half: place modal anchored to left
+                modal.style.left = `${Math.max(12, rect.left)}px`;
+                modal.style.right = 'auto';
+            } else {
+                // On right half: place modal anchored to right
+                modal.style.right = `${Math.max(12, window.innerWidth - rect.right)}px`;
+                modal.style.left = 'auto';
+            }
+        }
+
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         setTimeout(() => {
@@ -630,6 +673,94 @@
         }, 200);
         playOmnitrixSfx('beep');
     };
+
+    // Make Ben 10 Draggable anywhere across the screen
+    function setupOmnitrixDraggable() {
+        const wrap = document.getElementById('omnitrixTriggerWrap');
+        if (!wrap) return;
+
+        let isPointerDown = false;
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let initialLeft = 0, initialTop = 0;
+
+        wrap.addEventListener('pointerdown', (e) => {
+            // Only primary button
+            if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+            isPointerDown = true;
+            isDragging = false;
+            startX = e.clientX;
+            startY = e.clientY;
+
+            const rect = wrap.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+
+            wrap.style.bottom = 'auto';
+            wrap.style.right = 'auto';
+            wrap.style.left = `${initialLeft}px`;
+            wrap.style.top = `${initialTop}px`;
+            wrap.style.transition = 'none';
+
+            try { wrap.setPointerCapture(e.pointerId); } catch (_) {}
+        });
+
+        wrap.addEventListener('pointermove', (e) => {
+            if (!isPointerDown) return;
+
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            if (!isDragging && Math.hypot(dx, dy) > 6) {
+                isDragging = true;
+                justDragged = true;
+                wrap.classList.add('is-dragging');
+            }
+
+            if (isDragging) {
+                let newLeft = initialLeft + dx;
+                let newTop = initialTop + dy;
+
+                const wrapW = wrap.offsetWidth;
+                const wrapH = wrap.offsetHeight;
+                const maxLeft = window.innerWidth - wrapW - 10;
+                const maxTop = window.innerHeight - wrapH - 10;
+
+                newLeft = Math.max(10, Math.min(newLeft, maxLeft));
+                newTop = Math.max(10, Math.min(newTop, maxTop));
+
+                wrap.style.left = `${newLeft}px`;
+                wrap.style.top = `${newTop}px`;
+
+                // Adjust speech bubble orientation if near the left vs right edge
+                if (newLeft < 260) {
+                    wrap.style.flexDirection = 'row-reverse';
+                } else {
+                    wrap.style.flexDirection = 'row';
+                }
+            }
+        });
+
+        const handlePointerEnd = (e) => {
+            if (!isPointerDown) return;
+            isPointerDown = false;
+            wrap.classList.remove('is-dragging');
+            wrap.style.transition = '';
+
+            try { wrap.releasePointerCapture(e.pointerId); } catch (_) {}
+
+            if (isDragging) {
+                setTimeout(() => { justDragged = false; }, 250);
+            } else {
+                window.omnitrixToggle();
+            }
+            isDragging = false;
+        };
+
+        wrap.addEventListener('pointerup', handlePointerEnd);
+        wrap.addEventListener('pointercancel', handlePointerEnd);
+    }
 
     window.omnitrixToggleSfx = function () {
         sfxEnabled = !sfxEnabled;
@@ -771,6 +902,7 @@
     function initOmnitrix() {
         injectOmnitrixStyles();
         injectOmnitrixMarkup();
+        setupOmnitrixDraggable();
     }
 
     if (document.readyState === 'loading') {
