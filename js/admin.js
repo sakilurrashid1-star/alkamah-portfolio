@@ -189,12 +189,43 @@ export function updateNavbarAdminStatus() {
 let secretLogoClicks = 0;
 let secretLogoTimer = null;
 export function handleSecretLogoClick(e) {
+    if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
     secretLogoClicks++;
     clearTimeout(secretLogoTimer);
-    secretLogoTimer = setTimeout(() => { secretLogoClicks = 0; }, 1500);
+    secretLogoTimer = setTimeout(() => { secretLogoClicks = 0; }, 2000);
+    
+    // Subtle visual pulse feedback on click
+    const brand = document.getElementById('brandName');
+    if (brand) {
+        brand.style.transition = 'transform 0.15s ease';
+        brand.style.transform = 'scale(0.88)';
+        setTimeout(() => { if (brand) brand.style.transform = ''; }, 150);
+    }
+
     if (secretLogoClicks >= 3) {
         secretLogoClicks = 0;
         toggleAdminView();
+    }
+}
+window.handleSecretLogoClick = handleSecretLogoClick;
+
+// Ensure direct DOM binding to logo elements
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindLogoSecretTrigger);
+} else {
+    bindLogoSecretTrigger();
+}
+
+function bindLogoSecretTrigger() {
+    const brand = document.getElementById('brandName');
+    if (brand) {
+        const anchor = brand.closest('a');
+        if (anchor) {
+            anchor.addEventListener('click', handleSecretLogoClick);
+        }
     }
 }
 

@@ -334,9 +334,9 @@
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
                 <div class="flex-shrink-0">
-                    <a href="#" onclick="handleSecretLogoClick(event)" class="text-2xl font-bold font-heading tracking-tighter flex flex-col items-center group cursor-pointer" title="ASR Portfolio">
-                        <span class="text-gradient leading-none transition-transform group-hover:scale-105" id="brandName">ASR</span>
-                        <span class="text-[9px] font-bold tracking-[0.2em] text-slate-400 mt-1">PORTFOLIO</span>
+                    <a href="javascript:void(0)" onclick="handleSecretLogoClick(event)" class="text-2xl font-bold font-heading tracking-tighter flex flex-col items-center group cursor-pointer" title="ASR Portfolio">
+                        <span class="text-gradient leading-none transition-transform group-hover:scale-105 select-none" id="brandName">ASR</span>
+                        <span class="text-[9px] font-bold tracking-[0.2em] text-slate-400 mt-1 select-none">PORTFOLIO</span>
                     </a>
                 </div>
                 
@@ -2630,8 +2630,44 @@
         </div>
     </div>
 
-    <!-- UI Helpers for Tab Switching in Auth Modal -->
+    <!-- UI Helpers for Tab Switching in Auth Modal & Secret Logo Trigger -->
     <script>
+    let _secretLogoClicks = 0;
+    let _secretLogoTimer = null;
+    window.handleSecretLogoClick = function(e) {
+        if (e) {
+            if (typeof e.preventDefault === 'function') e.preventDefault();
+            if (typeof e.stopPropagation === 'function') e.stopPropagation();
+        }
+        _secretLogoClicks++;
+        clearTimeout(_secretLogoTimer);
+        _secretLogoTimer = setTimeout(() => { _secretLogoClicks = 0; }, 2000);
+        
+        // Visual feedback
+        const brand = document.getElementById('brandName');
+        if (brand) {
+            brand.style.transition = 'transform 0.15s ease';
+            brand.style.transform = 'scale(0.85)';
+            setTimeout(() => { if (brand) brand.style.transform = ''; }, 150);
+        }
+        
+        if (_secretLogoClicks >= 3) {
+            _secretLogoClicks = 0;
+            if (typeof window.toggleAdminView === 'function') {
+                window.toggleAdminView();
+            } else if (typeof window.openAdminAuthModal === 'function') {
+                window.openAdminAuthModal();
+            } else {
+                const modal = document.getElementById('adminAuthModal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        }
+    };
+
     function switchAuthTab(tab) {
         ['google', 'email', 'passcode'].forEach(t => {
             const pane = document.getElementById(`authTabPane-${t}`);
