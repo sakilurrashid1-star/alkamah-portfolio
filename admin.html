@@ -152,7 +152,7 @@
                     <i class="fas fa-users-gear text-purple-400"></i> <span>Clubs & Leadership</span>
                 </button>
                 <button type="button" onclick="switchStandTab('gallery')" data-standtab="gallery" class="stand-tab-btn px-4 py-2.5 rounded-xl text-slate-400 hover:text-white border border-transparent flex items-center gap-2 shrink-0">
-                    <i class="fas fa-camera-retro text-amber-400"></i> <span>Cultural Gallery</span>
+                    <i class="fas fa-images text-amber-400"></i> <span>Activities & Galleries</span>
                 </button>
                 <button type="button" onclick="switchStandTab('inbox')" data-standtab="inbox" class="stand-tab-btn px-4 py-2.5 rounded-xl text-slate-400 hover:text-white border border-transparent flex items-center gap-2 shrink-0">
                     <i class="fas fa-inbox text-pink-400"></i> <span>Messages Inbox</span>
@@ -176,7 +176,7 @@
                     </div>
                     <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-images"></i></div>
-                        <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Gallery Photos</p><h4 id="stMetricGallery" class="text-2xl font-extrabold text-white">0</h4></div>
+                        <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Activities Photos</p><h4 id="stMetricGallery" class="text-2xl font-extrabold text-white">0</h4></div>
                     </div>
                     <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-envelope-open-text"></i></div>
@@ -192,7 +192,7 @@
                                 <i class="fas fa-plus text-primary"></i> Add New Project
                             </button>
                             <button type="button" onclick="switchStandTab('gallery')" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
-                                <i class="fas fa-camera text-secondary"></i> Add Gallery Photo
+                                <i class="fas fa-images text-secondary"></i> Manage Activities Photos
                             </button>
                             <button type="button" onclick="adminExportBackup()" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
                                 <i class="fas fa-download text-emerald-400"></i> Download Backup
@@ -271,32 +271,74 @@
                         <div><label class="block text-xs font-bold text-slate-300 mb-1">Role / Designation</label><input type="text" id="adm_club_role" placeholder="Vice President" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm"></div>
                         <div><label class="block text-xs font-bold text-slate-300 mb-1">Previous Role (Optional)</label><input type="text" id="adm_club_prevRole" placeholder="General Secretary..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm"></div>
                         <div><label class="block text-xs font-bold text-slate-300 mb-1">Tenure / Date</label><input type="text" id="adm_club_date" placeholder="Oct 2026 - Present" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm"></div>
+                        <div><label class="block text-xs font-bold text-slate-300 mb-1">Icon Class (FontAwesome)</label><input type="text" id="adm_club_icon" placeholder="fas fa-shield-halved" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono"></div>
                         <div><label class="block text-xs font-bold text-slate-300 mb-1">Color Class</label><input type="text" id="adm_club_color" placeholder="text-emerald-400" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono"></div>
                         <div class="sm:col-span-3"><label class="block text-xs font-bold text-slate-300 mb-1">Responsibilities & Achievements</label><textarea id="adm_club_desc" rows="3" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm"></textarea></div>
                     </div>
-                    <button type="button" id="admClubSubmitBtn" onclick="adminSaveClub()" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2">
-                        <i class="fas fa-save"></i> <span>Save Club Role</span>
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button type="button" id="admClubSubmitBtn" onclick="adminSaveClub()" class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-all shadow-md flex items-center gap-2">
+                            <i class="fas fa-save"></i> <span>Save Club Role</span>
+                        </button>
+                        <button type="button" id="admClubCancelBtn" onclick="adminCancelClubEdit()" class="hidden px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all border border-white/10">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
                 <!-- Clubs List -->
                 <div class="space-y-3"><h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-list text-purple-400"></i> Existing Clubs List</h4><div id="admClubsList" class="space-y-3"></div></div>
             </div>
 
             <div id="standPane-gallery" class="stand-pane hidden space-y-6">
-                <!-- Gallery Add Form -->
-                <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                    <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-camera text-secondary"></i> Add Gallery Photo</h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div><label class="block text-xs font-bold text-slate-300 mb-1">Photo Path or URL</label><input type="text" id="adm_photo_src" placeholder="assets/cultural-photo-1.jpg" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm"></div>
-                        <div><label class="block text-xs font-bold text-slate-300 mb-1">Upload from Device (Optional)</label><input type="file" accept="image/*" onchange="adminHandlePhotoUpload(event)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs"></div>
-                        <div class="sm:col-span-2"><label class="block text-xs font-bold text-slate-300 mb-1">Caption</label><input type="text" id="adm_photo_caption" placeholder="Pohela Boishakh Celebration..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm"></div>
+                <!-- Activities Gallery Form -->
+                <div id="admPhotoFormCard" class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                    <h4 id="admPhotoFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-camera text-secondary"></i> Add Photo to Activities Gallery</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Activity Segment / Category *</label>
+                            <select id="adm_photo_category" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                                <option value="technical">Technical Activities (Segment 01)</option>
+                                <option value="cultural" selected>Cultural Activities (Segment 02)</option>
+                                <option value="sports">Sports Activities (Segment 03)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Photo Path or URL *</label>
+                            <input type="text" id="adm_photo_src" placeholder="assets/technical-activity-1.jpg or https://..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Upload from Device (Optional)</label>
+                            <input type="file" accept="image/*" onchange="adminHandlePhotoUpload(event)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-secondary/20 file:text-secondary">
+                        </div>
+                        <div class="sm:col-span-2 lg:col-span-3">
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Caption & Event Details *</label>
+                            <input type="text" id="adm_photo_caption" placeholder="Event description, milestone, or stage performance..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                        </div>
                     </div>
-                    <button type="button" onclick="adminAddPhoto()" class="px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs font-bold transition-all shadow-md flex items-center gap-2">
-                        <i class="fas fa-plus"></i> <span>Add Photo</span>
-                    </button>
+                    <div class="flex items-center gap-3">
+                        <button type="button" id="admPhotoSubmitBtn" onclick="adminSavePhoto()" class="px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs font-bold transition-all shadow-md flex items-center gap-2">
+                            <i class="fas fa-plus"></i> <span>Add Photo</span>
+                        </button>
+                        <button type="button" id="admPhotoCancelBtn" onclick="adminCancelPhotoEdit()" class="hidden px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all border border-white/10">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
-                <!-- Gallery List -->
-                <div class="space-y-3"><h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-images text-secondary"></i> Current Gallery Photos</h4><div id="admGalleryList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div></div>
+
+                <!-- Gallery List with Filter Pills -->
+                <div class="space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <h4 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fas fa-images text-secondary"></i> Existing Activities Photos
+                        </h4>
+                        <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10 text-xs font-bold overflow-x-auto">
+                            <button type="button" onclick="adminFilterGallery('all')" id="admGalFilter-all" class="px-3 py-1 rounded-lg bg-secondary text-white transition-all shadow-sm">All (<span id="admCount-all">0</span>)</button>
+                            <button type="button" onclick="adminFilterGallery('technical')" id="admGalFilter-technical" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Technical (<span id="admCount-technical">0</span>)</button>
+                            <button type="button" onclick="adminFilterGallery('cultural')" id="admGalFilter-cultural" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Cultural (<span id="admCount-cultural">0</span>)</button>
+                            <button type="button" onclick="adminFilterGallery('sports')" id="admGalFilter-sports" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Sports (<span id="admCount-sports">0</span>)</button>
+                        </div>
+                    </div>
+                    <div id="admGalleryList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                </div>
             </div>
 
             <div id="standPane-inbox" class="stand-pane hidden space-y-6">
@@ -409,8 +451,12 @@
             const setM = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
             setM('stMetricProjects', data.projects ? data.projects.length : 0);
             setM('stMetricClubs', data.clubs ? data.clubs.length : 0);
-            setM('stMetricGallery', data.culturalPhotos ? data.culturalPhotos.length : 0);
+            const totalPhotos = (data.technicalPhotos ? data.technicalPhotos.length : 0) +
+                                (data.culturalPhotos ? data.culturalPhotos.length : 0) +
+                                (data.sportsPhotos ? data.sportsPhotos.length : 0);
+            setM('stMetricGallery', totalPhotos);
         }
+        window.updateStandaloneMetrics = updateStandaloneMetrics;
 
         window.addEventListener('load', () => {
             setTimeout(checkStandaloneAuthState, 600);
@@ -420,7 +466,7 @@
     <!-- Admin & Cloud Integration Module -->
     <script type="module" src="js/admin.js"></script>
     <script type="module">
-        import { syncFromCloud } from './js/admin.js';
+        import { syncFromCloud, ensurePortfolioActivities } from './js/admin.js';
         
         window.addEventListener('load', async () => {
             // Load portfolio data from LocalStorage or default
@@ -441,16 +487,16 @@
                         bio: "Computer Science student at Presidency University with deep hands-on focus in Cybersecurity SOC operations, Network Investigation, Machine Learning analytics, and reliable Full-Stack engineering."
                     },
                     projects: [],
-                    clubs: [],
-                    culturalPhotos: []
+                    clubs: []
                 };
             }
+            data = ensurePortfolioActivities(data);
             window.currentPortfolioData = data;
             
             try {
                 const cloud = await syncFromCloud(window.currentPortfolioData);
                 if (cloud) {
-                    window.currentPortfolioData = cloud;
+                    window.currentPortfolioData = ensurePortfolioActivities(cloud);
                     if (window.renderAdminDashboard) window.renderAdminDashboard();
                     updateStandaloneMetrics();
                 }

@@ -687,68 +687,46 @@
                     <div class="mt-8">
                         <div class="flex items-center justify-between gap-4 mb-5">
                             <div><p class="text-sm text-primary font-semibold uppercase tracking-wider">Photo Gallery</p><h4 class="text-2xl font-bold text-white">Technical Moments</h4></div>
-                            <span class="text-sm text-gray-500 shrink-0 font-mono">9 photos</span>
+                            <span id="technicalPhotoCount" class="text-sm text-gray-500 shrink-0 font-mono">9 photos</span>
                         </div>
-                        
-                        <section class="mt-8" aria-labelledby="technical-segment-0">
-                            <h5 id="technical-segment-0" class="text-xl font-bold text-primary mb-4">Speaking &amp; Presentations</h5>
-                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(0)" aria-label="Open Speaking at a technical event">
-                                    <img src="assets/technical-activity-1.jpg" alt="Speaking at a technical event" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Speaking at a technical event</span>
-                                </button>
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(1)" aria-label="Open Presenting during a technical workshop">
-                                    <img src="assets/technical-activity-2.jpg" alt="Presenting during a technical workshop" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Presenting during a technical workshop</span>
-                                </button>
-                            </div>
-                        </section>
-
-                        <section class="mt-8" aria-labelledby="technical-segment-2">
-                            <h5 id="technical-segment-2" class="text-xl font-bold text-primary mb-4">Workshops &amp; Learning</h5>
-                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(2)" aria-label="Open Technical workshop group photo">
-                                    <img src="assets/technical-activity-4.jpg" alt="Technical workshop group photo" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Technical workshop group photo</span>
-                                </button>
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(3)" aria-label="Open Attending a technical presentation">
-                                    <img src="assets/technical-activity-7.jpg" alt="Attending a technical presentation" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Attending a technical presentation</span>
-                                </button>
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(4)" aria-label="Open Audience at a technical workshop">
-                                    <img src="assets/technical-activity-8.jpg" alt="Audience at a technical workshop" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Audience at a technical workshop</span>
-                                </button>
-                            </div>
-                        </section>
-
-                        <section class="mt-8" aria-labelledby="technical-segment-5">
-                            <h5 id="technical-segment-5" class="text-xl font-bold text-primary mb-4">Cybersecurity &amp; Club Engagement</h5>
-                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(5)" aria-label="Open PU Cyber Security Club event booth">
-                                    <img src="assets/technical-activity-5.jpg" alt="PU Cyber Security Club event booth" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">PU Cyber Security Club event booth</span>
-                                </button>
-                            </div>
-                        </section>
-
-                        <section class="mt-8" aria-labelledby="technical-segment-6">
-                            <h5 id="technical-segment-6" class="text-xl font-bold text-primary mb-4">Certificates &amp; Recognition</h5>
-                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(6)" aria-label="Open Certificate presentation at a technical event">
-                                    <img src="assets/technical-activity-3.jpg" alt="Certificate presentation at a technical event" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Certificate presentation at a technical event</span>
-                                </button>
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(7)" aria-label="Open Technical event participants with certificates">
-                                    <img src="assets/technical-activity-6.jpg" alt="Technical event participants with certificates" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Technical event participants with certificates</span>
-                                </button>
-                                <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(8)" aria-label="Open Technical event group with certificates">
-                                    <img src="assets/technical-activity-9.jpg" alt="Technical event group with certificates" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Technical event group with certificates</span>
-                                </button>
-                            </div>
-                        </section>
+                        <div id="technicalGalleryGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(0)" aria-label="Open Speaking at a technical event">
+                                <img src="assets/technical-activity-1.jpg" alt="Speaking at a technical event" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Speaking at a technical event</span>
+                            </button>
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(1)" aria-label="Open Presenting during a technical workshop">
+                                <img src="assets/technical-activity-2.jpg" alt="Presenting during a technical workshop" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Presenting during a technical workshop</span>
+                            </button>
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(2)" aria-label="Open Technical workshop group photo">
+                                <img src="assets/technical-activity-4.jpg" alt="Technical workshop group photo" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Technical workshop group photo</span>
+                            </button>
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(3)" aria-label="Open Attending a technical presentation">
+                                <img src="assets/technical-activity-7.jpg" alt="Attending a technical presentation" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Attending a technical presentation</span>
+                            </button>
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(4)" aria-label="Open Audience at a technical workshop">
+                                <img src="assets/technical-activity-8.jpg" alt="Audience at a technical workshop" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Audience at a technical workshop</span>
+                            </button>
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(5)" aria-label="Open PU Cyber Security Club event booth">
+                                <img src="assets/technical-activity-5.jpg" alt="PU Cyber Security Club event booth" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">PU Cyber Security Club event booth</span>
+                            </button>
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(6)" aria-label="Open Certificate presentation at a technical event">
+                                <img src="assets/technical-activity-3.jpg" alt="Certificate presentation at a technical event" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Certificate presentation at a technical event</span>
+                            </button>
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(7)" aria-label="Open Technical event participants with certificates">
+                                <img src="assets/technical-activity-6.jpg" alt="Technical event participants with certificates" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Technical event participants with certificates</span>
+                            </button>
+                            <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(8)" aria-label="Open Technical event group with certificates">
+                                <img src="assets/technical-activity-9.jpg" alt="Technical event group with certificates" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Technical event group with certificates</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -800,54 +778,38 @@
                     <div class="mt-8">
                         <div class="flex items-center justify-between gap-4 mb-5">
                             <div><p class="text-sm text-accent font-semibold uppercase tracking-wider">Photo Gallery</p><h4 class="text-2xl font-bold text-white">Sports Moments</h4></div>
-                            <span class="text-sm text-gray-500 shrink-0 font-mono">7 photos</span>
+                            <span id="sportsPhotoCount" class="text-sm text-gray-500 shrink-0 font-mono">7 photos</span>
                         </div>
-                        
-                        <section class="mt-8" aria-labelledby="sports-segment-0">
-                            <h5 id="sports-segment-0" class="text-xl font-bold text-accent mb-4">Football &amp; Tournaments</h5>
-                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(0)" aria-label="Open Football match action and team moments collage">
-                                    <img src="assets/sports-medal-ceremony.jpg" alt="Football match action and team moments collage" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Football match action and team moments collage</span>
-                                </button>
-                                <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(1)" aria-label="Open CSE football tournament poster">
-                                    <img src="assets/sports-moment-5.jpg" alt="CSE football tournament poster" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">CSE football tournament poster</span>
-                                </button>
-                            </div>
-                        </section>
-                        
-                        <section class="mt-8" aria-labelledby="sports-segment-2">
-                            <h5 id="sports-segment-2" class="text-xl font-bold text-accent mb-4">Teamwork &amp; Team Spirit</h5>
-                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(2)" aria-label="Open Strikes United football team on the field">
-                                    <img src="assets/sports-moment-1.jpg" alt="Strikes United football team on the field" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Strikes United football team on the field</span>
-                                </button>
-                                <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(3)" aria-label="Open Team celebration at the pool">
-                                    <img src="assets/sports-moment-2.jpg" alt="Team celebration at the pool" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Team celebration at the pool</span>
-                                </button>
-                            </div>
-                        </section>
-                        
-                        <section class="mt-8" aria-labelledby="sports-segment-4">
-                            <h5 id="sports-segment-4" class="text-xl font-bold text-accent mb-4">Leadership &amp; Achievements</h5>
-                            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(4)" aria-label="Open Celebrating with the football tournament trophy">
-                                    <img src="assets/sports-moment-3.jpg" alt="Celebrating with the football tournament trophy" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Celebrating with the football tournament trophy</span>
-                                </button>
-                                <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(5)" aria-label="Open Champions group with faculty, medals and trophy">
-                                    <img src="assets/sports-moment-4.jpg" alt="Champions group with faculty, medals and trophy" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Champions group with faculty, medals and trophy</span>
-                                </button>
-                                <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(6)" aria-label="Open Sports recognition ceremony with fellow participants">
-                                    <img src="assets/sports-football-action.jpg" alt="Sports recognition ceremony with fellow participants" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
-                                    <span class="block p-4 text-sm font-medium text-white">Sports recognition ceremony with fellow participants</span>
-                                </button>
-                            </div>
-                        </section>
+                        <div id="sportsGalleryGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(0)" aria-label="Open Football match action and team moments collage">
+                                <img src="assets/sports-medal-ceremony.jpg" alt="Football match action and team moments collage" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Football match action and team moments collage</span>
+                            </button>
+                            <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(1)" aria-label="Open CSE football tournament poster">
+                                <img src="assets/sports-moment-5.jpg" alt="CSE football tournament poster" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">CSE football tournament poster</span>
+                            </button>
+                            <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(2)" aria-label="Open Strikes United football team on the field">
+                                <img src="assets/sports-moment-1.jpg" alt="Strikes United football team on the field" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Strikes United football team on the field</span>
+                            </button>
+                            <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(3)" aria-label="Open Team celebration at the pool">
+                                <img src="assets/sports-moment-2.jpg" alt="Team celebration at the pool" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Team celebration at the pool</span>
+                            </button>
+                            <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(4)" aria-label="Open Celebrating with the football tournament trophy">
+                                <img src="assets/sports-moment-3.jpg" alt="Celebrating with the football tournament trophy" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Celebrating with the football tournament trophy</span>
+                            </button>
+                            <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(5)" aria-label="Open Champions group with faculty, medals and trophy">
+                                <img src="assets/sports-moment-4.jpg" alt="Champions group with faculty, medals and trophy" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Champions group with faculty, medals and trophy</span>
+                            </button>
+                            <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(6)" aria-label="Open Sports recognition ceremony with fellow participants">
+                                <img src="assets/sports-football-action.jpg" alt="Sports recognition ceremony with fellow participants" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                <span class="block p-4 text-sm font-medium text-white">Sports recognition ceremony with fellow participants</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1406,12 +1368,34 @@
                 { title: "Singing Competition Winner", org: "Division & Upazela Levels", desc: "1st position at the division level and four-time 1st position at the Upazela level." }
             ],
 
+            technicalPhotos: [
+                { src: "assets/technical-activity-1.jpg", caption: "Speaking at a technical event" },
+                { src: "assets/technical-activity-2.jpg", caption: "Presenting during a technical workshop" },
+                { src: "assets/technical-activity-4.jpg", caption: "Technical workshop group photo" },
+                { src: "assets/technical-activity-7.jpg", caption: "Attending a technical presentation" },
+                { src: "assets/technical-activity-8.jpg", caption: "Audience at a technical workshop" },
+                { src: "assets/technical-activity-5.jpg", caption: "PU Cyber Security Club event booth" },
+                { src: "assets/technical-activity-3.jpg", caption: "Certificate presentation at a technical event" },
+                { src: "assets/technical-activity-6.jpg", caption: "Technical event participants with certificates" },
+                { src: "assets/technical-activity-9.jpg", caption: "Technical event group with certificates" }
+            ],
+
             culturalPhotos: [
                 { src: "assets/cultural-photo-1.jpg", caption: "Pohela Boishakh – Stage Performance" },
                 { src: "assets/cultural-photo-2.jpg", caption: "Pohela Boishakh – Cultural Performance" },
                 { src: "assets/cultural-photo-3.jpg", caption: "Pohela Boishakh – Live Musical Performance" },
                 { src: "assets/cultural-photo-4.jpg", caption: "Pohela Boishakh – Audience & Festivity" },
                 { src: "assets/cultural-photo-5.jpg", caption: "Pohela Boishakh – Campus Celebration" }
+            ],
+
+            sportsPhotos: [
+                { src: "assets/sports-medal-ceremony.jpg", caption: "Football match action and team moments collage" },
+                { src: "assets/sports-moment-5.jpg", caption: "CSE football tournament poster" },
+                { src: "assets/sports-moment-1.jpg", caption: "Strikes United football team on the field" },
+                { src: "assets/sports-moment-2.jpg", caption: "Team celebration at the pool" },
+                { src: "assets/sports-moment-3.jpg", caption: "Celebrating with the football tournament trophy" },
+                { src: "assets/sports-moment-4.jpg", caption: "Champions group with faculty, medals and trophy" },
+                { src: "assets/sports-football-action.jpg", caption: "Sports recognition ceremony with fellow participants" }
             ]
         };
 
@@ -1421,6 +1405,29 @@
         // Active project filter state
         let currentProjectCategory = 'all';
         let currentSearchQuery = '';
+
+        /**
+         * Render Technical Photos Gallery Dynamically
+         */
+        function renderTechnicalGallery(photos) {
+            const grid = document.getElementById('technicalGalleryGrid');
+            const countEl = document.getElementById('technicalPhotoCount');
+            const items = photos || (window.currentPortfolioData && window.currentPortfolioData.technicalPhotos) || [];
+            
+            if (countEl) countEl.textContent = `${items.length} photos`;
+            window.technicalImages = items.map(p => p.src);
+            
+            if (!grid) return;
+            let html = '';
+            items.forEach((p, idx) => {
+                html += `
+                    <button type="button" class="technical-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-primary" onclick="openTechnicalLightbox(${idx})" aria-label="Open ${p.caption}">
+                        <img src="${p.src}" alt="${p.caption}" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                        <span class="block p-4 text-sm font-medium text-white">${p.caption}</span>
+                    </button>`;
+            });
+            grid.innerHTML = html;
+        }
 
         /**
          * Render Cultural Photos Gallery Dynamically
@@ -1438,6 +1445,29 @@
             items.forEach((p, idx) => {
                 html += `
                     <button type="button" class="cultural-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-secondary" onclick="openCulturalLightbox(${idx})" aria-label="Open ${p.caption}">
+                        <img src="${p.src}" alt="${p.caption}" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                        <span class="block p-4 text-sm font-medium text-white">${p.caption}</span>
+                    </button>`;
+            });
+            grid.innerHTML = html;
+        }
+
+        /**
+         * Render Sports Photos Gallery Dynamically
+         */
+        function renderSportsGallery(photos) {
+            const grid = document.getElementById('sportsGalleryGrid');
+            const countEl = document.getElementById('sportsPhotoCount');
+            const items = photos || (window.currentPortfolioData && window.currentPortfolioData.sportsPhotos) || [];
+            
+            if (countEl) countEl.textContent = `${items.length} photos`;
+            window.sportsImages = items.map(p => p.src);
+            
+            if (!grid) return;
+            let html = '';
+            items.forEach((p, idx) => {
+                html += `
+                    <button type="button" class="sports-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-accent" onclick="openSportsLightbox(${idx})" aria-label="Open ${p.caption}">
                         <img src="${p.src}" alt="${p.caption}" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
                         <span class="block p-4 text-sm font-medium text-white">${p.caption}</span>
                     </button>`;
@@ -1561,8 +1591,10 @@
             const awardsCont = document.getElementById('awardsContainer');
             if (awardsCont) awardsCont.innerHTML = awardsHTML;
 
-            // 8. Cultural Gallery
+            // 8. Activities Galleries (Technical, Cultural, Sports)
+            renderTechnicalGallery(data.technicalPhotos);
             renderCulturalGallery(data.culturalPhotos);
+            renderSportsGallery(data.sportsPhotos);
         }
         window.renderAllPortfolio = renderAllPortfolio;
 
@@ -1896,9 +1928,12 @@
     <!-- LIGHTBOX MODALS AND SCRIPTS FOR TECHNICAL, CULTURAL, AND SPORTS -->
     <script>
     // 1. Technical Activities Lightbox
-    const technicalImages = Array.from(document.querySelectorAll('.technical-gallery-item img')).map(img => img.src);
+    window.technicalImages = Array.from(document.querySelectorAll('.technical-gallery-item img')).map(img => img.src);
     let technicalIndex = 0;
     function openTechnicalLightbox(index) {
+      if (!window.technicalImages || window.technicalImages.length === 0) {
+        window.technicalImages = Array.from(document.querySelectorAll('.technical-gallery-item img')).map(img => img.src);
+      }
       technicalIndex = index;
       let box = document.getElementById('technical-lightbox');
       if (!box) {
@@ -1913,7 +1948,7 @@
         document.body.appendChild(box);
         box.addEventListener('click', e => { if (e.target === box) closeTechnicalLightbox(); });
       }
-      document.getElementById('technical-lightbox-img').src = technicalImages[technicalIndex];
+      document.getElementById('technical-lightbox-img').src = window.technicalImages[technicalIndex] || '';
       box.classList.remove('hidden'); box.classList.add('flex');
       document.body.style.overflow = 'hidden';
     }
@@ -1923,8 +1958,9 @@
       document.body.style.overflow = '';
     }
     function changeTechnicalImage(step) {
-      technicalIndex = (technicalIndex + step + technicalImages.length) % technicalImages.length;
-      document.getElementById('technical-lightbox-img').src = technicalImages[technicalIndex];
+      if (!window.technicalImages || window.technicalImages.length === 0) return;
+      technicalIndex = (technicalIndex + step + window.technicalImages.length) % window.technicalImages.length;
+      document.getElementById('technical-lightbox-img').src = window.technicalImages[technicalIndex];
     }
 
     // 2. Cultural Activities Lightbox
@@ -1963,11 +1999,13 @@
       document.getElementById('cultural-lightbox-img').src = window.culturalImages[culturalIndex];
     }
 
-
     // 3. Sports Activities Lightbox
-    const sportsImages = Array.from(document.querySelectorAll('.sports-gallery-item img')).map(img => img.src);
+    window.sportsImages = Array.from(document.querySelectorAll('.sports-gallery-item img')).map(img => img.src);
     let sportsIndex = 0;
     function openSportsLightbox(index) {
+      if (!window.sportsImages || window.sportsImages.length === 0) {
+        window.sportsImages = Array.from(document.querySelectorAll('.sports-gallery-item img')).map(img => img.src);
+      }
       sportsIndex = index;
       let box = document.getElementById('sports-lightbox');
       if (!box) {
@@ -1982,7 +2020,7 @@
         document.body.appendChild(box);
         box.addEventListener('click', e => { if (e.target === box) closeSportsLightbox(); });
       }
-      document.getElementById('sports-lightbox-img').src = sportsImages[sportsIndex];
+      document.getElementById('sports-lightbox-img').src = window.sportsImages[sportsIndex] || '';
       box.classList.remove('hidden'); box.classList.add('flex');
       document.body.style.overflow = 'hidden';
     }
@@ -1992,8 +2030,9 @@
       document.body.style.overflow = '';
     }
     function changeSportsImage(step) {
-      sportsIndex = (sportsIndex + step + sportsImages.length) % sportsImages.length;
-      document.getElementById('sports-lightbox-img').src = sportsImages[sportsIndex];
+      if (!window.sportsImages || window.sportsImages.length === 0) return;
+      sportsIndex = (sportsIndex + step + window.sportsImages.length) % window.sportsImages.length;
+      document.getElementById('sports-lightbox-img').src = window.sportsImages[sportsIndex];
     }
 
     // Global Keyboard Listener
@@ -2176,7 +2215,7 @@
                     </button>
                     <button type="button" onclick="switchAdminTab('gallery')" data-tab="gallery"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
-                        <i class="fas fa-camera-retro text-amber-400"></i> <span>Cultural Gallery</span>
+                        <i class="fas fa-images text-amber-400"></i> <span>Activities &amp; Galleries</span>
                     </button>
                     <button type="button" onclick="switchAdminTab('inbox')" data-tab="inbox"
                             class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
@@ -2376,7 +2415,7 @@
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">Role / Designation</label>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Role / Designation *</label>
                                     <input type="text" id="adm_club_role" placeholder="Vice President"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
                                 </div>
@@ -2391,6 +2430,11 @@
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
                                 </div>
                                 <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Icon Class (FontAwesome)</label>
+                                    <input type="text" id="adm_club_icon" placeholder="fas fa-shield-halved"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-purple-500">
+                                </div>
+                                <div>
                                     <label class="block text-xs font-bold text-slate-300 mb-1">Accent Color Class</label>
                                     <input type="text" id="adm_club_color" placeholder="text-emerald-400"
                                            class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-purple-500">
@@ -2402,10 +2446,16 @@
                                 </div>
                             </div>
 
-                            <button type="button" id="admClubSubmitBtn" onclick="adminSaveClub()"
-                                    class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
-                                <i class="fas fa-save"></i> <span>Save Club Role</span>
-                            </button>
+                            <div class="flex items-center gap-3 pt-2">
+                                <button type="button" id="admClubSubmitBtn" onclick="adminSaveClub()"
+                                        class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
+                                    <i class="fas fa-save"></i> <span>Save Club Role</span>
+                                </button>
+                                <button type="button" id="admClubCancelBtn" onclick="adminCancelClubEdit()"
+                                        class="hidden px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
+                                    <i class="fas fa-times"></i> <span>Cancel</span>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Existing Clubs List -->
@@ -2415,36 +2465,56 @@
                         </div>
                     </div>
 
-                    <!-- TAB 5: CULTURAL GALLERY -->
+                    <!-- TAB 5: ACTIVITIES & GALLERIES -->
                     <div id="adminTab-gallery" class="admin-tab-pane hidden space-y-6">
-                        <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-camera text-secondary"></i> Add Gallery Photo</h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Activities Gallery Form -->
+                        <div id="admPhotoFormCard" class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                            <h4 id="admPhotoFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-camera text-secondary"></i> Add Photo to Activities Gallery</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">Photo Path or URL</label>
-                                    <input type="text" id="adm_photo_src" placeholder="assets/cultural-photo-1.jpg or web URL"
-                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Activity Segment / Category *</label>
+                                    <select id="adm_photo_category" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                                        <option value="technical">Technical Activities (Segment 01)</option>
+                                        <option value="cultural" selected>Cultural Activities (Segment 02)</option>
+                                        <option value="sports">Sports Activities (Segment 03)</option>
+                                    </select>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">Upload Photo from Device (Optional)</label>
-                                    <input type="file" accept="image/*" onchange="adminHandlePhotoUpload(event)"
-                                           class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-secondary/20 file:text-secondary">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Photo Path or URL *</label>
+                                    <input type="text" id="adm_photo_src" placeholder="assets/technical-activity-1.jpg or https://..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
                                 </div>
-                                <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">Caption & Event Details</label>
-                                    <input type="text" id="adm_photo_caption" placeholder="Pohela Boishakh Celebration – Cultural Performance"
-                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Upload from Device (Optional)</label>
+                                    <input type="file" accept="image/*" onchange="adminHandlePhotoUpload(event)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-secondary/20 file:text-secondary">
+                                </div>
+                                <div class="sm:col-span-2 lg:col-span-3">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">Caption & Event Details *</label>
+                                    <input type="text" id="adm_photo_caption" placeholder="Event description, milestone, or stage performance..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
                                 </div>
                             </div>
-                            <button type="button" onclick="adminAddPhoto()"
-                                    class="px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
-                                <i class="fas fa-plus"></i> <span>Add Photo</span>
-                            </button>
+                            <div class="flex items-center gap-3">
+                                <button type="button" id="admPhotoSubmitBtn" onclick="adminSavePhoto()" class="px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs font-bold transition-all shadow-md flex items-center gap-2">
+                                    <i class="fas fa-plus"></i> <span>Add Photo</span>
+                                </button>
+                                <button type="button" id="admPhotoCancelBtn" onclick="adminCancelPhotoEdit()" class="hidden px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all border border-white/10">
+                                    Cancel
+                                </button>
+                            </div>
                         </div>
 
-                        <!-- Existing Gallery Grid -->
-                        <div class="space-y-3">
-                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-images text-secondary"></i> Current Gallery Photos</h4>
+                        <!-- Gallery List with Filter Pills -->
+                        <div class="space-y-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <h4 class="text-base font-bold text-white flex items-center gap-2">
+                                    <i class="fas fa-images text-secondary"></i> Existing Activities Photos
+                                </h4>
+                                <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10 text-xs font-bold overflow-x-auto">
+                                    <button type="button" onclick="adminFilterGallery('all')" id="admGalFilter-all" class="px-3 py-1 rounded-lg bg-secondary text-white transition-all shadow-sm">All (<span id="admCount-all">0</span>)</button>
+                                    <button type="button" onclick="adminFilterGallery('technical')" id="admGalFilter-technical" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Technical (<span id="admCount-technical">0</span>)</button>
+                                    <button type="button" onclick="adminFilterGallery('cultural')" id="admGalFilter-cultural" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Cultural (<span id="admCount-cultural">0</span>)</button>
+                                    <button type="button" onclick="adminFilterGallery('sports')" id="admGalFilter-sports" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all">Sports (<span id="admCount-sports">0</span>)</button>
+                                </div>
+                            </div>
                             <div id="admGalleryList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                         </div>
                     </div>

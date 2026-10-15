@@ -3,6 +3,7 @@
  * 
  * Secure Authentication, Full Access Control Panel & Real-time Cloud Sync
  * Matching Giri Sompriti Architecture with Google Sign-in & Master Passcode
+ * Full Control for Profile, Projects, Leadership Clubs, and All Activities (Technical, Cultural, Sports)
  */
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -57,6 +58,51 @@ try {
     console.warn('[Portfolio Admin] Firebase initialization failed, running in local fallback mode:', err);
 }
 
+// Default Activities Galleries Data
+export const DEFAULT_TECHNICAL_PHOTOS = [
+    { src: "assets/technical-activity-1.jpg", caption: "Speaking at a technical event" },
+    { src: "assets/technical-activity-2.jpg", caption: "Presenting during a technical workshop" },
+    { src: "assets/technical-activity-4.jpg", caption: "Technical workshop group photo" },
+    { src: "assets/technical-activity-7.jpg", caption: "Attending a technical presentation" },
+    { src: "assets/technical-activity-8.jpg", caption: "Audience at a technical workshop" },
+    { src: "assets/technical-activity-5.jpg", caption: "PU Cyber Security Club event booth" },
+    { src: "assets/technical-activity-3.jpg", caption: "Certificate presentation at a technical event" },
+    { src: "assets/technical-activity-6.jpg", caption: "Technical event participants with certificates" },
+    { src: "assets/technical-activity-9.jpg", caption: "Technical event group with certificates" }
+];
+
+export const DEFAULT_CULTURAL_PHOTOS = [
+    { src: "assets/cultural-photo-1.jpg", caption: "Pohela Boishakh – Stage Performance" },
+    { src: "assets/cultural-photo-2.jpg", caption: "Pohela Boishakh – Cultural Performance" },
+    { src: "assets/cultural-photo-3.jpg", caption: "Pohela Boishakh – Live Musical Performance" },
+    { src: "assets/cultural-photo-4.jpg", caption: "Pohela Boishakh – Audience & Festivity" },
+    { src: "assets/cultural-photo-5.jpg", caption: "Pohela Boishakh – Campus Celebration" }
+];
+
+export const DEFAULT_SPORTS_PHOTOS = [
+    { src: "assets/sports-medal-ceremony.jpg", caption: "Football match action and team moments collage" },
+    { src: "assets/sports-moment-5.jpg", caption: "CSE football tournament poster" },
+    { src: "assets/sports-moment-1.jpg", caption: "Strikes United football team on the field" },
+    { src: "assets/sports-moment-2.jpg", caption: "Team celebration at the pool" },
+    { src: "assets/sports-moment-3.jpg", caption: "Celebrating with the football tournament trophy" },
+    { src: "assets/sports-moment-4.jpg", caption: "Champions group with faculty, medals and trophy" },
+    { src: "assets/sports-football-action.jpg", caption: "Sports recognition ceremony with fellow participants" }
+];
+
+export function ensurePortfolioActivities(data) {
+    if (!data) return data;
+    if (!data.technicalPhotos || !Array.isArray(data.technicalPhotos) || data.technicalPhotos.length === 0) {
+        data.technicalPhotos = [...DEFAULT_TECHNICAL_PHOTOS];
+    }
+    if (!data.culturalPhotos || !Array.isArray(data.culturalPhotos) || data.culturalPhotos.length === 0) {
+        data.culturalPhotos = [...DEFAULT_CULTURAL_PHOTOS];
+    }
+    if (!data.sportsPhotos || !Array.isArray(data.sportsPhotos) || data.sportsPhotos.length === 0) {
+        data.sportsPhotos = [...DEFAULT_SPORTS_PHOTOS];
+    }
+    return data;
+}
+
 // Admin State
 export const AdminState = {
     isAdmin: false,
@@ -65,7 +111,9 @@ export const AdminState = {
     activeTab: 'dashboard',
     inbox: [],
     editingProjectIndex: -1,
-    editingClubIndex: -1
+    editingClubIndex: -1,
+    editingPhotoInfo: null, // { category: 'technical' | 'cultural' | 'sports', index: number }
+    galleryFilter: 'all' // 'all' | 'technical' | 'cultural' | 'sports'
 };
 
 // Master Passcode Key
@@ -148,10 +196,8 @@ export function handleSecretLogoClick(e) {
         toggleAdminView();
     }
 }
-window.handleSecretLogoClick = handleSecretLogoClick;
 
-
-// Authentication Listeners
+// Monitor Auth State
 if (isFirebaseReady) {
     onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -172,7 +218,6 @@ if (isFirebaseReady) {
                 showAdminToast('Unauthorized account. Access restricted to sakilurrashid1@gmail.com.', 'error');
             }
         } else {
-            // Check if passcode session was active
             if (sessionStorage.getItem('alkamah_admin_passcode_active') === 'true') {
                 AdminState.isAdmin = true;
                 AdminState.authMethod = 'passcode';
@@ -281,26 +326,24 @@ export async function logoutAdmin() {
 
 // Cloud Synchronization: Fetch /site/portfolio
 export async function syncFromCloud(currentData) {
-    // 1. Try LocalStorage first (instant)
-    const local = localStorage.getItem(DATA_STORAGE_KEY);
-    let resolvedData = currentData;
+    let resolvedData = ensurePortfolioActivities(currentData);
     
+    const local = localStorage.getItem(DATA_STORAGE_KEY);
     if (local) {
         try {
             const parsed = JSON.parse(local);
-            resolvedData = { ...currentData, ...parsed };
+            resolvedData = ensurePortfolioActivities({ ...resolvedData, ...parsed });
         } catch (e) {
             console.warn('LocalStorage parse error:', e);
         }
     }
     
-    // 2. Fetch from Firebase Firestore if available
     if (isFirebaseReady) {
         try {
             const siteDoc = await getDoc(doc(db, 'site', 'portfolio'));
             if (siteDoc.exists()) {
                 const cloudData = siteDoc.data();
-                resolvedData = { ...resolvedData, ...cloudData };
+                resolvedData = ensurePortfolioActivities({ ...resolvedData, ...cloudData });
                 localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(resolvedData));
                 console.log('[Portfolio Admin] Synced latest data from Cloud Firestore');
             }
@@ -314,13 +357,12 @@ export async function syncFromCloud(currentData) {
 
 // Cloud Synchronization: Save to /site/portfolio
 export async function saveToCloud(portfolioData) {
-    // 1. Save to LocalStorage immediately
-    localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(portfolioData));
+    const dataToSave = ensurePortfolioActivities(portfolioData);
+    localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(dataToSave));
     
-    // 2. If Firebase and Admin, save to Firestore
     if (isFirebaseReady && AdminState.isAdmin && AdminState.user) {
         try {
-            await setDoc(doc(db, 'site', 'portfolio'), portfolioData, { merge: true });
+            await setDoc(doc(db, 'site', 'portfolio'), dataToSave, { merge: true });
             showAdminToast('Saved to Cloud Firestore and local storage successfully!', 'success');
             return true;
         } catch (err) {
@@ -403,7 +445,8 @@ function updateInboxBadge() {
 
 // Backup & Export JSON
 export function exportPortfolioBackup(portfolioData) {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(portfolioData, null, 2));
+    const exportData = ensurePortfolioActivities(portfolioData);
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
     const downloadAnchor = document.createElement('a');
     const dateStr = new Date().toISOString().split('T')[0];
     downloadAnchor.setAttribute("href", dataStr);
@@ -460,16 +503,24 @@ export function closeAdminDashboard() {
     }
 }
 
-// Toggle View Helper
 export function toggleAdminView() {
     if (AdminState.isAdmin) {
-        openAdminDashboard();
+        const modal = document.getElementById('adminDashboardModal');
+        if (modal && !modal.classList.contains('hidden')) {
+            closeAdminDashboard();
+        } else {
+            openAdminDashboard();
+        }
     } else {
-        openAdminAuthModal();
+        const authModal = document.getElementById('adminAuthModal');
+        if (authModal && !authModal.classList.contains('hidden')) {
+            closeAdminAuthModal();
+        } else {
+            openAdminAuthModal();
+        }
     }
 }
 
-// Switch Tab inside Admin Dashboard
 export function switchAdminTab(tabName) {
     AdminState.activeTab = tabName;
     const tabBtns = document.querySelectorAll('.admin-tab-btn');
@@ -492,12 +543,16 @@ export function switchAdminTab(tabName) {
             pane.classList.add('hidden');
         }
     });
+    
+    if (tabName === 'inbox') {
+        loadInboxMessages();
+    }
 }
 
-// Render Admin Dashboard Data
+// Render Admin Dashboard
 export function renderAdminDashboard() {
     if (!window.currentPortfolioData) return;
-    const data = window.currentPortfolioData;
+    const data = ensurePortfolioActivities(window.currentPortfolioData);
     
     // Overview Metrics
     const mProjects = document.getElementById('admMetricProjects');
@@ -505,9 +560,11 @@ export function renderAdminDashboard() {
     const mGallery = document.getElementById('admMetricGallery');
     const mInbox = document.getElementById('admMetricInbox');
     
+    const totalPhotos = (data.technicalPhotos.length) + (data.culturalPhotos.length) + (data.sportsPhotos.length);
+    
     if (mProjects) mProjects.textContent = data.projects ? data.projects.length : 0;
     if (mClubs) mClubs.textContent = data.clubs ? data.clubs.length : 0;
-    if (mGallery) mGallery.textContent = data.culturalPhotos ? data.culturalPhotos.length : 0;
+    if (mGallery) mGallery.textContent = totalPhotos;
     if (mInbox) mInbox.textContent = AdminState.inbox.length;
     
     // Account details
@@ -539,16 +596,10 @@ export function renderAdminDashboard() {
         }
     }
     
-    // Populate Projects Tab
+    // Populate Tabs
     renderAdminProjectsList();
-    
-    // Populate Clubs Tab
     renderAdminClubsList();
-    
-    // Populate Gallery Tab
     renderAdminGalleryList();
-    
-    // Populate Inbox Tab
     renderAdminInbox();
 }
 
@@ -602,20 +653,25 @@ export function renderAdminClubsList() {
     if (!container || !window.currentPortfolioData) return;
     
     const clubs = window.currentPortfolioData.clubs || [];
-    let html = '';
+    if (clubs.length === 0) {
+        container.innerHTML = '<div class="p-6 rounded-2xl glass text-center text-slate-400">No club leadership roles found. Add your first role above.</div>';
+        return;
+    }
     
+    let html = '';
     clubs.forEach((c, idx) => {
         html += `
             <div class="glass p-5 rounded-2xl border border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div class="flex items-start gap-4">
                     <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center ${c.color || 'text-white'} border border-white/10 shrink-0">
-                        <i class="${c.icon || 'fas fa-users'}"></i>
+                        <i class="${c.icon || 'fas fa-shield-halved'}"></i>
                     </div>
                     <div>
                         <h4 class="font-bold text-white text-base">${c.club}</h4>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-xs font-bold ${c.color || 'text-white'}">${c.role}</span>
                             <span class="text-[10px] text-slate-400 font-mono px-2 py-0.5 rounded-full bg-white/5">${c.date}</span>
+                            ${c.prevRole ? `<span class="text-[10px] text-slate-400 font-mono">(Prev: ${c.prevRole})</span>` : ''}
                         </div>
                         <p class="text-xs text-slate-400 mt-1 line-clamp-1">${c.desc}</p>
                     </div>
@@ -636,26 +692,79 @@ export function renderAdminClubsList() {
     container.innerHTML = html;
 }
 
-// Render Cultural Gallery List in Admin
+// Render Activities & Galleries List in Admin
 export function renderAdminGalleryList() {
     const container = document.getElementById('admGalleryList');
     if (!container || !window.currentPortfolioData) return;
     
-    const photos = window.currentPortfolioData.culturalPhotos || [];
-    let html = '';
+    const data = ensurePortfolioActivities(window.currentPortfolioData);
     
-    photos.forEach((ph, idx) => {
+    const techPhotos = data.technicalPhotos || [];
+    const cultPhotos = data.culturalPhotos || [];
+    const sportsPhotos = data.sportsPhotos || [];
+    const totalPhotos = techPhotos.length + cultPhotos.length + sportsPhotos.length;
+    
+    // Update live counter badges on filter pills if elements exist
+    const countAll = document.getElementById('admCount-all');
+    const countTech = document.getElementById('admCount-technical');
+    const countCult = document.getElementById('admCount-cultural');
+    const countSports = document.getElementById('admCount-sports');
+    if (countAll) countAll.textContent = totalPhotos;
+    if (countTech) countTech.textContent = techPhotos.length;
+    if (countCult) countCult.textContent = cultPhotos.length;
+    if (countSports) countSports.textContent = sportsPhotos.length;
+    
+    // Update stat cards
+    const mGallery = document.getElementById('admMetricGallery');
+    const stGallery = document.getElementById('stMetricGallery');
+    if (mGallery) mGallery.textContent = totalPhotos;
+    if (stGallery) stGallery.textContent = totalPhotos;
+    
+    // Build combined list
+    const combined = [];
+    techPhotos.forEach((p, i) => combined.push({ ...p, category: 'technical', origIndex: i }));
+    cultPhotos.forEach((p, i) => combined.push({ ...p, category: 'cultural', origIndex: i }));
+    sportsPhotos.forEach((p, i) => combined.push({ ...p, category: 'sports', origIndex: i }));
+    
+    const filter = AdminState.galleryFilter || 'all';
+    const filtered = filter === 'all' ? combined : combined.filter(p => p.category === filter);
+    
+    if (filtered.length === 0) {
+        container.innerHTML = `<div class="sm:col-span-2 lg:col-span-3 p-8 rounded-2xl glass text-center text-slate-400">No photos found in ${filter} category. Add a photo using the form above.</div>`;
+        return;
+    }
+    
+    const badgeConfig = {
+        technical: { label: 'Technical', color: 'bg-primary/20 text-indigo-300 border-primary/30' },
+        cultural: { label: 'Cultural', color: 'bg-secondary/20 text-pink-300 border-secondary/30' },
+        sports: { label: 'Sports', color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' }
+    };
+    
+    let html = '';
+    filtered.forEach((ph) => {
+        const conf = badgeConfig[ph.category] || badgeConfig.technical;
         html += `
-            <div class="glass p-4 rounded-2xl border border-white/10 flex items-center gap-4">
-                <img src="${ph.src}" alt="${ph.caption}" class="w-20 h-16 object-cover rounded-xl border border-white/10 shrink-0" onerror="this.src='assets/sakil-profile.jpg'">
-                <div class="flex-1 min-w-0">
-                    <h5 class="text-xs font-bold text-white truncate">${ph.caption}</h5>
-                    <p class="text-[10px] text-slate-400 truncate mt-0.5">${ph.src}</p>
+            <div class="glass p-4 rounded-2xl border border-white/10 flex flex-col justify-between gap-3 group relative overflow-hidden">
+                <div class="relative overflow-hidden rounded-xl h-44 bg-slate-900 border border-white/5">
+                    <img src="${ph.src}" alt="${ph.caption}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" onerror="this.src='assets/sakil-profile.jpg'">
+                    <span class="absolute top-2 left-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border backdrop-blur-md ${conf.color}">
+                        ${conf.label}
+                    </span>
                 </div>
-                <button type="button" onclick="window.adminDeletePhoto(${idx})" 
-                        class="p-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold border border-rose-500/30 transition-all">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <div>
+                    <h5 class="text-xs font-bold text-white line-clamp-2 leading-relaxed" title="${ph.caption}">${ph.caption}</h5>
+                    <p class="text-[10px] text-slate-400 truncate mt-1 font-mono">${ph.src}</p>
+                </div>
+                <div class="flex items-center gap-2 pt-1 border-t border-white/5">
+                    <button type="button" onclick="window.adminEditPhoto('${ph.category}', ${ph.origIndex})" 
+                            class="flex-1 py-1.5 rounded-xl bg-primary/20 hover:bg-primary/30 text-indigo-200 text-xs font-bold border border-primary/30 transition-all flex items-center justify-center gap-1.5">
+                        <i class="fas fa-edit text-xs"></i> <span>Edit</span>
+                    </button>
+                    <button type="button" onclick="window.adminDeletePhoto('${ph.category}', ${ph.origIndex})" 
+                            class="py-1.5 px-3 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-bold border border-rose-500/30 transition-all flex items-center justify-center">
+                        <i class="fas fa-trash text-xs"></i>
+                    </button>
+                </div>
             </div>`;
     });
     
@@ -729,7 +838,7 @@ window.adminLoginWithPasscode = () => {
         showAdminToast('Please enter the passcode.', 'error');
         return;
     }
-    loginWithPasscode(code);
+    return loginWithPasscode(code);
 };
 window.adminLogout = logoutAdmin;
 window.openAdminAuthModal = openAdminAuthModal;
@@ -742,7 +851,7 @@ window.switchAdminTab = switchAdminTab;
 // Save Profile Info
 window.adminSaveProfile = () => {
     if (!window.currentPortfolioData) return;
-    const getVal = id => document.getElementById(id)?.value.trim() || '';
+    const getVal = id => document.getElementById(id)?.value?.trim() || '';
     
     window.currentPortfolioData.personalInfo.name = getVal('adm_name');
     window.currentPortfolioData.personalInfo.firstName = getVal('adm_firstName');
@@ -764,7 +873,7 @@ window.adminSaveProfile = () => {
 // Project CRUD
 window.adminSaveProject = () => {
     if (!window.currentPortfolioData) return;
-    const getVal = id => document.getElementById(id)?.value.trim() || '';
+    const getVal = id => document.getElementById(id)?.value?.trim() || '';
     
     const title = getVal('adm_proj_title');
     if (!title) {
@@ -784,46 +893,63 @@ window.adminSaveProject = () => {
         demo: getVal('adm_proj_demo')
     };
     
-    if (AdminState.editingProjectIndex >= 0) {
+    if (AdminState.editingProjectIndex >= 0 && window.currentPortfolioData.projects[AdminState.editingProjectIndex]) {
         window.currentPortfolioData.projects[AdminState.editingProjectIndex] = newProj;
         AdminState.editingProjectIndex = -1;
-        document.getElementById('admProjectFormTitle').textContent = 'Add New Project';
-        document.getElementById('admProjectSubmitBtn').textContent = 'Add Project';
         showAdminToast('Project updated successfully!', 'success');
     } else {
+        if (!window.currentPortfolioData.projects) window.currentPortfolioData.projects = [];
         window.currentPortfolioData.projects.unshift(newProj);
         showAdminToast('New project added to portfolio successfully!', 'success');
     }
     
-    // Clear form
-    ['adm_proj_title', 'adm_proj_tech', 'adm_proj_desc', 'adm_proj_github', 'adm_proj_demo'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
-    
+    window.adminCancelProjectEdit();
     saveToCloud(window.currentPortfolioData);
     renderAdminProjectsList();
     if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
 };
 
 window.adminEditProject = (idx) => {
-    if (!window.currentPortfolioData || !window.currentPortfolioData.projects[idx]) return;
+    if (!window.currentPortfolioData || !window.currentPortfolioData.projects || !window.currentPortfolioData.projects[idx]) return;
     const p = window.currentPortfolioData.projects[idx];
     AdminState.editingProjectIndex = idx;
     
-    document.getElementById('adm_proj_title').value = p.title || '';
-    document.getElementById('adm_proj_category').value = p.category || 'web-dev';
-    document.getElementById('adm_proj_catLabel').value = p.categoryLabel || '';
-    document.getElementById('adm_proj_catColor').value = p.categoryColor || '';
-    document.getElementById('adm_proj_tech').value = p.tech || '';
-    document.getElementById('adm_proj_desc').value = p.desc || '';
-    document.getElementById('adm_proj_icon').value = p.icon || 'fas fa-code';
-    document.getElementById('adm_proj_github').value = p.github || '';
-    document.getElementById('adm_proj_demo').value = p.demo || '';
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+    setVal('adm_proj_title', p.title);
+    setVal('adm_proj_category', p.category || 'web-dev');
+    setVal('adm_proj_catLabel', p.categoryLabel);
+    setVal('adm_proj_catColor', p.categoryColor);
+    setVal('adm_proj_tech', p.tech);
+    setVal('adm_proj_desc', p.desc);
+    setVal('adm_proj_icon', p.icon || 'fas fa-code');
+    setVal('adm_proj_github', p.github);
+    setVal('adm_proj_demo', p.demo);
     
-    document.getElementById('admProjectFormTitle').textContent = `Edit Project: ${p.title}`;
-    document.getElementById('admProjectSubmitBtn').textContent = 'Save Update';
-    document.getElementById('admProjectFormCard').scrollIntoView({ behavior: 'smooth' });
+    const titleEl = document.getElementById('admProjectFormTitle');
+    if (titleEl) titleEl.innerHTML = `<i class="fas fa-edit text-primary"></i> Edit Project: ${p.title}`;
+    
+    const btn = document.getElementById('admProjectSubmitBtn');
+    if (btn) btn.innerHTML = '<i class="fas fa-check"></i> <span>Save Update</span>';
+    
+    const cancelBtn = document.getElementById('admProjectCancelBtn');
+    if (cancelBtn) cancelBtn.classList.remove('hidden');
+    
+    const card = document.getElementById('admProjectFormCard');
+    if (card) card.scrollIntoView({ behavior: 'smooth' });
+};
+
+window.adminCancelProjectEdit = () => {
+    AdminState.editingProjectIndex = -1;
+    ['adm_proj_title', 'adm_proj_catLabel', 'adm_proj_catColor', 'adm_proj_tech', 'adm_proj_desc', 'adm_proj_icon', 'adm_proj_github', 'adm_proj_demo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+    const titleEl = document.getElementById('admProjectFormTitle');
+    if (titleEl) titleEl.innerHTML = '<i class="fas fa-plus-circle text-primary"></i> Add New Project';
+    const btn = document.getElementById('admProjectSubmitBtn');
+    if (btn) btn.innerHTML = '<i class="fas fa-plus"></i> <span>Add Project</span>';
+    const cancelBtn = document.getElementById('admProjectCancelBtn');
+    if (cancelBtn) cancelBtn.classList.add('hidden');
 };
 
 window.adminDeleteProject = (idx) => {
@@ -835,10 +961,10 @@ window.adminDeleteProject = (idx) => {
     showAdminToast('Project deleted successfully.', 'info');
 };
 
-// Club CRUD
+// Club Leadership CRUD
 window.adminSaveClub = () => {
     if (!window.currentPortfolioData) return;
-    const getVal = id => document.getElementById(id)?.value.trim() || '';
+    const getVal = id => document.getElementById(id)?.value?.trim() || '';
     
     const club = getVal('adm_club_name');
     if (!club) {
@@ -849,7 +975,7 @@ window.adminSaveClub = () => {
     const newClub = {
         club: club,
         role: getVal('adm_club_role') || 'Executive Member',
-        prevRole: getVal('adm_club_prevRole'),
+        prevRole: getVal('adm_club_prevRole') || '',
         date: getVal('adm_club_date') || 'Present',
         icon: getVal('adm_club_icon') || 'fas fa-shield-halved',
         color: getVal('adm_club_color') || 'text-emerald-400',
@@ -858,43 +984,70 @@ window.adminSaveClub = () => {
         desc: getVal('adm_club_desc') || ''
     };
     
-    if (AdminState.editingClubIndex >= 0) {
+    if (AdminState.editingClubIndex >= 0 && window.currentPortfolioData.clubs && window.currentPortfolioData.clubs[AdminState.editingClubIndex]) {
         window.currentPortfolioData.clubs[AdminState.editingClubIndex] = newClub;
-        AdminState.editingClubIndex = -1;
-        document.getElementById('admClubFormTitle').textContent = 'Add New Club Leadership Role';
-        document.getElementById('admClubSubmitBtn').textContent = 'Save Club';
         showAdminToast('Club information updated successfully!', 'success');
     } else {
+        if (!window.currentPortfolioData.clubs) window.currentPortfolioData.clubs = [];
         window.currentPortfolioData.clubs.push(newClub);
         showAdminToast('New club role added successfully!', 'success');
     }
     
-    ['adm_club_name', 'adm_club_role', 'adm_club_prevRole', 'adm_club_date', 'adm_club_desc'].forEach(id => {
+    window.adminCancelClubEdit();
+    saveToCloud(window.currentPortfolioData);
+    renderAdminClubsList();
+    if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
+    if (window.updateStandaloneMetrics) window.updateStandaloneMetrics();
+};
+
+window.adminEditClub = (idx) => {
+    if (!window.currentPortfolioData || !window.currentPortfolioData.clubs || !window.currentPortfolioData.clubs[idx]) return;
+    const c = window.currentPortfolioData.clubs[idx];
+    AdminState.editingClubIndex = idx;
+    
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+    setVal('adm_club_name', c.club);
+    setVal('adm_club_role', c.role);
+    setVal('adm_club_prevRole', c.prevRole);
+    setVal('adm_club_date', c.date);
+    setVal('adm_club_desc', c.desc);
+    setVal('adm_club_icon', c.icon || 'fas fa-shield-halved');
+    setVal('adm_club_color', c.color || 'text-emerald-400');
+    
+    const titleEl = document.getElementById('admClubFormTitle');
+    if (titleEl) titleEl.innerHTML = `<i class="fas fa-edit text-purple-400"></i> Edit Club Role: ${c.club}`;
+    
+    const submitBtn = document.getElementById('admClubSubmitBtn');
+    if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> <span>Save Club Update</span>';
+        submitBtn.className = 'px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2';
+    }
+    
+    const cancelBtn = document.getElementById('admClubCancelBtn');
+    if (cancelBtn) cancelBtn.classList.remove('hidden');
+    
+    const formCard = document.getElementById('admClubFormCard');
+    if (formCard) formCard.scrollIntoView({ behavior: 'smooth' });
+};
+
+window.adminCancelClubEdit = () => {
+    AdminState.editingClubIndex = -1;
+    ['adm_club_name', 'adm_club_role', 'adm_club_prevRole', 'adm_club_date', 'adm_club_desc', 'adm_club_icon', 'adm_club_color'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
     
-    saveToCloud(window.currentPortfolioData);
-    renderAdminClubsList();
-    if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
-};
-
-window.adminEditClub = (idx) => {
-    if (!window.currentPortfolioData || !window.currentPortfolioData.clubs[idx]) return;
-    const c = window.currentPortfolioData.clubs[idx];
-    AdminState.editingClubIndex = idx;
+    const titleEl = document.getElementById('admClubFormTitle');
+    if (titleEl) titleEl.innerHTML = '<i class="fas fa-users text-purple-400"></i> Add New Club Leadership Role';
     
-    document.getElementById('adm_club_name').value = c.club || '';
-    document.getElementById('adm_club_role').value = c.role || '';
-    document.getElementById('adm_club_prevRole').value = c.prevRole || '';
-    document.getElementById('adm_club_date').value = c.date || '';
-    document.getElementById('adm_club_desc').value = c.desc || '';
-    document.getElementById('adm_club_icon').value = c.icon || 'fas fa-shield-halved';
-    document.getElementById('adm_club_color').value = c.color || 'text-emerald-400';
+    const submitBtn = document.getElementById('admClubSubmitBtn');
+    if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> <span>Save Club Role</span>';
+        submitBtn.className = 'px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2';
+    }
     
-    document.getElementById('admClubFormTitle').textContent = `Edit Club: ${c.club}`;
-    document.getElementById('admClubSubmitBtn').textContent = 'Save Update';
-    document.getElementById('admClubFormCard').scrollIntoView({ behavior: 'smooth' });
+    const cancelBtn = document.getElementById('admClubCancelBtn');
+    if (cancelBtn) cancelBtn.classList.add('hidden');
 };
 
 window.adminDeleteClub = (idx) => {
@@ -903,42 +1056,142 @@ window.adminDeleteClub = (idx) => {
     saveToCloud(window.currentPortfolioData);
     renderAdminClubsList();
     if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
+    if (window.updateStandaloneMetrics) window.updateStandaloneMetrics();
     showAdminToast('Club information deleted successfully.', 'info');
 };
 
-// Gallery Photo Management
-window.adminAddPhoto = () => {
+// Activities Galleries Management (Technical, Cultural, Sports)
+window.adminFilterGallery = (filter) => {
+    AdminState.galleryFilter = filter;
+    
+    ['all', 'technical', 'cultural', 'sports'].forEach(f => {
+        const btn = document.getElementById(`admGalFilter-${f}`);
+        if (btn) {
+            if (f === filter) {
+                btn.className = 'px-3 py-1 rounded-lg bg-secondary text-white transition-all shadow-sm';
+            } else {
+                btn.className = 'px-3 py-1 rounded-lg text-slate-400 hover:text-white transition-all';
+            }
+        }
+    });
+    
+    renderAdminGalleryList();
+};
+
+window.adminSavePhoto = () => {
     if (!window.currentPortfolioData) return;
-    const src = document.getElementById('adm_photo_src')?.value.trim();
-    const caption = document.getElementById('adm_photo_caption')?.value.trim() || 'Pohela Boishakh Celebration';
+    const data = ensurePortfolioActivities(window.currentPortfolioData);
+    
+    const getVal = id => document.getElementById(id)?.value?.trim() || '';
+    const category = getVal('adm_photo_category') || 'cultural';
+    const src = getVal('adm_photo_src');
+    const caption = getVal('adm_photo_caption');
     
     if (!src) {
         showAdminToast('Please enter the image URL or path.', 'error');
         return;
     }
-    
-    if (!window.currentPortfolioData.culturalPhotos) {
-        window.currentPortfolioData.culturalPhotos = [];
+    if (!caption) {
+        showAdminToast('Please provide a caption for the photo.', 'error');
+        return;
     }
     
-    window.currentPortfolioData.culturalPhotos.push({ src, caption });
-    document.getElementById('adm_photo_src').value = '';
-    document.getElementById('adm_photo_caption').value = '';
+    const targetArrayKey = category === 'technical' ? 'technicalPhotos' : category === 'sports' ? 'sportsPhotos' : 'culturalPhotos';
     
-    saveToCloud(window.currentPortfolioData);
+    if (AdminState.editingPhotoInfo) {
+        const oldCat = AdminState.editingPhotoInfo.category;
+        const oldIdx = AdminState.editingPhotoInfo.index;
+        const oldArrayKey = oldCat === 'technical' ? 'technicalPhotos' : oldCat === 'sports' ? 'sportsPhotos' : 'culturalPhotos';
+        
+        if (oldCat === category && data[oldArrayKey] && data[oldArrayKey][oldIdx]) {
+            data[oldArrayKey][oldIdx] = { src, caption };
+        } else {
+            if (data[oldArrayKey]) data[oldArrayKey].splice(oldIdx, 1);
+            if (!data[targetArrayKey]) data[targetArrayKey] = [];
+            data[targetArrayKey].push({ src, caption });
+        }
+        showAdminToast('Activity photo updated successfully!', 'success');
+    } else {
+        if (!data[targetArrayKey]) data[targetArrayKey] = [];
+        data[targetArrayKey].unshift({ src, caption });
+        showAdminToast(`New photo added to ${category} activities gallery!`, 'success');
+    }
+    
+    window.adminCancelPhotoEdit();
+    saveToCloud(data);
     renderAdminGalleryList();
-    if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
-    showAdminToast('New photo added to gallery successfully!', 'success');
+    if (window.renderAllPortfolio) window.renderAllPortfolio(data);
+    if (window.updateStandaloneMetrics) window.updateStandaloneMetrics();
 };
 
-window.adminDeletePhoto = (idx) => {
-    if (!confirm('Are you sure you want to remove this photo from the gallery?')) return;
-    window.currentPortfolioData.culturalPhotos.splice(idx, 1);
-    saveToCloud(window.currentPortfolioData);
-    renderAdminGalleryList();
-    if (window.renderAllPortfolio) window.renderAllPortfolio(window.currentPortfolioData);
-    showAdminToast('Photo removed successfully.', 'info');
+window.adminEditPhoto = (category, index) => {
+    if (!window.currentPortfolioData) return;
+    const data = ensurePortfolioActivities(window.currentPortfolioData);
+    const arrayKey = category === 'technical' ? 'technicalPhotos' : category === 'sports' ? 'sportsPhotos' : 'culturalPhotos';
+    
+    if (!data[arrayKey] || !data[arrayKey][index]) return;
+    const item = data[arrayKey][index];
+    
+    AdminState.editingPhotoInfo = { category, index };
+    
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+    setVal('adm_photo_category', category);
+    setVal('adm_photo_src', item.src);
+    setVal('adm_photo_caption', item.caption);
+    
+    const titleEl = document.getElementById('admPhotoFormTitle');
+    if (titleEl) titleEl.innerHTML = `<i class="fas fa-edit text-secondary"></i> Edit Activity Photo: ${item.caption}`;
+    
+    const submitBtn = document.getElementById('admPhotoSubmitBtn');
+    if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> <span>Save Photo Update</span>';
+        submitBtn.className = 'px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2';
+    }
+    
+    const cancelBtn = document.getElementById('admPhotoCancelBtn');
+    if (cancelBtn) cancelBtn.classList.remove('hidden');
+    
+    const card = document.getElementById('admPhotoFormCard');
+    if (card) card.scrollIntoView({ behavior: 'smooth' });
 };
+
+window.adminCancelPhotoEdit = () => {
+    AdminState.editingPhotoInfo = null;
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+    setVal('adm_photo_src', '');
+    setVal('adm_photo_caption', '');
+    
+    const titleEl = document.getElementById('admPhotoFormTitle');
+    if (titleEl) titleEl.innerHTML = '<i class="fas fa-camera text-secondary"></i> Add Photo to Activities Gallery';
+    
+    const submitBtn = document.getElementById('admPhotoSubmitBtn');
+    if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-plus"></i> <span>Add Photo</span>';
+        submitBtn.className = 'px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2';
+    }
+    
+    const cancelBtn = document.getElementById('admPhotoCancelBtn');
+    if (cancelBtn) cancelBtn.classList.add('hidden');
+};
+
+window.adminDeletePhoto = (category, index) => {
+    if (!window.currentPortfolioData) return;
+    const data = ensurePortfolioActivities(window.currentPortfolioData);
+    const arrayKey = category === 'technical' ? 'technicalPhotos' : category === 'sports' ? 'sportsPhotos' : 'culturalPhotos';
+    
+    if (!confirm(`Are you sure you want to remove this photo from ${category} activities?`)) return;
+    
+    if (data[arrayKey] && data[arrayKey][index] !== undefined) {
+        data[arrayKey].splice(index, 1);
+        saveToCloud(data);
+        renderAdminGalleryList();
+        if (window.renderAllPortfolio) window.renderAllPortfolio(data);
+        if (window.updateStandaloneMetrics) window.updateStandaloneMetrics();
+        showAdminToast('Photo removed successfully.', 'info');
+    }
+};
+
+window.adminAddPhoto = window.adminSavePhoto;
 
 // Handle Image File Upload directly to DataURL
 window.adminHandlePhotoUpload = (event) => {
@@ -952,7 +1205,8 @@ window.adminHandlePhotoUpload = (event) => {
     
     const reader = new FileReader();
     reader.onload = (e) => {
-        document.getElementById('adm_photo_src').value = e.target.result;
+        const srcInput = document.getElementById('adm_photo_src');
+        if (srcInput) srcInput.value = e.target.result;
         showAdminToast('Photo loaded! Enter caption and click "Add Photo".', 'success');
     };
     reader.readAsDataURL(file);
@@ -977,10 +1231,11 @@ window.adminImportBackup = (event) => {
     reader.onload = (e) => {
         try {
             const imported = JSON.parse(e.target.result);
-            if (imported && imported.personalInfo && imported.projects) {
-                window.currentPortfolioData = imported;
-                saveToCloud(imported);
-                if (window.renderAllPortfolio) window.renderAllPortfolio(imported);
+            if (imported && imported.personalInfo) {
+                const resolved = ensurePortfolioActivities(imported);
+                window.currentPortfolioData = resolved;
+                saveToCloud(resolved);
+                if (window.renderAllPortfolio) window.renderAllPortfolio(resolved);
                 renderAdminDashboard();
                 showAdminToast('Backup restored successfully!', 'success');
             } else {
@@ -1033,4 +1288,3 @@ window.addEventListener('load', () => {
         setTimeout(toggleAdminView, 500);
     }
 });
-
