@@ -352,6 +352,13 @@
 
                 <!-- Right Action Buttons -->
                 <div class="hidden md:flex items-center space-x-3">
+                    <!-- Admin Login / Cockpit Button -->
+                    <button type="button" id="adminNavBtn" onclick="toggleAdminView()" aria-label="Admin Access"
+                            class="px-3.5 py-2 rounded-full glass border border-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:border-emerald-500/40" title="Admin Login & Control Panel (Ctrl+Shift+A)">
+                        <i class="fas fa-shield-halved text-emerald-400 text-xs"></i>
+                        <span id="adminNavStatus">Admin</span>
+                    </button>
+
                     <!-- Theme Toggle -->
                     <button type="button" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Cyber Theme"
                             class="w-10 h-10 rounded-full glass border border-white/10 text-slate-300 hover:text-accent hover:border-accent/40 flex items-center justify-center transition-all hover:scale-105" title="Toggle Cyber Glow Mode">
@@ -373,6 +380,11 @@
 
                 <!-- Mobile menu button -->
                 <div class="lg:hidden flex items-center gap-2">
+                    <button type="button" onclick="toggleAdminView()" aria-label="Admin Access"
+                            class="px-2.5 py-1.5 rounded-full glass border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center gap-1">
+                        <i class="fas fa-shield-halved text-xs"></i>
+                        <span>Admin</span>
+                    </button>
                     <button type="button" onclick="toggleTheme()" aria-label="Toggle Theme"
                             class="w-9 h-9 rounded-full glass border border-white/10 text-slate-300 flex items-center justify-center">
                         <i class="fas fa-terminal text-xs"></i>
@@ -398,11 +410,15 @@
             <a href="#leadership" class="mobile-link block text-slate-300 font-medium text-base hover:text-white">Leadership</a>
             <a href="#activities" class="mobile-link block text-slate-300 font-medium text-base hover:text-white">Activities</a>
             <a href="#projects" class="mobile-link block text-slate-300 font-medium text-base hover:text-white">Projects</a>
-            <div class="pt-2 px-6">
+            <div class="pt-2 px-6 space-y-2">
+                <button type="button" id="adminMobileNavBtn" onclick="toggleAdminView()" class="mobile-link block w-full py-2.5 rounded-full glass border border-emerald-500/30 text-emerald-300 font-bold text-sm">
+                    <i class="fas fa-shield-halved text-emerald-400"></i> Admin Panel
+                </button>
                 <a href="#contact" class="mobile-link block w-full py-3 rounded-full bg-white text-slate-900 font-bold text-sm">Contact Me</a>
             </div>
         </div>
     </nav>
+
 
     <!-- HERO SECTION -->
     <section id="home" class="min-h-screen flex flex-col items-center justify-center pt-28 pb-16 relative overflow-hidden text-center px-4">
@@ -750,9 +766,9 @@
                     <div class="mt-8">
                         <div class="flex items-center justify-between gap-4 mb-5">
                             <div><p class="text-sm text-secondary font-semibold uppercase tracking-wider">University Cultural Festival</p><h4 class="text-2xl font-bold text-white">Pohela Boishakh Cultural Moments</h4></div>
-                            <span class="text-sm text-gray-500 shrink-0 font-mono">5 photos</span>
+                            <span id="culturalPhotoCount" class="text-sm text-gray-500 shrink-0 font-mono">5 photos</span>
                         </div>
-                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <div id="culturalGalleryGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                             <button type="button" class="cultural-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-secondary" onclick="openCulturalLightbox(0)" aria-label="Open Pohela Boishakh Stage Performance photo">
                                 <img src="assets/cultural-photo-1.jpg" alt="Pohela Boishakh Celebration – Stage Performance" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
                                 <span class="block p-4 text-sm font-medium text-white">Pohela Boishakh – Stage Performance</span>
@@ -1391,58 +1407,91 @@
                 { title: "Excellence in Digital Promotion", org: "Presidency University", desc: "Granted in recognition of continuous high performance and commitment to institutional outreach during the Gazipur Tour." },
                 { title: "President Scouts Award", org: "Bangladesh Scouts", desc: "Division Level achievement demonstrating leadership, team management, and civic duty." },
                 { title: "Singing Competition Winner", org: "Division & Upazela Levels", desc: "1st position at the division level and four-time 1st position at the Upazela level." }
+            ],
+
+            culturalPhotos: [
+                { src: "assets/cultural-photo-1.jpg", caption: "Pohela Boishakh – Stage Performance" },
+                { src: "assets/cultural-photo-2.jpg", caption: "Pohela Boishakh – Cultural Performance" },
+                { src: "assets/cultural-photo-3.jpg", caption: "Pohela Boishakh – Live Musical Performance" },
+                { src: "assets/cultural-photo-4.jpg", caption: "Pohela Boishakh – Audience & Festivity" },
+                { src: "assets/cultural-photo-5.jpg", caption: "Pohela Boishakh – Campus Celebration" }
             ]
         };
+
+        // Single source of truth across admin and public views
+        window.currentPortfolioData = portfolioData;
 
         // Active project filter state
         let currentProjectCategory = 'all';
         let currentSearchQuery = '';
 
         /**
-         * DOM Initialization and Rendering
+         * Render Cultural Photos Gallery Dynamically
          */
-        document.addEventListener('DOMContentLoaded', () => {
-            // Apply saved theme
-            const savedTheme = localStorage.getItem('asr_theme');
-            if (savedTheme === 'cyber') {
-                document.body.classList.add('theme-cyber');
-                updateThemeButton(true);
-            }
+        function renderCulturalGallery(photos) {
+            const grid = document.getElementById('culturalGalleryGrid');
+            const countEl = document.getElementById('culturalPhotoCount');
+            const items = photos || (window.currentPortfolioData && window.currentPortfolioData.culturalPhotos) || [];
+            
+            if (countEl) countEl.textContent = `${items.length} photos`;
+            window.culturalImages = items.map(p => p.src);
+            
+            if (!grid) return;
+            let html = '';
+            items.forEach((p, idx) => {
+                html += `
+                    <button type="button" class="cultural-gallery-item group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20 text-left focus:outline-none focus:ring-2 focus:ring-secondary" onclick="openCulturalLightbox(${idx})" aria-label="Open ${p.caption}">
+                        <img src="${p.src}" alt="${p.caption}" class="w-full h-72 object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                        <span class="block p-4 text-sm font-medium text-white">${p.caption}</span>
+                    </button>`;
+            });
+            grid.innerHTML = html;
+        }
+
+        /**
+         * Master Render Function — Updates Entire DOM Dynamically
+         */
+        function renderAllPortfolio(data) {
+            if (!data) return;
+            window.currentPortfolioData = data;
 
             // 1. Basic Info
-            document.getElementById('heroName').textContent = portfolioData.personalInfo.firstName;
-            document.getElementById('heroDesc').textContent = portfolioData.personalInfo.bio;
+            const nameEl = document.getElementById('heroName');
+            const descEl = document.getElementById('heroDesc');
             const heroImg = document.getElementById('heroImage');
-            if (heroImg) {
-                heroImg.src = portfolioData.personalInfo.profileImage;
-            }
+            if (nameEl) nameEl.textContent = data.personalInfo.name || data.personalInfo.firstName;
+            if (descEl) descEl.textContent = data.personalInfo.bio;
+            if (heroImg && data.personalInfo.profileImage) heroImg.src = data.personalInfo.profileImage;
 
             // 2. Social Links
             let socialHTML = '';
-            portfolioData.socialLinks.forEach(link => {
+            (data.socialLinks || []).forEach(link => {
                 socialHTML += `
                     <a href="${link.url}" target="_blank" rel="noopener noreferrer" aria-label="${link.name}"
                        class="w-11 h-11 rounded-full glass border border-white/10 flex items-center justify-center text-slate-400 transition-all duration-300 ${link.hover} hover:scale-110 shadow-sm">
                         <i class="${link.icon} text-base"></i>
                     </a>`;
             });
-            document.getElementById('heroSocials').innerHTML = socialHTML;
-            document.getElementById('contactSocials').innerHTML = socialHTML;
+            const heroSoc = document.getElementById('heroSocials');
+            const contSoc = document.getElementById('contactSocials');
+            if (heroSoc) heroSoc.innerHTML = socialHTML;
+            if (contSoc) contSoc.innerHTML = socialHTML;
 
             // 3. Skills
             let skillsHTML = '';
-            portfolioData.skillsList.forEach(skill => {
+            (data.skillsList || []).forEach(skill => {
                 skillsHTML += `
                     <div>
                         <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">${skill.category}</h4>
                         <p class="text-slate-200 font-medium text-xs sm:text-sm bg-white/5 px-4 py-3 rounded-xl border border-white/5 leading-relaxed">${skill.items}</p>
                     </div>`;
             });
-            document.getElementById('skillsContainer').innerHTML = skillsHTML;
+            const skillsCont = document.getElementById('skillsContainer');
+            if (skillsCont) skillsCont.innerHTML = skillsHTML;
 
             // 4. Experience
             let expHTML = '';
-            portfolioData.experience.forEach((exp, i) => {
+            (data.experience || []).forEach((exp, i) => {
                 expHTML += `
                     <div class="glass p-8 rounded-[2rem] interactive-card border border-white/10 reveal delay-${i*100}">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-2">
@@ -1458,29 +1507,30 @@
                             <span class="px-3 py-1 rounded-full bg-white/5 text-slate-300 text-xs font-bold border border-white/5 w-fit font-mono">${exp.date}</span>
                         </div>
                         <ul class="list-disc ml-6 sm:ml-14 text-sm text-slate-300 space-y-2 font-light">
-                            ${exp.points.map(p => `<li>${p}</li>`).join('')}
+                            ${(exp.points || []).map(p => `<li>${p}</li>`).join('')}
                         </ul>
                     </div>`;
             });
-            document.getElementById('experienceContainer').innerHTML = expHTML;
+            const expCont = document.getElementById('experienceContainer');
+            if (expCont) expCont.innerHTML = expHTML;
 
             // 5. Clubs & Leadership
             let clubsHTML = '';
-            portfolioData.clubs.forEach((club, i) => {
+            (data.clubs || []).forEach((club, i) => {
                 clubsHTML += `
-                    <div class="glass p-8 rounded-[2rem] interactive-card group border border-white/5 ${club.borderHover} transition-all duration-500 reveal delay-${(i%2)*100} ${club.shadowHover} relative overflow-hidden flex flex-col h-full bg-white/[0.02]">
+                    <div class="glass p-8 rounded-[2rem] interactive-card group border border-white/5 ${club.borderHover || ''} transition-all duration-500 reveal delay-${(i%2)*100} ${club.shadowHover || ''} relative overflow-hidden flex flex-col h-full bg-white/[0.02]">
                         <div class="absolute -right-8 -top-8 opacity-[0.03] group-hover:opacity-[0.08] transition-all duration-700 transform group-hover:scale-110 group-hover:rotate-12 pointer-events-none">
-                            <i class="${club.icon} text-9xl ${club.color}"></i>
+                            <i class="${club.icon} text-9xl ${club.color || 'text-white'}"></i>
                         </div>
                         
                         <div class="flex items-start gap-4 mb-5 relative z-10">
                             <div class="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 shrink-0 group-hover:-translate-y-1 transition-transform duration-300">
-                                <i class="${club.icon} text-2xl ${club.color}"></i>
+                                <i class="${club.icon} text-2xl ${club.color || 'text-white'}"></i>
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold text-white leading-tight mb-1">${club.club}</h3>
                                 <div class="flex flex-wrap items-center gap-2 mt-1">
-                                    <span class="text-sm font-bold ${club.color}">${club.role}</span>
+                                    <span class="text-sm font-bold ${club.color || 'text-white'}">${club.role}</span>
                                     <span class="text-[10px] text-slate-400 font-bold px-2 py-0.5 rounded-full bg-white/10 border border-white/5 font-mono">${club.date}</span>
                                 </div>
                                 ${club.prevRole ? `<p class="text-[10px] text-slate-400 font-medium mt-1.5 uppercase tracking-wider"><i class="fas fa-history mr-1"></i> Prev: ${club.prevRole}</p>` : ''}
@@ -1492,14 +1542,15 @@
                         </p>
                     </div>`;
             });
-            document.getElementById('clubsContainer').innerHTML = clubsHTML;
+            const clubsCont = document.getElementById('clubsContainer');
+            if (clubsCont) clubsCont.innerHTML = clubsHTML;
 
-            // 6. Initial Projects Render
+            // 6. Projects Render
             renderProjects();
 
             // 7. Awards
             let awardsHTML = '';
-            portfolioData.awards.forEach((award, i) => {
+            (data.awards || []).forEach((award, i) => {
                 awardsHTML += `
                     <div class="glass p-6 rounded-[1.5rem] interactive-card border border-white/5 reveal delay-${i*100} flex items-start gap-4">
                         <div class="mt-1 text-amber-400 bg-amber-400/10 p-2.5 rounded-xl border border-amber-400/20"><i class="fas fa-award text-xl"></i></div>
@@ -1510,7 +1561,40 @@
                         </div>
                     </div>`;
             });
-            document.getElementById('awardsContainer').innerHTML = awardsHTML;
+            const awardsCont = document.getElementById('awardsContainer');
+            if (awardsCont) awardsCont.innerHTML = awardsHTML;
+
+            // 8. Cultural Gallery
+            renderCulturalGallery(data.culturalPhotos);
+        }
+        window.renderAllPortfolio = renderAllPortfolio;
+
+        /**
+         * DOM Initialization and Rendering
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply saved theme
+            const savedTheme = localStorage.getItem('asr_theme');
+            if (savedTheme === 'cyber') {
+                document.body.classList.add('theme-cyber');
+                updateThemeButton(true);
+            }
+
+            // Check LocalStorage cache first for instant render
+            const cached = localStorage.getItem('alkamah_portfolio_data');
+            if (cached) {
+                try {
+                    const parsed = JSON.parse(cached);
+                    window.currentPortfolioData = { ...portfolioData, ...parsed };
+                } catch (e) {
+                    window.currentPortfolioData = portfolioData;
+                }
+            } else {
+                window.currentPortfolioData = portfolioData;
+            }
+
+            // Render all components
+            renderAllPortfolio(window.currentPortfolioData);
 
             // Fetch live GitHub stats
             fetchLiveGitHubStats();
@@ -1519,6 +1603,7 @@
             initTypingEffect();
             setTimeout(revealOnScroll, 100);
         });
+
 
         // Typing Effect
         function initTypingEffect() {
@@ -1574,7 +1659,9 @@
             const countLabel = document.getElementById('projectCount');
             if (!container) return;
 
-            let filtered = portfolioData.projects.filter(p => {
+            const allProjects = (window.currentPortfolioData && window.currentPortfolioData.projects) || portfolioData.projects || [];
+
+            let filtered = allProjects.filter(p => {
                 // Category check
                 const matchCategory = (currentProjectCategory === 'all') || (p.category === currentProjectCategory);
                 
@@ -1589,8 +1676,9 @@
             });
 
             if (countLabel) {
-                countLabel.textContent = `Showing ${filtered.length} of ${portfolioData.projects.length} projects`;
+                countLabel.textContent = `Showing ${filtered.length} of ${allProjects.length} projects`;
             }
+
 
             if (filtered.length === 0) {
                 container.innerHTML = '';
@@ -1787,9 +1875,15 @@
                         stat.innerHTML = `<i class="fas fa-check-circle mr-2"></i> Thank you, <strong>${nameVal}</strong>! Your message was sent successfully. Sakil will reply soon.`;
                         stat.className = "p-4 rounded-xl text-xs sm:text-sm text-center font-bold mt-4 border bg-emerald-500/10 border-emerald-500/30 text-emerald-300";
                         contactForm.reset();
+
+                        // Sync message to Cloud Firestore for Admin Inbox
+                        if (window.adminSaveMessageToCloud) {
+                            window.adminSaveMessageToCloud(nameVal, emailVal, phoneVal, messageVal);
+                        }
                     } else {
                         throw new Error("Submission rejected by server.");
                     }
+
                 } catch (error) {
                     stat.classList.remove('hidden');
                     stat.innerHTML = `<i class="fas fa-exclamation-triangle mr-2"></i> Message could not be sent directly. Please email me at <a href="mailto:sakilurrashid1@gmail.com" class="underline font-bold">sakilurrashid1@gmail.com</a> or message on <a href="https://wa.me/8801329544365" target="_blank" class="underline font-bold">WhatsApp</a>.`;
@@ -1837,9 +1931,12 @@
     }
 
     // 2. Cultural Activities Lightbox
-    const culturalImages = Array.from(document.querySelectorAll('.cultural-gallery-item img')).map(img => img.src);
+    window.culturalImages = Array.from(document.querySelectorAll('.cultural-gallery-item img')).map(img => img.src);
     let culturalIndex = 0;
     function openCulturalLightbox(index) {
+      if (!window.culturalImages || window.culturalImages.length === 0) {
+        window.culturalImages = Array.from(document.querySelectorAll('.cultural-gallery-item img')).map(img => img.src);
+      }
       culturalIndex = index;
       let box = document.getElementById('cultural-lightbox');
       if (!box) {
@@ -1854,7 +1951,7 @@
         document.body.appendChild(box);
         box.addEventListener('click', e => { if (e.target === box) closeCulturalLightbox(); });
       }
-      document.getElementById('cultural-lightbox-img').src = culturalImages[culturalIndex];
+      document.getElementById('cultural-lightbox-img').src = window.culturalImages[culturalIndex] || '';
       box.classList.remove('hidden'); box.classList.add('flex');
       document.body.style.overflow = 'hidden';
     }
@@ -1864,9 +1961,11 @@
       document.body.style.overflow = '';
     }
     function changeCulturalImage(step) {
-      culturalIndex = (culturalIndex + step + culturalImages.length) % culturalImages.length;
-      document.getElementById('cultural-lightbox-img').src = culturalImages[culturalIndex];
+      if (!window.culturalImages || window.culturalImages.length === 0) return;
+      culturalIndex = (culturalIndex + step + window.culturalImages.length) % window.culturalImages.length;
+      document.getElementById('cultural-lightbox-img').src = window.culturalImages[culturalIndex];
     }
+
 
     // 3. Sports Activities Lightbox
     const sportsImages = Array.from(document.querySelectorAll('.sports-gallery-item img')).map(img => img.src);
@@ -1926,5 +2025,536 @@
       }
     });
     </script>
+
+    <!-- ========================================== -->
+    <!-- 1. ADMIN AUTHENTICATION MODAL -->
+    <!-- ========================================== -->
+    <div id="adminAuthModal" class="fixed inset-0 z-[99999] hidden items-center justify-center bg-black/80 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="adminAuthTitle">
+        <div class="max-w-md w-full glass p-7 sm:p-8 rounded-[2rem] border border-white/10 shadow-2xl relative bg-slate-950/95 text-left">
+            <!-- Close Button -->
+            <button type="button" onclick="closeAdminAuthModal()" aria-label="Close modal"
+                    class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/5 border border-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="flex items-center gap-3.5 mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h3 id="adminAuthTitle" class="text-xl font-bold text-white leading-tight">অ্যাডমিন প্রবেশদ্বার</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Alkamah Portfolio Control Center</p>
+                </div>
+            </div>
+
+            <!-- Login Method Tabs -->
+            <div class="grid grid-cols-3 gap-1 p-1 bg-white/5 rounded-xl border border-white/5 mb-6 text-xs font-bold text-center">
+                <button type="button" id="authTabBtn-google" onclick="switchAuthTab('google')" class="py-2 rounded-lg bg-primary text-white transition-all">গুগল</button>
+                <button type="button" id="authTabBtn-email" onclick="switchAuthTab('email')" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all">ইমেইল</button>
+                <button type="button" id="authTabBtn-passcode" onclick="switchAuthTab('passcode')" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all">মাস্টার কোড</button>
+            </div>
+
+            <!-- Tab 1: Google Login (Recommended, matches Giri Sompriti) -->
+            <div id="authTabPane-google" class="space-y-4">
+                <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300 leading-relaxed">
+                    <p class="font-bold text-white mb-1"><i class="fas fa-circle-info text-primary mr-1"></i> অনুমোদিত অ্যাকাউন্ট:</p>
+                    <p class="font-mono text-[11px] text-emerald-400">sakilurrashid1@gmail.com</p>
+                    <p class="font-mono text-[11px] text-emerald-400">alkamahrashid@gmail.com</p>
+                </div>
+                <button type="button" onclick="adminLoginWithGoogle()"
+                        class="w-full py-3.5 px-4 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 flex items-center justify-center gap-3 transition-all shadow-lg hover:scale-[1.01]">
+                    <i class="fab fa-google text-red-500 text-lg"></i>
+                    <span>গুগল দিয়ে অ্যাডমিন লগইন</span>
+                </button>
+            </div>
+
+            <!-- Tab 2: Email & Password -->
+            <div id="authTabPane-email" class="hidden space-y-3.5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">অ্যাডমিন ইমেইল</label>
+                    <input type="email" id="admLoginEmail" placeholder="sakilurrashid1@gmail.com"
+                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">পাসওয়ার্ড</label>
+                    <input type="password" id="admLoginPassword" placeholder="••••••••"
+                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-primary">
+                </div>
+                <button type="button" onclick="adminLoginWithEmail()"
+                        class="w-full py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold text-xs sm:text-sm transition-all shadow-md">
+                    লগইন করুন
+                </button>
+            </div>
+
+            <!-- Tab 3: Master Passcode -->
+            <div id="authTabPane-passcode" class="space-y-3.5 hidden">
+                <p class="text-xs text-slate-400">ইন্টারনেট বা ফায়ারস্টোর পপআপ ব্যতিরেকে সরাসরি অফলাইন/লোকাল অ্যাডমিন মোডে প্রবেশ করতে আপনার মাস্টার পাসকোড ব্যবহার করুন।</p>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">মাস্টার পাসকোড</label>
+                    <input type="password" id="admLoginPasscode" placeholder="ডিফল্ট: alkamah2026"
+                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 font-mono">
+                </div>
+                <button type="button" onclick="adminLoginWithPasscode()"
+                        class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition-all shadow-md">
+                    প্রবেশ করুন
+                </button>
+            </div>
+
+            <!-- Footer info -->
+            <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
+                <span><i class="fas fa-lock mr-1 text-emerald-400"></i> নিরাপদ ও এনক্রিপ্টেড</span>
+                <span>গিরি সম্প্রীতির সমতুল্য আর্কিটেকচার</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. FULL ACCESS ADMIN COCKPIT / DASHBOARD -->
+    <!-- ========================================== -->
+    <div id="adminDashboardModal" class="fixed inset-0 z-[99999] hidden items-center justify-center bg-black/85 p-2 sm:p-4 md:p-6 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="admCockpitTitle">
+        <div class="max-w-6xl w-full h-[94vh] glass rounded-[2.5rem] border border-white/10 shadow-2xl flex flex-col overflow-hidden bg-slate-950/95 text-left">
+            
+            <!-- Cockpit Top Bar -->
+            <div class="px-6 py-4 border-b border-white/10 flex flex-wrap items-center justify-between gap-4 bg-slate-900/50 shrink-0">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold shadow-[0_0_20px_rgba(99,102,241,0.3)] shrink-0">
+                        AS
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 id="admCockpitTitle" class="text-base sm:text-lg font-bold text-white leading-tight">আলকামাহ — অ্যাডমিন ড্যাশবোর্ড</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">SuperAdmin</span>
+                        </div>
+                        <div class="flex items-center gap-2 mt-0.5">
+                            <span id="admUserEmail" class="text-xs text-slate-400 font-mono">sakilurrashid1@gmail.com</span>
+                            <span class="text-slate-600">•</span>
+                            <span id="admCloudStatus" class="text-xs"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2.5">
+                    <button type="button" onclick="adminSaveToCloud()"
+                            class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                        <i class="fas fa-cloud-arrow-up"></i>
+                        <span>ক্লাউডে সেভ করুন</span>
+                    </button>
+                    <button type="button" onclick="closeAdminDashboard()"
+                            class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold border border-white/10 transition-all flex items-center gap-1.5">
+                        <i class="fas fa-globe"></i>
+                        <span>লাইভ সাইট</span>
+                    </button>
+                    <button type="button" onclick="adminLogout()"
+                            class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs font-bold border border-rose-500/20 transition-all flex items-center gap-1.5" title="লগআউট">
+                        <i class="fas fa-arrow-right-from-bracket"></i>
+                        <span class="hidden sm:inline">লগআউট</span>
+                    </button>
+                    <button type="button" onclick="closeAdminDashboard()" aria-label="Close Cockpit"
+                            class="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-all">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cockpit Main Flex Container -->
+            <div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
+                <!-- Sidebar Tabs Navigation -->
+                <div class="w-full md:w-64 p-3 md:p-4 border-b md:border-b-0 md:border-r border-white/10 flex md:flex-col gap-1.5 overflow-x-auto md:overflow-y-auto shrink-0 bg-slate-900/30">
+                    <button type="button" onclick="switchAdminTab('dashboard')" data-tab="dashboard"
+                            class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all bg-primary/20 text-white border border-primary/50 text-left shrink-0">
+                        <i class="fas fa-gauge-high text-primary"></i> <span>ড্যাশবোর্ড</span>
+                    </button>
+                    <button type="button" onclick="switchAdminTab('profile')" data-tab="profile"
+                            class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
+                        <i class="fas fa-user-pen text-indigo-400"></i> <span>প্রোফাইল ও বায়ো</span>
+                    </button>
+                    <button type="button" onclick="switchAdminTab('projects')" data-tab="projects"
+                            class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
+                        <i class="fas fa-laptop-code text-cyan-400"></i> <span>প্রজেক্টস ম্যানেজার</span>
+                    </button>
+                    <button type="button" onclick="switchAdminTab('clubs')" data-tab="clubs"
+                            class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
+                        <i class="fas fa-users-gear text-purple-400"></i> <span>ক্লাবস ও নেতৃত্ব</span>
+                    </button>
+                    <button type="button" onclick="switchAdminTab('gallery')" data-tab="gallery"
+                            class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
+                        <i class="fas fa-camera-retro text-amber-400"></i> <span>কালচারাল গ্যালারি</span>
+                    </button>
+                    <button type="button" onclick="switchAdminTab('inbox')" data-tab="inbox"
+                            class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
+                        <i class="fas fa-inbox text-pink-400"></i> <span>ইনবক্স ও বার্তা</span>
+                        <span id="adminInboxBadge" class="hidden"></span>
+                    </button>
+                    <button type="button" onclick="switchAdminTab('backup')" data-tab="backup"
+                            class="admin-tab-btn flex-1 md:flex-initial px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-3 transition-all text-slate-400 hover:text-white hover:bg-white/5 border border-transparent text-left shrink-0">
+                        <i class="fas fa-cloud-arrow-down text-emerald-400"></i> <span>ব্যাকআপ ও সেটিংস</span>
+                    </button>
+                </div>
+
+                <!-- Tab Panes Content Area -->
+                <div class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6">
+                    
+                    <!-- TAB 1: DASHBOARD OVERVIEW -->
+                    <div id="adminTab-dashboard" class="admin-tab-pane space-y-6">
+                        <!-- 4 Stat Cards -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-folder-tree"></i></div>
+                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">মোট প্রজেক্ট</p><h4 id="admMetricProjects" class="text-2xl font-extrabold text-white">0</h4></div>
+                            </div>
+                            <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-shield-halved"></i></div>
+                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">ক্লাব ভূমিকা</p><h4 id="admMetricClubs" class="text-2xl font-extrabold text-white">0</h4></div>
+                            </div>
+                            <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-images"></i></div>
+                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">গ্যালারি ছবি</p><h4 id="admMetricGallery" class="text-2xl font-extrabold text-white">0</h4></div>
+                            </div>
+                            <div class="glass p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center text-xl shrink-0"><i class="fas fa-envelope-open-text"></i></div>
+                                <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">প্রাপ্ত বার্তা</p><h4 id="admMetricInbox" class="text-2xl font-extrabold text-white">0</h4></div>
+                            </div>
+                        </div>
+
+                        <!-- System Status & Quick Actions -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-bolt text-amber-400"></i> দ্রুত অ্যাকশন</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <button type="button" onclick="switchAdminTab('projects')" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
+                                        <i class="fas fa-plus text-primary"></i> নতুন প্রজেক্ট যোগ করুন
+                                    </button>
+                                    <button type="button" onclick="switchAdminTab('gallery')" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
+                                        <i class="fas fa-camera text-secondary"></i> গ্যালারিতে ছবি যোগ করুন
+                                    </button>
+                                    <button type="button" onclick="adminExportBackup()" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
+                                        <i class="fas fa-download text-emerald-400"></i> সম্পূর্ণ ডেটা ব্যাকআপ
+                                    </button>
+                                    <button type="button" onclick="switchAdminTab('inbox')" class="p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold text-xs flex items-center gap-2.5 transition-all text-left">
+                                        <i class="fas fa-inbox text-pink-400"></i> মেসেজ ইনবক্স দেখুন
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="glass p-6 rounded-2xl border border-white/10 space-y-3 text-xs text-slate-300">
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-shield-check text-emerald-400"></i> নিরাপত্তা ও ক্লাউড স্ট্যাটাস</h4>
+                                <p><strong class="text-white">ক্লাউড প্রজেক্ট:</strong> giri-somprity (Firestore DB)</p>
+                                <p><strong class="text-white">অনুমোদিত অ্যাডমিন:</strong> sakilurrashid1@gmail.com, alkamahrashid@gmail.com</p>
+                                <p><strong class="text-white">ডেটা লেয়ার:</strong> রিয়েল-টাইম লোকাল ক্যাশিং + ক্লাউড ফায়ারস্টোর ডুয়েল সিঙ্ক। যেকোনো ডিভাইস থেকে অ্যাডমিন লগইন করলেই লাইভ আপডেট প্রদর্শিত হবে।</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: PROFILE & BIO -->
+                    <div id="adminTab-profile" class="admin-tab-pane hidden space-y-6">
+                        <div class="glass p-6 md:p-8 rounded-2xl border border-white/10 space-y-5">
+                            <h4 class="text-lg font-bold text-white flex items-center gap-2"><i class="fas fa-user-pen text-primary"></i> ব্যক্তিগত তথ্য ও বায়ো সম্পাদনা</h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">পূর্ণ নাম (Full Name)</label>
+                                    <input type="text" id="adm_name" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ডিসপ্লে নাম (Hero Name)</label>
+                                    <input type="text" id="adm_firstName" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ফোন নম্বর (WhatsApp)</label>
+                                    <input type="text" id="adm_phone" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ইমেইল ঠিকানা</label>
+                                    <input type="email" id="adm_email" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ঠিকানা / অবস্থান</label>
+                                    <input type="text" id="adm_location" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">প্রোফাইল ছবি পাথ / URL</label>
+                                    <input type="text" id="adm_profileImg" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">বায়ো / ভূমিকা বক্তব্য (About Me)</label>
+                                <textarea id="adm_bio" rows="4" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 mb-1">টাইপিং অ্যানিমেশন টেক্সট (প্রতি লাইনে একটি করে বাক্যাংশ)</label>
+                                <textarea id="adm_phrases" rows="4" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-primary"></textarea>
+                            </div>
+
+                            <button type="button" onclick="adminSaveProfile()"
+                                    class="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
+                                <i class="fas fa-save"></i> <span>প্রোফাইল তথ্য সংরক্ষণ করুন</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: PROJECTS MANAGER -->
+                    <div id="adminTab-projects" class="admin-tab-pane hidden space-y-6">
+                        <!-- Add/Edit Project Form -->
+                        <div id="admProjectFormCard" class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                            <h4 id="admProjectFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-plus-circle text-primary"></i> নতুন প্রজেক্ট যোগ করুন</h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">প্রজেক্টের শিরোনাম (Title) *</label>
+                                    <input type="text" id="adm_proj_title" placeholder="NetPulse — Network Intelligence Lab"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ক্যাটাগরি আইডি</label>
+                                    <select id="adm_proj_category" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                        <option value="cybersecurity">Cybersecurity & SOC</option>
+                                        <option value="ai-ml">AI & Analytics</option>
+                                        <option value="web-dev">Full-Stack Web</option>
+                                        <option value="academic">Academic & Systems</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ক্যাটাগরি লেবেল</label>
+                                    <input type="text" id="adm_proj_catLabel" placeholder="Cybersecurity & SOC"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">লেবেল কালার ক্লাস</label>
+                                    <input type="text" id="adm_proj_catColor" placeholder="text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ফন্ট অওসাম আইকন ক্লাস</label>
+                                    <input type="text" id="adm_proj_icon" placeholder="fas fa-shield-halved"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">গিটহাব রিপো লিঙ্ক (GitHub URL)</label>
+                                    <input type="url" id="adm_proj_github" placeholder="https://github.com/sakilurrashid1-star/..."
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">লাইভ ডেমো লিঙ্ক (Live Demo URL)</label>
+                                    <input type="text" id="adm_proj_demo" placeholder="projects/netpulse/index.html বা https://..."
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div class="sm:col-span-3">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ব্যবহৃত টেকনোলজি (Tech Stack)</label>
+                                    <input type="text" id="adm_proj_tech" placeholder="Python, Streamlit, Pandas, NumPy, NLP"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary">
+                                </div>
+                                <div class="sm:col-span-3">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">সংক্ষিপ্ত বিবরণ (Description)</label>
+                                    <textarea id="adm_proj_desc" rows="3" placeholder="প্রজেক্টের মূল বৈশিষ্ট্য ও কার্যকারিতা..."
+                                              class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-primary"></textarea>
+                                </div>
+                            </div>
+
+                            <button type="button" id="admProjectSubmitBtn" onclick="adminSaveProject()"
+                                    class="px-6 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
+                                <i class="fas fa-plus"></i> <span>প্রজেক্ট যোগ করুন</span>
+                            </button>
+                        </div>
+
+                        <!-- Existing Projects List -->
+                        <div class="space-y-3">
+                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-list-check text-cyan-400"></i> বিদ্যমান প্রজেক্ট তালিকা</h4>
+                            <div id="admProjectsList" class="space-y-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: CLUBS & LEADERSHIP -->
+                    <div id="adminTab-clubs" class="admin-tab-pane hidden space-y-6">
+                        <!-- Add/Edit Club Form -->
+                        <div id="admClubFormCard" class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                            <h4 id="admClubFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-users text-purple-400"></i> নতুন ক্লাব দায়িত্ব যোগ করুন</h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ক্লাবের নাম (Club Name) *</label>
+                                    <input type="text" id="adm_club_name" placeholder="PU Cyber Security Club (PUCSC)"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">পদবী / দায়িত্ব (Role)</label>
+                                    <input type="text" id="adm_club_role" placeholder="Vice President"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">পূর্ববর্তী ভূমিকা (Previous Role)</label>
+                                    <input type="text" id="adm_club_prevRole" placeholder="General Secretary (Aug–Sep 2026)"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">মেয়াদ / তারিখ (Date)</label>
+                                    <input type="text" id="adm_club_date" placeholder="Oct 2026 - Present"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">কালার ক্লাস</label>
+                                    <input type="text" id="adm_club_color" placeholder="text-emerald-400"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm font-mono focus:border-purple-500">
+                                </div>
+                                <div class="sm:col-span-3">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">দায়িত্ব ও কার্যক্রমের বিবরণ (Description)</label>
+                                    <textarea id="adm_club_desc" rows="3" placeholder="ওয়ার্কশপ লজিস্টিকস সমন্বয়, প্রচার ও টিম সুপারভিশন..."
+                                              class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-purple-500"></textarea>
+                                </div>
+                            </div>
+
+                            <button type="button" id="admClubSubmitBtn" onclick="adminSaveClub()"
+                                    class="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
+                                <i class="fas fa-save"></i> <span>সংরক্ষণ করুন</span>
+                            </button>
+                        </div>
+
+                        <!-- Existing Clubs List -->
+                        <div class="space-y-3">
+                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-list text-purple-400"></i> বিদ্যমান ক্লাব ও নেতৃত্বের তালিকা</h4>
+                            <div id="admClubsList" class="space-y-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: CULTURAL GALLERY -->
+                    <div id="adminTab-gallery" class="admin-tab-pane hidden space-y-6">
+                        <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-camera text-secondary"></i> গ্যালারিতে ছবি যোগ করুন</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ছবির পাথ বা URL</label>
+                                    <input type="text" id="adm_photo_src" placeholder="assets/cultural-photo-1.jpg বা ওয়েব লিংক"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ডিভাইস থেকে ছবি আপলোড (ঐচ্ছিক)</label>
+                                    <input type="file" accept="image/*" onchange="adminHandlePhotoUpload(event)"
+                                           class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-secondary/20 file:text-secondary">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-300 mb-1">ক্যাপশন ও ইভেন্ট বিবরণ</label>
+                                    <input type="text" id="adm_photo_caption" placeholder="পহেলা বৈশাখ উদযাপন – সাংস্কৃতিক পরিবেশনা"
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                                </div>
+                            </div>
+                            <button type="button" onclick="adminAddPhoto()"
+                                    class="px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
+                                <i class="fas fa-plus"></i> <span>ছবি যোগ করুন</span>
+                            </button>
+                        </div>
+
+                        <!-- Existing Gallery Grid -->
+                        <div class="space-y-3">
+                            <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-images text-secondary"></i> বিদ্যমান গ্যালারি ছবি</h4>
+                            <div id="admGalleryList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: INBOX & LEADS -->
+                    <div id="adminTab-inbox" class="admin-tab-pane hidden space-y-6">
+                        <div class="flex items-center justify-between gap-4">
+                            <div>
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-envelope-open-text text-pink-400"></i> মেসেজ ইনবক্স ও দর্শনার্থীর বার্তা</h4>
+                                <p class="text-xs text-slate-400">কন্টাক্ট ফর্মের মাধ্যমে পাঠানো সমস্ত অনুসন্ধান রিয়েল-টাইমে এখানে সংরক্ষিত হয়।</p>
+                            </div>
+                            <button type="button" onclick="adminRefreshInbox()"
+                                    class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 text-xs font-bold transition-all flex items-center gap-1.5">
+                                <i class="fas fa-sync text-xs"></i> <span>রিফ্রেশ</span>
+                            </button>
+                        </div>
+                        <div id="admInboxList" class="space-y-3"></div>
+                    </div>
+
+                    <!-- TAB 7: BACKUP & SETTINGS -->
+                    <div id="adminTab-backup" class="admin-tab-pane hidden space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Download Backup -->
+                            <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-download text-emerald-400"></i> সম্পূর্ণ পোর্টফোলিও ব্যাকআপ</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">আপনার সমস্ত প্রজেক্ট, বায়ো, ক্লাবের তথ্য ও গ্যালারির কনফিগারেশন এক ক্লিকে একটি একক JSON ফাইল হিসেবে নিরাপদে ডাউনলোড করে সংরক্ষণ করুন।</p>
+                                <button type="button" onclick="adminExportBackup()"
+                                        class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
+                                    <i class="fas fa-file-arrow-down"></i> <span>JSON ব্যাকআপ ডাউনলোড</span>
+                                </button>
+                            </div>
+
+                            <!-- Restore Backup -->
+                            <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-upload text-cyan-400"></i> ব্যাকআপ রিস্টোর</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">পূর্বে ডাউনলোড করা যেকোনো JSON ব্যাকআপ ফাইল নির্বাচন করে সম্পূর্ণ পোর্টফোলিওর পূর্বাবস্থা তাৎক্ষণিকভাবে রিস্টোর করুন।</p>
+                                <input type="file" accept=".json" onchange="adminImportBackup(event)"
+                                       class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-cyan-500/20 file:text-cyan-300">
+                            </div>
+
+                            <!-- Change Master Passcode -->
+                            <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-key text-amber-400"></i> মাস্টার পাসকোড পরিবর্তন</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">অফলাইন অ্যাডমিন অ্যাক্সেসের জন্য আপনার গোপন মাস্টার পাসকোড পরিবর্তন করতে পারেন।</p>
+                                <button type="button" onclick="adminChangePasscode()"
+                                        class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2">
+                                    <i class="fas fa-shield-keyhole"></i> <span>পাসকোড পরিবর্তন করুন</span>
+                                </button>
+                            </div>
+
+                            <!-- Factory Reset -->
+                            <div class="glass p-6 rounded-2xl border border-white/10 space-y-4">
+                                <h4 class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-rotate-left text-rose-400"></i> ফ্যাক্টরি রিসেট</h4>
+                                <p class="text-xs text-slate-300 leading-relaxed">লোকালে সংরক্ষিত সকল কাস্টমাইজেশন মুছে ফেলে মূল ডিফল্ট পোর্টফোলিও তথ্যে ফিরে যেতে চাইলে রিসেট করুন।</p>
+                                <button type="button" onclick="adminResetToFactory()"
+                                        class="px-5 py-2.5 rounded-xl bg-rose-600/30 hover:bg-rose-600 text-rose-200 hover:text-white border border-rose-500/40 text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
+                                    <i class="fas fa-triangle-exclamation"></i> <span>ফ্যাক্টরি রিসেট করুন</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- UI Helpers for Tab Switching in Auth Modal -->
+    <script>
+    function switchAuthTab(tab) {
+        ['google', 'email', 'passcode'].forEach(t => {
+            const pane = document.getElementById(`authTabPane-${t}`);
+            const btn = document.getElementById(`authTabBtn-${t}`);
+            if (pane) pane.classList.toggle('hidden', t !== tab);
+            if (btn) {
+                if (t === tab) {
+                    btn.className = "py-2 rounded-lg bg-primary text-white transition-all";
+                } else {
+                    btn.className = "py-2 rounded-lg text-slate-400 hover:text-white transition-all";
+                }
+            }
+        });
+    }
+    </script>
+
+    <!-- Admin & Cloud Integration Module -->
+    <script type="module" src="js/admin.js"></script>
+
+    <!-- Cloud Content Initializer -->
+    <script type="module">
+    import { syncFromCloud } from './js/admin.js';
+
+    // Automatically sync latest cloud content from Firestore on background load
+    window.addEventListener('load', async () => {
+        try {
+            if (window.currentPortfolioData) {
+                const updated = await syncFromCloud(window.currentPortfolioData);
+                if (updated && window.renderAllPortfolio) {
+                    window.renderAllPortfolio(updated);
+                }
+            }
+        } catch (e) {
+            console.warn('Initial cloud sync notice:', e);
+        }
+    });
+    </script>
 </body>
 </html>
+
