@@ -448,53 +448,51 @@
         const container = document.createElement('div');
         container.id = 'omnitrixContainer';
         container.innerHTML = `
-            <!-- FLOATING OMNITRIX DIAL BUTTON -->
-            <div id="omnitrixTriggerWrap" class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
-                <!-- Playful Tooltip / Hint -->
-                <div id="omnitrixHint" class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/30 text-emerald-300 text-xs font-bold shadow-xl backdrop-blur-md cursor-pointer transition-all hover:scale-105" onclick="window.omnitrixToggle()">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                    <span>Ask Ben 10 AI</span>
+            <!-- FLOATING BEN 10 CARTOON WIDGET -->
+            <div id="omnitrixTriggerWrap" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] flex items-end gap-2.5">
+                <!-- Playful Ben 10 Speech Bubble -->
+                <div id="omnitrixHint" onclick="window.omnitrixToggle()" 
+                     class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-slate-950/95 border-2 border-[#00ff66] text-[#00ff66] text-xs font-bold shadow-[0_0_20px_rgba(0,255,102,0.5)] backdrop-blur-md cursor-pointer transition-all hover:scale-105 select-none relative animate-bounce">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#00ff66] animate-ping"></span>
+                    <span>Hey! I'm Ben 10! Ask me about Alkamah</span>
                 </div>
 
-                <!-- Omnitrix Dial Trigger -->
+                <!-- Ben 10 Cartoon Sticker Dial Trigger -->
                 <button type="button" id="omnitrixDialBtn" onclick="window.omnitrixToggle()" 
-                        class="omnitrix-dial-btn relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-950 border-4 border-[#00ff66] flex items-center justify-center text-[#00ff66] shadow-[0_0_20px_rgba(0,255,102,0.6)] hover:scale-110 active:scale-95 transition-transform duration-200 focus:outline-none"
-                        aria-label="Open Ben 10 Omnitrix Assistant" title="Omnitrix AI Assistant">
+                        class="omnitrix-dial-btn relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-950 border-4 border-[#00ff66] flex items-center justify-center shadow-[0_0_30px_rgba(0,255,102,0.8)] hover:scale-110 active:scale-95 transition-transform duration-200 focus:outline-none overflow-hidden group"
+                        aria-label="Open Ben 10 Cartoon AI Assistant" title="Ben 10 Cartoon AI Assistant">
                     
-                    <!-- Omnitrix Outer Ring Accents -->
-                    <div class="absolute inset-1 rounded-full border border-white/20 pointer-events-none"></div>
+                    <!-- Omnitrix Rotating Energy Ring -->
+                    <div class="absolute inset-0 rounded-full border border-dashed border-[#00ff66]/50 animate-spin pointer-events-none" style="animation-duration: 10s;"></div>
                     
-                    <!-- Iconic Ben 10 Hourglass SVG -->
-                    <svg viewBox="0 0 100 100" class="w-8 h-8 sm:w-9 sm:h-9 fill-current transition-transform duration-300 group-hover:rotate-45">
-                        <polygon points="18,12 82,12 50,47" />
-                        <polygon points="18,88 82,88 50,53" />
-                        <circle cx="50" cy="50" r="10" fill="#030712" />
-                    </svg>
+                    <!-- Direct Ben 10 Cartoon Character Image -->
+                    <img src="assets/ben10-avatar.png" alt="Ben 10 Cartoon" 
+                         class="w-full h-full object-cover object-top scale-110 group-hover:scale-125 transition-transform duration-300 pointer-events-none">
 
                     <!-- Green status blip -->
-                    <span class="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-[#00ff66] border-2 border-slate-950 shadow-[0_0_8px_#00ff66]"></span>
+                    <span class="absolute bottom-0 right-1 w-4 h-4 rounded-full bg-[#00ff66] border-2 border-slate-950 shadow-[0_0_10px_#00ff66]"></span>
                 </button>
             </div>
 
             <!-- OMNITRIX HOLOGRAPHIC CHAT WINDOW -->
-            <div id="omnitrixModal" class="fixed bottom-24 right-4 sm:right-6 z-50 hidden w-[94vw] sm:w-[440px] max-h-[84vh] rounded-[2rem] omnitrix-holo-panel text-slate-100 flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0">
+            <div id="omnitrixModal" class="fixed bottom-24 right-3 sm:right-6 z-[9999] hidden w-[94vw] sm:w-[440px] max-h-[84vh] rounded-[2rem] omnitrix-holo-panel text-slate-100 flex-col overflow-hidden transition-all duration-300 scale-95 opacity-0 shadow-2xl">
                 
                 <!-- TOP HEADER BAR -->
-                <div class="p-4 sm:p-5 border-b border-emerald-500/20 bg-slate-950/80 backdrop-blur-md flex items-center justify-between relative">
+                <div class="p-4 sm:p-5 border-b border-emerald-500/20 bg-slate-950/90 backdrop-blur-md flex items-center justify-between relative">
                     <div class="flex items-center gap-3">
-                        <!-- Mini Omnitrix Logo -->
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/40 flex items-center justify-center text-[#00ff66] shadow-[0_0_15px_rgba(0,255,102,0.3)]">
-                            <i id="omnitrixHeaderIcon" class="fas fa-bolt text-lg"></i>
+                        <!-- Direct Ben 10 Avatar in Header -->
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border-2 border-[#00ff66]/50 overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(0,255,102,0.4)] flex-shrink-0">
+                            <img src="assets/ben10-avatar.png" alt="Ben 10" class="w-full h-full object-cover object-top scale-110">
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
                                 <h3 id="omnitrixHeaderTitle" class="font-extrabold text-sm sm:text-base tracking-wide text-white flex items-center gap-1.5">
-                                    OMNITRIX AI <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-[#00ff66] font-mono border border-emerald-500/30">v10.0</span>
+                                    BEN 10 AI ASSISTANT
                                 </h3>
                             </div>
-                            <p id="omnitrixHeaderSubtitle" class="text-[11px] text-emerald-400/80 font-mono flex items-center gap-1.5">
+                            <p id="omnitrixHeaderSubtitle" class="text-[11px] text-emerald-400 font-mono flex items-center gap-1.5">
                                 <span class="w-1.5 h-1.5 rounded-full bg-[#00ff66] animate-pulse"></span>
-                                Galvanic Neural Link Active
+                                "It's Hero Time!" // Ready
                             </p>
                         </div>
                     </div>
@@ -541,12 +539,12 @@
                 <div id="omnitrixMessages" class="p-4 space-y-3.5 overflow-y-auto max-h-[50vh] sm:max-h-[52vh] omnitrix-custom-scrollbar omnitrix-scanline text-xs leading-relaxed">
                     <!-- Initial Welcome Message -->
                     <div class="flex items-start gap-2.5">
-                        <div class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-[#00ff66] flex items-center justify-center flex-shrink-0 text-xs">
-                            <i class="fas fa-robot"></i>
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border-2 border-[#00ff66]/50 overflow-hidden flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(0,255,102,0.3)]">
+                            <img src="assets/ben10-avatar.png" alt="Ben 10" class="w-full h-full object-cover object-top scale-110">
                         </div>
                         <div class="p-3.5 rounded-2xl omnitrix-bubble-ai text-slate-200">
-                            <p class="font-bold text-[#00ff66] mb-1">It's Hero Time! ⚡</p>
-                            <p>Greetings! I am Alkamah's <strong>Omnitrix AI Assistant</strong>. Ask me anything about his Cybersecurity expertise, university leadership, development projects, or how to reach him!</p>
+                            <p class="font-bold text-[#00ff66] mb-1">"It's Hero Time!" ⚡</p>
+                            <p>Hey! I am <strong>Ben 10</strong>, your virtual AI guide. Ask me anything about Alkamah—his Cybersecurity expertise, university leadership, development projects, or how to reach him!</p>
                         </div>
                     </div>
                 </div>
@@ -727,8 +725,8 @@
         const div = document.createElement('div');
         div.className = 'flex items-start gap-2.5 animate-fadeIn';
         div.innerHTML = `
-            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-[#00ff66] flex items-center justify-center flex-shrink-0 text-xs">
-                <i class="${p.icon}"></i>
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border-2 border-[#00ff66]/50 overflow-hidden flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(0,255,102,0.3)]">
+                <img src="assets/ben10-avatar.png" alt="Ben 10" class="w-full h-full object-cover object-top scale-110">
             </div>
             <div class="p-3.5 rounded-2xl omnitrix-bubble-ai text-slate-200 max-w-[85%] break-words">
                 ${htmlContent}
@@ -746,14 +744,14 @@
         div.id = id;
         div.className = 'flex items-start gap-2.5';
         div.innerHTML = `
-            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-[#00ff66] flex items-center justify-center flex-shrink-0 text-xs">
-                <i class="fas fa-bolt animate-spin"></i>
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border-2 border-[#00ff66]/50 overflow-hidden flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_rgba(0,255,102,0.3)]">
+                <img src="assets/ben10-avatar.png" alt="Ben 10" class="w-full h-full object-cover object-top scale-110 animate-pulse">
             </div>
             <div class="p-3 rounded-2xl omnitrix-bubble-ai text-slate-400 flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce"></span>
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce delay-100"></span>
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce delay-200"></span>
-                <span class="text-[11px] font-mono text-emerald-400 ml-1">Scanning DNA Database...</span>
+                <span class="text-[11px] font-mono text-[#00ff66] ml-1">Ben 10 is analyzing Omnitrix...</span>
             </div>
         `;
         feed.appendChild(div);
