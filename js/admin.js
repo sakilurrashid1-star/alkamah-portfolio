@@ -30,12 +30,13 @@ import {
 
 // Firebase Configuration (Dedicated Project for Portfolio)
 const firebaseConfig = {
-    apiKey: "AIzaSyBNlW4HX4Am295kuirFvBy7dblCbSuigI4",
-    authDomain: "giri-somprity.firebaseapp.com",
-    projectId: "giri-somprity",
-    storageBucket: "giri-somprity.firebasestorage.app",
-    messagingSenderId: "582709873059",
-    appId: "1:582709873059:web:2b5d308f148be0594eb216"
+    apiKey: "AIzaSyD0DraIxTUwISZd2ssFNHhWjhV-KX_VZFU",
+    authDomain: "alkamah-poartfulio.firebaseapp.com",
+    projectId: "alkamah-poartfulio",
+    storageBucket: "alkamah-poartfulio.firebasestorage.app",
+    messagingSenderId: "1077607906393",
+    appId: "1:1077607906393:web:e707aa758ccf587f464548",
+    measurementId: "G-17FN7Y0RRH"
 };
 
 // Authorized Admin Emails
