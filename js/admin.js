@@ -1088,7 +1088,7 @@ window.adminSavePhoto = () => {
     const caption = getVal('adm_photo_caption');
     
     if (!src) {
-        showAdminToast('Please enter the image URL or path.', 'error');
+        showAdminToast('Please choose a photo from your device or enter an image link.', 'error');
         return;
     }
     if (!caption) {
@@ -1124,6 +1124,84 @@ window.adminSavePhoto = () => {
     if (window.updateStandaloneMetrics) window.updateStandaloneMetrics();
 };
 
+// Update live photo preview UI element
+export function updatePhotoPreviewUI(src, name = '', sizeInfo = '') {
+    const previewWraps = document.querySelectorAll('#adm_photo_preview_wrap');
+    previewWraps.forEach(wrap => {
+        if (!src) {
+            wrap.classList.add('hidden');
+            return;
+        }
+        wrap.classList.remove('hidden');
+        const img = wrap.querySelector('img');
+        const nameEl = wrap.querySelector('.photo-preview-name');
+        const sizeEl = wrap.querySelector('.photo-preview-size');
+        if (img) img.src = src;
+        if (nameEl) nameEl.textContent = name || 'Selected Photo';
+        if (sizeEl) sizeEl.textContent = sizeInfo || '';
+    });
+}
+
+/**
+ * Automatically compress and optimize an image file using Canvas.
+ * Supports files of any size (even 10MB+ from mobile cameras).
+ */
+export function compressImageFile(file, maxDimension = 1200, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+        if (!file) {
+            resolve({ dataUrl: '', sizeBytes: 0 });
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let scale = Math.min(1, maxDimension / Math.max(img.width, img.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.max(1, Math.round(img.width * scale));
+                canvas.height = Math.max(1, Math.round(img.height * scale));
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                let outputType = 'image/jpeg';
+                try {
+                    const testWebp = canvas.toDataURL('image/webp', quality);
+                    if (testWebp.startsWith('data:image/webp')) {
+                        outputType = 'image/webp';
+                    }
+                } catch (ignore) {}
+                
+                let dataUrl = canvas.toDataURL(outputType, quality);
+                let currentQuality = quality;
+                let tries = 0;
+                
+                while (dataUrl.length > 350000 && tries < 4) {
+                    currentQuality = Math.max(0.55, currentQuality - 0.1);
+                    scale *= 0.85;
+                    canvas.width = Math.max(1, Math.round(img.width * scale));
+                    canvas.height = Math.max(1, Math.round(img.height * scale));
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    dataUrl = canvas.toDataURL(outputType, currentQuality);
+                    tries++;
+                }
+                
+                resolve({
+                    dataUrl,
+                    width: canvas.width,
+                    height: canvas.height,
+                    sizeBytes: Math.round(dataUrl.length * 3 / 4)
+                });
+            };
+            img.onerror = () => reject(new Error('Failed to process image file.'));
+            img.src = e.target.result;
+        };
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+    });
+}
+
 window.adminEditPhoto = (category, index) => {
     if (!window.currentPortfolioData) return;
     const data = ensurePortfolioActivities(window.currentPortfolioData);
@@ -1138,6 +1216,8 @@ window.adminEditPhoto = (category, index) => {
     setVal('adm_photo_category', category);
     setVal('adm_photo_src', item.src);
     setVal('adm_photo_caption', item.caption);
+    
+    updatePhotoPreviewUI(item.src, item.caption, item.src.startsWith('data:') ? 'Embedded Photo' : item.src);
     
     const titleEl = document.getElementById('admPhotoFormTitle');
     if (titleEl) titleEl.innerHTML = `<i class="fas fa-edit text-secondary"></i> Edit Activity Photo: ${item.caption}`;
@@ -1160,6 +1240,11 @@ window.adminCancelPhotoEdit = () => {
     const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
     setVal('adm_photo_src', '');
     setVal('adm_photo_caption', '');
+    
+    const fileInputs = document.querySelectorAll('#adm_photo_file, input[type="file"][onchange*="adminHandlePhotoUpload"]');
+    fileInputs.forEach(inp => { inp.value = ''; });
+    
+    updatePhotoPreviewUI('', '', '');
     
     const titleEl = document.getElementById('admPhotoFormTitle');
     if (titleEl) titleEl.innerHTML = '<i class="fas fa-camera text-secondary"></i> Add Photo to Activities Gallery';
@@ -1193,23 +1278,42 @@ window.adminDeletePhoto = (category, index) => {
 
 window.adminAddPhoto = window.adminSavePhoto;
 
-// Handle Image File Upload directly to DataURL
-window.adminHandlePhotoUpload = (event) => {
-    const file = event.target.files[0];
+// Handle Direct Device Image Upload with Auto-Optimization
+window.adminHandlePhotoUpload = async (event) => {
+    const file = event.target?.files?.[0];
     if (!file) return;
     
-    if (file.size > 2 * 1024 * 1024) {
-        showAdminToast('Image file exceeds 2 MB. Please upload an optimized image.', 'error');
-        return;
-    }
+    showAdminToast('Optimizing photo from your device...', 'info');
     
-    const reader = new FileReader();
-    reader.onload = (e) => {
+    try {
+        const { dataUrl, sizeBytes } = await compressImageFile(file, 1200, 0.82);
+        const origSizeKb = Math.round(file.size / 1024);
+        const compSizeKb = Math.round(sizeBytes / 1024);
+        
         const srcInput = document.getElementById('adm_photo_src');
-        if (srcInput) srcInput.value = e.target.result;
-        showAdminToast('Photo loaded! Enter caption and click "Add Photo".', 'success');
-    };
-    reader.readAsDataURL(file);
+        if (srcInput) srcInput.value = dataUrl;
+        
+        updatePhotoPreviewUI(
+            dataUrl, 
+            file.name, 
+            `Auto-Optimized: ${compSizeKb} KB (Reduced from ${origSizeKb} KB)`
+        );
+        
+        showAdminToast(`Photo ready! (${compSizeKb} KB) Enter caption and click "Save Photo".`, 'success');
+    } catch (err) {
+        console.error('Image processing error:', err);
+        showAdminToast('Could not process this image file. Please try another.', 'error');
+    }
+};
+
+// Clear currently selected image upload
+window.adminClearPhotoUpload = () => {
+    const srcInput = document.getElementById('adm_photo_src');
+    if (srcInput) srcInput.value = '';
+    const fileInputs = document.querySelectorAll('#adm_photo_file, input[type="file"][onchange*="adminHandlePhotoUpload"]');
+    fileInputs.forEach(inp => { inp.value = ''; });
+    updatePhotoPreviewUI('', '', '');
+    showAdminToast('Photo selection cleared.', 'info');
 };
 
 // Message Actions

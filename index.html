@@ -2469,8 +2469,17 @@
                     <div id="adminTab-gallery" class="admin-tab-pane hidden space-y-6">
                         <!-- Activities Gallery Form -->
                         <div id="admPhotoFormCard" class="glass p-6 rounded-2xl border border-white/10 space-y-4">
-                            <h4 id="admPhotoFormTitle" class="text-base font-bold text-white flex items-center gap-2"><i class="fas fa-camera text-secondary"></i> Add Photo to Activities Gallery</h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <h4 id="admPhotoFormTitle" class="text-base font-bold text-white flex items-center gap-2">
+                                    <i class="fas fa-camera text-secondary"></i> Add Activity Photo
+                                </h4>
+                                <span class="text-[11px] text-emerald-400 font-mono bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 w-fit">
+                                    <i class="fas fa-bolt mr-1"></i> Direct Device Upload Active
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Category Selection -->
                                 <div>
                                     <label class="block text-xs font-bold text-slate-300 mb-1">Activity Segment / Category *</label>
                                     <select id="adm_photo_category" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
@@ -2479,22 +2488,60 @@
                                         <option value="sports">Sports Activities (Segment 03)</option>
                                     </select>
                                 </div>
+
+                                <!-- Caption Input -->
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">Photo Path or URL *</label>
-                                    <input type="text" id="adm_photo_src" placeholder="assets/technical-activity-1.jpg or https://..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-300 mb-1">Upload from Device (Optional)</label>
-                                    <input type="file" accept="image/*" onchange="adminHandlePhotoUpload(event)" class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-white/10 text-slate-400 text-xs file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-secondary/20 file:text-secondary">
-                                </div>
-                                <div class="sm:col-span-2 lg:col-span-3">
                                     <label class="block text-xs font-bold text-slate-300 mb-1">Caption & Event Details *</label>
-                                    <input type="text" id="adm_photo_caption" placeholder="Event description, milestone, or stage performance..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                                    <input type="text" id="adm_photo_caption" placeholder="Event description, milestone, or celebration details..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3">
+
+                            <!-- Primary Action: Direct Device File Upload Box -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 mb-1.5">Direct Photo Upload from Phone / PC</label>
+                                <div class="relative group border-2 border-dashed border-white/15 hover:border-secondary rounded-2xl p-6 text-center transition-all bg-slate-900/60 hover:bg-slate-900 cursor-pointer" onclick="document.getElementById('adm_photo_file').click()">
+                                    <input type="file" id="adm_photo_file" accept="image/*" onchange="adminHandlePhotoUpload(event)" class="hidden">
+                                    <div class="flex flex-col items-center justify-center gap-2">
+                                        <div class="w-12 h-12 rounded-2xl bg-secondary/15 text-secondary flex items-center justify-center text-xl group-hover:scale-110 transition-transform shadow-inner">
+                                            <i class="fas fa-cloud-arrow-up"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs sm:text-sm font-bold text-white">Click to Select Photo from Your Device</p>
+                                            <p class="text-[11px] text-slate-400 mt-0.5">JPG, PNG, WebP — automatically compressed and optimized for instant loading</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Live Image Preview Card (Shown when image is selected) -->
+                            <div id="adm_photo_preview_wrap" class="hidden flex items-center gap-4 p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                                <img id="adm_photo_preview_img" src="" alt="Selected Photo" class="w-16 h-16 rounded-xl object-cover border border-white/10 shrink-0">
+                                <div class="flex-1 min-w-0">
+                                    <p class="photo-preview-name text-xs font-bold text-white truncate">Selected Photo</p>
+                                    <p class="photo-preview-size text-[11px] text-emerald-400 font-mono mt-0.5">Ready to save</p>
+                                </div>
+                                <button type="button" onclick="adminClearPhotoUpload()" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 text-xs font-bold transition-all flex items-center gap-1.5" title="Remove selected photo">
+                                    <i class="fas fa-times"></i> <span>Remove</span>
+                                </button>
+                            </div>
+
+                            <!-- Optional URL / Path Accordion (For linking an existing asset or web URL) -->
+                            <details class="group text-xs">
+                                <summary class="cursor-pointer text-slate-400 hover:text-white font-semibold flex items-center gap-2 py-1 select-none">
+                                    <i class="fas fa-link text-[10px] text-secondary"></i>
+                                    <span>Or paste image URL / asset link (Optional)</span>
+                                    <i class="fas fa-chevron-down text-[9px] group-open:rotate-180 transition-transform ml-auto"></i>
+                                </summary>
+                                <div class="pt-2">
+                                    <input type="text" id="adm_photo_src" placeholder="assets/photo.jpg or https://..."
+                                           class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/10 text-white text-xs sm:text-sm focus:border-secondary">
+                                </div>
+                            </details>
+
+                            <!-- Form Action Buttons -->
+                            <div class="flex items-center gap-3 pt-2">
                                 <button type="button" id="admPhotoSubmitBtn" onclick="adminSavePhoto()" class="px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary-hover text-white text-xs font-bold transition-all shadow-md flex items-center gap-2">
-                                    <i class="fas fa-plus"></i> <span>Add Photo</span>
+                                    <i class="fas fa-plus"></i> <span>Save Photo</span>
                                 </button>
                                 <button type="button" id="admPhotoCancelBtn" onclick="adminCancelPhotoEdit()" class="hidden px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all border border-white/10">
                                     Cancel
